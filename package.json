@@ -34,6 +34,7 @@
     "react-native-heroicons": "^3.2.0",
     "react-native-image-crop-picker": "^0.40.0",
     "react-native-maps": "^1.7.1",
+    "react-native-onboarding-swiper": "^1.2.0",
     "react-native-onesignal": "^4.5.1",
     "react-native-push-notification": "^8.1.1",
     "react-native-reanimated": "^3.0.2",
