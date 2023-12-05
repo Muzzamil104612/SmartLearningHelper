@@ -5,7 +5,7 @@ import firestore from '@react-native-firebase/firestore';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { themeColors } from '../../theme';
 import { BookOpenIcon, ArrowLeftIcon } from 'react-native-heroicons/solid';
-
+import storage from '@react-native-firebase/storage';
 const ParentHomePage = ({ navigation }) => {
   const [user, setUser] = useState(null);
 
@@ -18,11 +18,13 @@ const ParentHomePage = ({ navigation }) => {
           .get()
           .then((documentSnapshot) => {
             if (documentSnapshot.exists) {
+              const img =storage().ref(documentSnapshot.data().ImageURL).getDownloadURL();
+
               setUser({
                 uid: authenticatedUser.uid,
                 email: authenticatedUser.email,
                 username: documentSnapshot.data().name,
-                imageURL: documentSnapshot.data().ImageURL,
+                imageURL: img,
               });
               console.log(user + "----user");
             }
@@ -269,9 +271,10 @@ headtxt2:{
 
 
   container: {
-    flex: 1,
+    height: hp(150),
+    backgroundColor: 'white',
+   
 
-    backgroundColor: 'white'
   },
 
 

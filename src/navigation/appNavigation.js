@@ -26,7 +26,7 @@ export default function AppNavigation() {
   return (
     <NavigationContainer>
         <Provider store={store}>
-      <Stack.Navigator initialRouteName='Login'>
+      <Stack.Navigator initialRouteName='SplashScreen'>
       <Stack.Screen name="SplashScreen" options={{headerShown: false}} component={SplashScreen} />
  
         <Stack.Screen name="Welcome" options={{headerShown: false}} component={WelcomeScreen} />

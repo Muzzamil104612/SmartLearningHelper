@@ -101,9 +101,7 @@ const HomeScreenForParent=()=> {
               size={35} // Set the size you want
               style={{
                 backgroundColor: '#FFCD4B', // Set the background color
-                borderRadius: hp(10), // To make it a circular shape
-               // Some padding for better appearance
-               
+                borderRadius: hp(10), // To make it a circular shape           
                 marginTop:hp(-8) ,
                 height:hp(10),
                 width:wp(20),

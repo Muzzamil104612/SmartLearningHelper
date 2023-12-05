@@ -13,6 +13,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import * as Animatable from 'react-native-animatable';
 import { useState, useEffect } from 'react';
 import { useSelector} from 'react-redux';
+
 const StudentProfile = ({ navigation }) => {
   const data= useSelector(state =>state.value. stdData);
   const [myObject, setMyObject] = useState({
