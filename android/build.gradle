@@ -4,7 +4,7 @@ buildscript {
     ext {
         buildToolsVersion = "33.0.0"
         minSdkVersion = 21
-        compileSdkVersion = 33
+        compileSdkVersion = 34
         targetSdkVersion = 33
         googlePlayServicesAuthVersion="19.2.0"
 
@@ -22,10 +22,12 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.2.1")
+        classpath("com.android.tools.build:gradle:7.3.0")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("de.undercouch:gradle-download-task:5.0.1")
         classpath ('com.google.gms:google-services:4.3.3')
+      
+
        
         // NOTE: Do not place youro application dependencies here; they belong
         // in the individual module build.gradle \a

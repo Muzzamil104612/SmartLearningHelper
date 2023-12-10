@@ -94,9 +94,19 @@ const LoginScreen = ({ navigation, route }) => {
             };
         }
   , []);
+
+
+
+
+
+
+
+
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  
   const handleRegistration = () => {
 
 
@@ -179,27 +189,34 @@ setMyObject1({ emailError: '', passwordError: '' }); // Clear any error messages
               return false; // Return false to continue the loop
           });
 
-              if (userFound) {
-                  setMyObject({ ...myObject, Email: '' ,Password:''});
+          if(userFound){
+            const teacher = teacherinfo.find((item) => item.email === myObject.Email);
+            console.log(teacher);
+            if (teacher.Status === 'approved') {
+    
+              navigation.navigate('HomeScreenForTeacher');
+              setIsLoading(false);
+              Alert.alert('Success', 'Successfully Logged In!');
+            } else if(teacher.Status != 'approved') {
+    
+              navigation.navigate('StatusPage', { teacherInfo: teacher });
+
+              setIsLoading(false);
+            }
+             
+          }   
+    else {
+        setMyObject({ ...myObject, Email: '', Password: '' });
+        setIsLoading(false);
+        Alert.alert('Error', 'User not found. Check your credentials.');
+      }
 
 
-                  navigation.navigate('HomeScreenForTeacher');
-                  setIsLoading(false);
-                  Alert.alert(Error, '𝙎𝙪𝙘𝙘𝙚𝙨𝙨𝙁𝙪𝙡𝙡𝙮 𝙇𝙤𝙜𝙜𝙚𝙙 𝙄𝙣....');
-              } else {
-                  setMyObject({ ...myObject, Email: '' ,Password:''});
+      return () => {
+        unsubscribe();
+    };
 
-                  setIsLoading(false);
-                  Alert.alert(Error, '𝙎𝙤𝙧𝙧𝙮...𝙐𝙨𝙚𝙧 𝙉𝙤𝙩 𝙁𝙤𝙪𝙣𝙙');
-                  setMyObject1({ ...myObject1, passwordError: "", emailError: "" });
-              }
-
-
-
-
-          return () => {
-              unsubscribe();
-          };
+        
       }
       if (role === 'Student') {
 
@@ -258,12 +275,9 @@ setMyObject1({ emailError: '', passwordError: '' }); // Clear any error messages
             setMyObject1({ ...myObject1, passwordError: "", emailError: "" });
         }
 
-
-
-
-    return () => {
-        unsubscribe();
-    };
+        return () => {
+          unsubscribe();
+      };
 }
 
 

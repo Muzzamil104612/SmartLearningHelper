@@ -55,7 +55,7 @@ const TeacherSignUp = ({ navigation }) => {
     setShowPassword1(!showPassword1);
   };
   const [myObject, setMyObject] = useState({
-   userID:'', name: '', email: '', phone: '',experience: '', majorSubject: '', qualification: '', password: '', confirmpassword: '',ImageURL: '',documentURL:'',
+   userID:'', name: '', email: '', phone: '',experience: '', majorSubject: '', qualification: '', password: '', confirmpassword: '',ImageURL: '',documentURL:'',Status:'pending',
   });
   const [myObject2, setMyObject2] = useState({
     emailError2: '', PhoneError2: ''

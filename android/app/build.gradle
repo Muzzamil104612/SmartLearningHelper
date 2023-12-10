@@ -79,7 +79,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
  */
 
 project.ext.react = [
-    enableHermes: true,  // clean and rebuild if changing
+   enableHermes: true,  // clean and rebuild if changing 
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -195,6 +195,7 @@ android {
                 tasks.findByName("configureCMakeDebug[${architecture}]")?.configure {
                     dependsOn("preDebugBuild")
                 }
+                
                 tasks.findByName("configureCMakeRelWithDebInfo[${architecture}]")?.configure {
                     dependsOn("preReleaseBuild")
                 }
@@ -249,6 +250,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-fs')
     implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
     implementation 'com.google.android.gms:play-services-auth:19.2.0'

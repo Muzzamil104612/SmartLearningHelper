@@ -16,9 +16,10 @@ import SelectRoleForLogin from '../screens/Login/SelectRoleForLogin';
 import LoginScreen from '../screens/Login/LoginScreen';
 import SplashScreen from '../screens/splashScreen/SplashScreen';
 import { Provider } from 'react-redux';
-
+import TeacherDetails from '../screens/admin/TeacherDetails';
 import store from '../redux/store';
 import Slider from '../screens/components/Slider';
+import StatusPage from '../screens/teacher/StatusPage';
 const Stack = createNativeStackNavigator();
 
 
@@ -41,8 +42,9 @@ export default function AppNavigation() {
         <Stack.Screen name="HomeScreenForTeacher" options={{headerShown: false}} component={HomeScreenForTeacher} />
         <Stack.Screen name="HomeScreenForAdmin" options={{headerShown: false}} component={HomeScreenForAdmin} />
         <Stack.Screen name="Slider" options={{headerShown: false}} component={Slider} />
+        <Stack.Screen name="TeacherDetails" options={{headerShown: false}} component={TeacherDetails} />
+        <Stack.Screen name="StatusPage" options={{headerShown: false}} component={StatusPage} />
 
-      
       </Stack.Navigator>
       </Provider>
     </NavigationContainer>
