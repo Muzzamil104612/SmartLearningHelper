@@ -18,8 +18,8 @@ import StudentSearch from './StudentSearch';
 
 const Tab = createBottomTabNavigator();
 const styles = StyleSheet.create({
-    image: {height: hp(3.2), width: hp(3.1),},
-    images: {height: hp(3), width: hp(3),},
+  image: {height: hp(3.5), width: hp(4.1),},
+  images: {height: hp(3), width: hp(3),},
     label: {
       fontSize: 10,
       fontWeight: 'bold',

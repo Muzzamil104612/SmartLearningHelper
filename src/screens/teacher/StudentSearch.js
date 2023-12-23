@@ -22,10 +22,6 @@ import InAppBrowser from 'react-native-inappbrowser-reborn';
 const StudentSearchd = ({ route, navigation }) => {
   const { student } = route.params;
   
-
- 
-
- 
   
   return (
  

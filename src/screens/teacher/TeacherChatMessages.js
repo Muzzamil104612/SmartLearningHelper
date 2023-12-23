@@ -1,9 +1,11 @@
 import { useSelector } from 'react-redux';
 import React, { useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
 import { themeColors } from '../../theme';
+import { Text } from 'react-native';
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 
 const TeacherChatMessages = ({ route }) => {
   const teacher = useSelector(state => state.value.TeacherData);
@@ -85,11 +87,51 @@ const TeacherChatMessages = ({ route }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
+     <Text
+     style={{
+      color:'white',
+      margin:20,
+      alignSelf:'center',
+      fontWeight:'700',
+      fontSize:19,
+      fontStyle:'italic',
+      backgroundColor:themeColors.bg2,
+      padding:10,
+      borderRadius:5,
+      borderStyle:'solid',
+      borderColor:themeColors.bg3,
+      borderWidth:1.2,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.8,
+      shadowRadius: 4,
+      elevation: 8,
+     }}
+
+     >Chatting with {studentUsername}</Text>
       <GiftedChat
         messages={messages}
         onSend={(text) => onSend(text)}
         user={{
           _id: teacher.userID,
+        }}
+        renderSend={props => {
+          return (
+
+            <View style={{ flexDirection: 'row' }}>
+              <Send  {...props} >
+              <Image
+              source={require('../../assets/images/send.png')}
+              style={{width:widthPercentageToDP(7),height:heightPercentageToDP(4),margin:12,
+              color:themeColors.bg2
+              
+              }}
+              
+              /></Send>
+            </View>
+          )
         }}
         renderBubble={(props) => {
           return (
