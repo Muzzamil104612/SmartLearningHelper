@@ -18,10 +18,10 @@ const StudentSignUp = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasErrors, setHasErrors] = useState(false)
   const [myObject, setMyObject] = useState({
-    name: '', email: '', phone: '', parentEmail:'',password: '', confirmpassword: '',ImageURL: '',
+    name: '', email: '', phone: '', parentEmail:'',qualification: '',password: '', confirmpassword: '',ImageURL: '',
   });
   const [myObject1, setMyObject1] = useState({
-    emailError: '', nameError: '', PhoneError: '',imageError: '', passwordError: '', cpasswordError: '',PemailError: ''
+    emailError: '', nameError: '', PhoneError: '',imageError: '',  qualificationError: '',passwordError: '', cpasswordError: '',PemailError: ''
   });
   const [myObject2, setMyObject2] = useState({
     emailError2: '',PemailError2:''
@@ -104,6 +104,20 @@ useEffect(() => {
 }, [myObject.userID]);
 const getData = async () => {
 if (myObject.userID) {
+  
+ 
+  await firestore().collection('Students').doc(myObject.userID).
+  set(myObject)
+  .then(() => {
+   
+      console.log('Registration data stored in Firebase.');
+     
+
+  })
+  .catch((error) => {
+     
+      Alert.alert(Error, 'Error storing registration data:',error);
+  });
     const storageRef = storage().ref();
     const imageName = myObject.userID + '.jpg'; // Choose a name for the image file
     const imageRef = storageRef.child(imageName);
@@ -112,30 +126,22 @@ if (myObject.userID) {
         .then(() => {
             return imageRef.getDownloadURL();
         })
-        .then((downloadURL) => {
-            setMyObject({ ...myObject, userID: myObject.userID, ImageURL: downloadURL });
-            console.log('image stored');
+        .then(async(downloadURL)=> {
+           
+            console.log(downloadURL);
+            await firestore().collection('Students').doc(myObject.userID).update({
+              ImageURL: downloadURL,
+            });
+            setMyObject({ ...myObject, ImageURL: '', userID: '' });
+
+            Alert.alert(Error, '𝙍𝙚𝙘𝙤𝙧𝙙 𝙞𝙨 𝘼𝙙𝙙𝙚𝙙 𝙎𝙪𝙘𝙘𝙚𝙨𝙨𝙁𝙪𝙡𝙡𝙮');
+            navigation.navigate('Login');
           })
         .catch((error) => {
             console.error('Image upload error:', error);
         });
 
 
- 
-    await firestore().collection('Students').doc(myObject.userID).
-        set(myObject)
-        .then(() => {
-            console.log('Registration data stored in Firebase.');
-            setMyObject({ ...myObject, ImageURL: '', userID: '' });
-
-            Alert.alert(Error, '𝙍𝙚𝙘𝙤𝙧𝙙 𝙞𝙨 𝘼𝙙𝙙𝙚𝙙 𝙎𝙪𝙘𝙘𝙚𝙨𝙨𝙁𝙪𝙡𝙡𝙮');
-            navigation.navigate('Login');
-
-        })
-        .catch((error) => {
-           
-            Alert.alert(Error, 'Error storing registration data:',error);
-        });
 }
 setIsLoading(false);
 }
@@ -143,7 +149,7 @@ const handleRegistration = async () =>  {
     const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+,-./:;<=>?@[\\])(.{8,})$/;
     if (myObject.name.trim().length < 3 || myObject.email.trim() === '' || (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(myObject.email)) || myObject.password.trim() === '' || myObject.name.trim() === ''
       ||myObject.parentEmail.trim() === '' || (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(myObject.parentEmail)) || myObject.password.trim() === '' || myObject.name.trim() === ''
-      || myObject.confirmpassword.trim() === '' ||myObject.ImageURL.trim() === ''|| myObject.phone.trim() === '' || !/^[0-9]*$/.test(myObject.phone) || myObject.password !== myObject.confirmpassword || !passwordRegex.test(myObject.password)) {
+      ||  myObject.qualification.trim() === ''|| myObject.confirmpassword.trim() === '' ||myObject.ImageURL.trim() === ''|| myObject.phone.trim() === '' || !/^[0-9]*$/.test(myObject.phone) || myObject.password !== myObject.confirmpassword || !passwordRegex.test(myObject.password)) {
       setMyObject1({
         ...myObject1,
         passwordError: myObject.password.trim() === '' ? "please Enter Your password"
@@ -157,6 +163,9 @@ const handleRegistration = async () =>  {
           ? "Please Enter Your Email Address"
           : !/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(myObject.email)
             ? "Invalid Email Format"
+            : "",
+
+            qualificationError: myObject.qualification.trim() === '' ? "Please Enter Your ClassName"
             : "",
         PemailError: myObject.parentEmail.trim() === ''
             ? "Please Enter Parent's Email Address"
@@ -270,6 +279,15 @@ const handleRegistration = async () =>  {
                         {myObject2.emailError2 !== '' && (
                             <Text style={{ height: hp(3), color: 'red', marginLeft: wp(2) }}>{myObject2.emailError2}</Text>
                         )}
+                          <TextInputComponent
+              label="Class"
+              onChangeText={Text => setMyObject({ ...myObject, qualification: (Text) })}
+              placeholder="Three Class"
+              secureTextEntry={false}
+              keyboardType="default"
+            />
+          {myObject1.qualificationError !== '' && <Text style={{ height: hp(3), color: 'red', marginLeft: wp(2), }}>{myObject1.qualificationError}</Text>}
+
             <TextInputComponent
               label="Contact No."
               onChangeText={Text => setMyObject({ ...myObject, phone: (Text) })}

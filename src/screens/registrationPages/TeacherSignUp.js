@@ -47,22 +47,6 @@ const TeacherSignUp = ({ navigation }) => {
       }
     }
   };
-  
-  const handlePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-  const handlePasswordVisibility1 = () => {
-    setShowPassword1(!showPassword1);
-  };
-  const [myObject, setMyObject] = useState({
-   userID:'', name: '', email: '', phone: '',experience: '', majorSubject: '', qualification: '', password: '', confirmpassword: '',ImageURL: '',documentURL:'',Status:'pending',
-  });
-  const [myObject2, setMyObject2] = useState({
-    emailError2: '', PhoneError2: ''
-});
-  const [myObject1, setMyObject1] = useState({
-    emailError: '',documentError:"", nameError: '', PhoneError: '',imageError: '', experienceError: '', subjectError: '', qualificationError: '', passwordError: '', cpasswordError: '',
-  });
   const selectImage = () => {
     ImagePicker.openPicker({
         mediaType: 'photo',
@@ -80,6 +64,23 @@ const TeacherSignUp = ({ navigation }) => {
             console.log(error);
         });
 };
+  
+  const handlePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const handlePasswordVisibility1 = () => {
+    setShowPassword1(!showPassword1);
+  };
+  const [myObject, setMyObject] = useState({
+   userID:'', name: '', email: '', phone: '',experience: '', majorSubject: '', qualification: '', password: '', confirmpassword: '',ImageURL: '',documentURL:'',Status:'pending',
+  });
+  const [myObject2, setMyObject2] = useState({
+    emailError2: '', PhoneError2: ''
+});
+  const [myObject1, setMyObject1] = useState({
+    emailError: '',documentError:"", nameError: '', PhoneError: '',imageError: '', experienceError: '', subjectError: '', qualificationError: '', passwordError: '', cpasswordError: '',
+  });
+
 useEffect(() => {
   let unsubscribeAll;
 
@@ -134,37 +135,44 @@ useEffect(() => {
   getData();
 }, [myObject.userID]);
 const getData = async () => {
-if (myObject.userID) {
-    const storageRef = storage().ref();
-    const imageName = myObject.userID + '.jpg'; // Choose a name for the image file
-    const imageRef = storageRef.child(imageName);
-
-    await imageRef.putFile(myObject.ImageURL)
-        .then(() => {
-            return imageRef.getDownloadURL();
-        })
-        .then((downloadURL) => {
-            setMyObject({ ...myObject, userID: myObject.userID, ImageURL: downloadURL });
-            console.log('image stored');
-          })
-        .catch((error) => {
-            console.error('Image upload error:', error);
-        });
-        {
-          await firestore().collection('Teachers').doc(myObject.userID).
-          set(myObject)
+  if (myObject.userID) {
+  
+ 
+    await firestore().collection('Teachers').doc(myObject.userID).
+    set(myObject)
+    .then(() => {
+     
+        console.log('Registration data stored in Firebase.');
+       
+  
+    })
+    .catch((error) => {
+       
+        Alert.alert(Error, 'Error storing registration data:',error);
+    });
+      const storageRef = storage().ref();
+      const imageName = myObject.userID + '.jpg'; // Choose a name for the image file
+      const imageRef = storageRef.child(imageName);
+  
+      await imageRef.putFile(myObject.ImageURL)
           .then(() => {
-              console.log('Registration data stored in Firebase.');
-              setMyObject({ ...myObject, ImageURL: '', userID: '' });
-        
-             
-        
+              return imageRef.getDownloadURL();
           })
-          .catch((error) => {
+          .then(async(downloadURL)=> {
              
-              Alert.alert(Error, 'Error storing registration data:',error);
+              console.log(downloadURL);
+              await firestore().collection('Teachers').doc(myObject.userID).update({
+                ImageURL: downloadURL,
+              });
+              setMyObject({ ...myObject, ImageURL: '', userID: '' });
+  
+            
+            })
+          .catch((error) => {
+              console.error('Image upload error:', error);
           });
-        }
+  
+  
 
         const documentName = document[0].name;
         const reference = storage().ref(documentName);
@@ -181,7 +189,7 @@ if (myObject.userID) {
           await firestore().collection('Teachers').doc(myObject.userID).update({
             documentURL: image,
           });
-          Alert.alert(Error, '𝙍𝙚𝙘𝙤𝙧𝙙 𝙞𝙨 𝘼𝙙𝙙𝙚𝙙 𝙎𝙪𝙘𝙘𝙚𝙨𝙨𝙁𝙪𝙡𝙡𝙮');
+          Alert.alert(Error, '𝗬𝗼𝘂𝗿 𝗥𝗲𝗾𝘂𝗲𝘀𝘁 𝗜𝘀 𝗦𝗲𝗻𝘁 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆');
           navigation.navigate('Login');
           setIsLoading(false);
 

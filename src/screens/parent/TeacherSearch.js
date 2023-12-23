@@ -19,45 +19,14 @@ import * as Animatable from 'react-native-animatable';
 
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 
-const TeacherDetails = ({ route, navigation }) => {
+const TeacherSearchs = ({ route, navigation }) => {
   const { teacher } = route.params;
-  const [status, setStatus] = useState(teacher.status);
+  
 
-  const approveRequest = async () => {
-    try {
-      await firebase.firestore().collection('Teachers').doc(teacher.id).update({
-        Status: 'approved',
-      });
-      setStatus('approved');
-navigation.navigate('AdminHomePage');
-    } catch (error) {
-        console.log(error)  ;  
-    }
-  };
-
-  const rejectRequest = async () => {
-    try {
-      await firebase.firestore().collection('Teachers').doc(teacher.id).update({
-        Status: 'rejected',
-      });
-      setStatus('rejected');
-      navigation.navigate('AdminHomePage');
-
-    } catch (error) {
-console.log(error)  ;  }
-  };
-
-  const openDocumentInBrowser = async () => {
-    try {
-      await InAppBrowser.open(teacher.documentURL, {
-        
-      });
-    } catch (error) {
-      console.error(error);
  
-    }
-  };
 
+ 
+  
   return (
  
         <ScrollView style={{ backgroundColor: 'white', flex: 1.5 }}>
@@ -149,34 +118,9 @@ console.log(error)  ;  }
       keyboardType="default"
     />
 
-    <TextInputComponent
-      onChangeText={Text => setMyObject({ ...myObject, phone: (Text) })}
-      label="Contact No."
-      value={teacher.phone}
-      placeholder="+923456675634"
-      secureTextEntry={false}
-      keyboardType="numeric"
-      editable={false}
-    />
+   
 
-<TouchableOpacity onPress={() => openDocumentInBrowser()}>
-<View style={{height:hp(3)}}></View>
-<View style={[styles.btn]}>
-  <Text style={{ color: 'white' }}>Open CV</Text>
-</View>
-</TouchableOpacity>
-          <TouchableOpacity onPress={() => approveRequest()}>
-            <View style={[styles.btn]}>
-              <Text style={{ color: 'white' }}>Approve</Text>
-            </View>
-          </TouchableOpacity>
 
-          
-          <TouchableOpacity onPress={() => rejectRequest()}>
-            <View style={[styles.btn]}>
-              <Text style={{ color: 'white' }}>Reject</Text>
-            </View>
-          </TouchableOpacity>
 
   
   </View>
@@ -200,7 +144,7 @@ console.log(error)  ;  }
   );
 };
 
-export default TeacherDetails;
+export default TeacherSearchs;
 
 const styles = StyleSheet.create({
 

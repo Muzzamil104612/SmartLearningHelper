@@ -1,5 +1,5 @@
 
-import  { useState } from 'react';
+import  { useEffect, useState } from 'react';
 
 import { firebase } from '@react-native-firebase/firestore';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -18,46 +18,34 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import * as Animatable from 'react-native-animatable';
 
 import InAppBrowser from 'react-native-inappbrowser-reborn';
+import auth from '@react-native-firebase/auth';
 
-const TeacherDetails = ({ route, navigation }) => {
+const TeacherSearches = ({ route, navigation }) => {
   const { teacher } = route.params;
-  const [status, setStatus] = useState(teacher.status);
+  
+console.log("teacher....."+teacher.userID);
 
-  const approveRequest = async () => {
-    try {
-      await firebase.firestore().collection('Teachers').doc(teacher.id).update({
-        Status: 'approved',
-      });
-      setStatus('approved');
-navigation.navigate('AdminHomePage');
-    } catch (error) {
-        console.log(error)  ;  
-    }
-  };
 
-  const rejectRequest = async () => {
-    try {
-      await firebase.firestore().collection('Teachers').doc(teacher.id).update({
-        Status: 'rejected',
-      });
-      setStatus('rejected');
-      navigation.navigate('AdminHomePage');
 
-    } catch (error) {
-console.log(error)  ;  }
-  };
 
-  const openDocumentInBrowser = async () => {
-    try {
-      await InAppBrowser.open(teacher.documentURL, {
-        
-      });
-    } catch (error) {
-      console.error(error);
+
  
-    }
+
+  const handleSendMessage = () => {
+  console.log(teacher.name+"------------");
+      navigation.navigate('ChatMessages', {
+        teacherId: teacher.userID, 
+        teacherUsername:teacher.name,
+      
+      });
+    
   };
 
+
+ 
+
+ 
+  
   return (
  
         <ScrollView style={{ backgroundColor: 'white', flex: 1.5 }}>
@@ -149,34 +137,21 @@ console.log(error)  ;  }
       keyboardType="default"
     />
 
-    <TextInputComponent
-      onChangeText={Text => setMyObject({ ...myObject, phone: (Text) })}
-      label="Contact No."
-      value={teacher.phone}
-      placeholder="+923456675634"
-      secureTextEntry={false}
-      keyboardType="numeric"
-      editable={false}
-    />
+<TouchableOpacity
+    onPress={()=>handleSendMessage()}
+    style={{
+      backgroundColor: themeColors.bg2,
+      padding: 10,
+      alignSelf: 'center',
+      margin: hp(4),
+      borderRadius: 3,
+    }}
+  >
+    <Text style={{ color: themeColors.bg3 }}>Send Message</Text>
+  </TouchableOpacity>
+   
 
-<TouchableOpacity onPress={() => openDocumentInBrowser()}>
-<View style={{height:hp(3)}}></View>
-<View style={[styles.btn]}>
-  <Text style={{ color: 'white' }}>Open CV</Text>
-</View>
-</TouchableOpacity>
-          <TouchableOpacity onPress={() => approveRequest()}>
-            <View style={[styles.btn]}>
-              <Text style={{ color: 'white' }}>Approve</Text>
-            </View>
-          </TouchableOpacity>
 
-          
-          <TouchableOpacity onPress={() => rejectRequest()}>
-            <View style={[styles.btn]}>
-              <Text style={{ color: 'white' }}>Reject</Text>
-            </View>
-          </TouchableOpacity>
 
   
   </View>
@@ -200,7 +175,7 @@ console.log(error)  ;  }
   );
 };
 
-export default TeacherDetails;
+export default TeacherSearches;
 
 const styles = StyleSheet.create({
 

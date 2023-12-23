@@ -16,6 +16,7 @@ import { useSelector} from 'react-redux';
 
 const StudentProfile = ({ navigation }) => {
   const data= useSelector(state =>state.value. stdData);
+  console.log(data);
   const [myObject, setMyObject] = useState({
     name: '', email: '', phone: '', parentEmail:'',password: '', confirmpassword: '',ImageURL: '',
   });

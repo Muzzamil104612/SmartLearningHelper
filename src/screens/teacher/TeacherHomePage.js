@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -60,6 +60,7 @@ const TeacherHomePage = ({ navigation }) => {
     { key: 2, title: 'Remaining Charges', Time: '01-Dec-2023', Amount: 3000 },
     { key: 3, title: 'half Month Fee', Time: '11-Nov-2023', Amount: 2500 },
     { key: 4, title: 'Remaining Charges', Time: '01-Dec-2023', Amount: 900 },
+    { key: 5, title: 'Remaining Charges', Time: '01-Dec-2023', Amount: 900 },
 
   ];
 
@@ -122,27 +123,18 @@ const TeacherHomePage = ({ navigation }) => {
       </View>
       <Text style={styles.headtxt1}>All Transactions</Text>
 
-      <View>
-        <FlatList
-          data={transactions}
-          keyExtractor={(item) => item.key.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.categoriesView1}>
-             {console.log(item)}
-              <TouchableOpacity style={styles.iconbtn1}>
-
-                <Image style={styles.icon1} source={require('../../assets/images/student.png')} />
-                <Text style={[styles.TName1, { color: themeColors.bg3 }]}> {item.title}</Text>
-                <Text style={[styles.TTime1, { color: themeColors.bg2}]}>{item.Time}</Text>
-                <Text style={[styles.TAmount1, { color: themeColors.bg3 }]}>{item.Amount}Rs.</Text>
-
-              </TouchableOpacity>
-            </View>
-          )}
-          vertical
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
+      <ScrollView style={{marginBottom:hp(10),}}>
+  {transactions.map((item) => (
+    <View key={item.key} style={styles.categoriesView1}>
+      <TouchableOpacity style={styles.iconbtn1}>
+        <Image style={styles.icon1} source={require('../../assets/images/student.png')} />
+        <Text style={[styles.TName1, { color: themeColors.bg3 }]}> {item.title}</Text>
+        <Text style={[styles.TTime1, { color: themeColors.bg2}]}>{item.Time}</Text>
+        <Text style={[styles.TAmount1, { color: themeColors.bg3 }]}>{item.Amount}Rs.</Text>
+      </TouchableOpacity>
+    </View>
+  ))}
+</ScrollView>
 
     </View>
   );

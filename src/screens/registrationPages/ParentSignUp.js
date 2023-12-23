@@ -105,41 +105,47 @@ useEffect(() => {
 }, [myObject.userID]);
 const getData = async () => {
   if (myObject.userID) {
+    
+   
+    await firestore().collection('Parents').doc(myObject.userID).
+    set(myObject)
+    .then(() => {
+     
+        console.log('Registration data stored in Firebase.');
+       
+  
+    })
+    .catch((error) => {
+       
+        Alert.alert(Error, 'Error storing registration data:',error);
+    });
       const storageRef = storage().ref();
       const imageName = myObject.userID + '.jpg'; // Choose a name for the image file
       const imageRef = storageRef.child(imageName);
-
+  
       await imageRef.putFile(myObject.ImageURL)
           .then(() => {
               return imageRef.getDownloadURL();
           })
-          .then((downloadURL) => {
-              setMyObject({ ...myObject, userID: myObject.userID, ImageURL: downloadURL });
-              console.log('image stored');
+          .then(async(downloadURL)=> {
+             
+              console.log(downloadURL);
+              await firestore().collection('Parents').doc(myObject.userID).update({
+                ImageURL: downloadURL,
+              });
+              setMyObject({ ...myObject, ImageURL: '', userID: '' });
+  
+              Alert.alert(Error, '𝙍𝙚𝙘𝙤𝙧𝙙 𝙞𝙨 𝘼𝙙𝙙𝙚𝙙 𝙎𝙪𝙘𝙘𝙚𝙨𝙨𝙁𝙪𝙡𝙡𝙮');
+              navigation.navigate('Login');
             })
           .catch((error) => {
               console.error('Image upload error:', error);
           });
-
-
-   
-      await firestore().collection('Parents').doc(myObject.userID).
-          set(myObject)
-          .then(() => {
-              console.log('Registration data stored in Firebase.');
-              setMyObject({ ...myObject, ImageURL: '', userID: '' });
-
-              Alert.alert(Error, '𝙍𝙚𝙘𝙤𝙧𝙙 𝙞𝙨 𝘼𝙙𝙙𝙚𝙙 𝙎𝙪𝙘𝙘𝙚𝙨𝙨𝙁𝙪𝙡𝙡𝙮');
-              navigation.navigate('Login');
-
-          })
-          .catch((error) => {
-             
-              Alert.alert(Error, 'Error storing registration data:',error);
-          });
+  
+  
   }
   setIsLoading(false);
-}
+  }
   const handleRegistration = async () => {
     const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+,-./:;<=>?@[\\])(.{8,})$/;
     if (myObject.name.trim().length < 3 || myObject.ImageURL.trim() === ''|| myObject.email.trim() === '' || (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(myObject.email)) || myObject.password.trim() === '' || myObject.name.trim() === ''

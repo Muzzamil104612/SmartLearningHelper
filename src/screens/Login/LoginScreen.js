@@ -32,12 +32,21 @@ const LoginScreen = ({ navigation, route }) => {
   useEffect(() => {
     const firestoreRef = firestore().collection('Teachers');
     const unsubscribe = firestoreRef.onSnapshot((querySnapshot) => {
+
+
+              
+      if (querySnapshot) {
         const teachers = [];
         querySnapshot.forEach((doc) => {
             teachers.push({ id: doc.id, ...doc.data() });
         });
 
         setTeacherInfo(teachers);
+       
+      }
+
+
+      
 
         
     });
@@ -46,32 +55,44 @@ const LoginScreen = ({ navigation, route }) => {
         unsubscribe();
     };
   }, []);
-
   useEffect(() => {
     const firestoreRef = firestore().collection('Students');
-            const unsubscribe = firestoreRef.onSnapshot((querySnapshot) => {
-                const Student = [];
-                querySnapshot.forEach((doc) => {
-                    Student.push({ id: doc.id, ...doc.data() });
-                });
+    const unsubscribe = firestoreRef.onSnapshot((querySnapshot) => {
+      if (querySnapshot) {
+        const Student = [];
+        querySnapshot.forEach((doc) => {
+          Student.push({ id: doc.id, ...doc.data() });
+        });
+  
+        setStdInfo(Student);
         
-                setStdInfo(Student);
-            });
-            return () => {
-                unsubscribe();
-            };
-        }
-  , []);
+       
+      }
+    });
+  
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+  
+  
   useEffect(() => {
     const firestoreRef = firestore().collection('Admin');
             const unsubscribe = firestoreRef.onSnapshot((querySnapshot) => {
+
+
+              if (querySnapshot) {
                 const Admin = [];
                 querySnapshot.forEach((doc) => {
                     Admin.push({ id: doc.id, ...doc.data() });
                 });
         
                 setAdminInfo(Admin);
-                console.log(Admin)
+          
+               
+              }
+                
+             
             });
             return () => {
                 unsubscribe();
@@ -81,13 +102,23 @@ const LoginScreen = ({ navigation, route }) => {
   useEffect(() => {
     const firestoreRef = firestore().collection('Parents');
             const unsubscribe = firestoreRef.onSnapshot((querySnapshot) => {
+
+
+              
+              if (querySnapshot) {
                 const Parents = [];
                 querySnapshot.forEach((doc) => {
                   Parents.push({ id: doc.id, ...doc.data() });
                 });
         
                 setParentInfo(Parents);
-                console.log(Parents)
+          
+               
+              }
+
+              
+              
+              
             });
             return () => {
                 unsubscribe();
@@ -193,7 +224,7 @@ setMyObject1({ emailError: '', passwordError: '' }); // Clear any error messages
             const teacher = teacherinfo.find((item) => item.email === myObject.Email);
             console.log(teacher);
             if (teacher.Status === 'approved') {
-    
+              setMyObject({ ...myObject, Email: '', Password: '' });
               navigation.navigate('HomeScreenForTeacher');
               setIsLoading(false);
               Alert.alert('Success', 'Successfully Logged In!');

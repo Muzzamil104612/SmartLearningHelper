@@ -19,45 +19,14 @@ import * as Animatable from 'react-native-animatable';
 
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 
-const TeacherDetails = ({ route, navigation }) => {
-  const { teacher } = route.params;
-  const [status, setStatus] = useState(teacher.status);
+const StudentSearchDetails = ({ route, navigation }) => {
+  const { student } = route.params;
+  
 
-  const approveRequest = async () => {
-    try {
-      await firebase.firestore().collection('Teachers').doc(teacher.id).update({
-        Status: 'approved',
-      });
-      setStatus('approved');
-navigation.navigate('AdminHomePage');
-    } catch (error) {
-        console.log(error)  ;  
-    }
-  };
-
-  const rejectRequest = async () => {
-    try {
-      await firebase.firestore().collection('Teachers').doc(teacher.id).update({
-        Status: 'rejected',
-      });
-      setStatus('rejected');
-      navigation.navigate('AdminHomePage');
-
-    } catch (error) {
-console.log(error)  ;  }
-  };
-
-  const openDocumentInBrowser = async () => {
-    try {
-      await InAppBrowser.open(teacher.documentURL, {
-        
-      });
-    } catch (error) {
-      console.error(error);
  
-    }
-  };
 
+ 
+  
   return (
  
         <ScrollView style={{ backgroundColor: 'white', flex: 1.5 }}>
@@ -79,8 +48,8 @@ console.log(error)  ;  }
     <Text style={{ color: '#F4BC1C', alignSelf: "center", fontSize: 28, fontWeight: "500", marginBottom: hp(1.5) }}>𝙋𝙧𝙞𝙫𝙖𝙩𝙚 𝙄𝙣𝙛𝙤𝙧𝙢𝙖𝙩𝙞𝙤𝙣!</Text>
     <View style={styles.circle}>
     <TouchableOpacity >
-                        {teacher.ImageURL ? (
-                            <Image source={{ uri: teacher.ImageURL }} style={styles.selectedImage} />
+                        {student.ImageURL ? (
+                            <Image source={{ uri: student.ImageURL }} style={styles.selectedImage} />
                         ) : (
                           <Icon name="person-add" size={86} color="#F4BC1C" style={styles.person} />
                         )}
@@ -106,7 +75,7 @@ console.log(error)  ;  }
       onChangeText={Text => setMyObject({ ...myObject, name: (Text) })}
       label="Complete Name"
       placeholder="John Smith"
-      value={teacher.name}
+      value={student.name}
       secureTextEntry={false}
       keyboardType="default"
       editable={false}
@@ -115,68 +84,44 @@ console.log(error)  ;  }
     <TextInputComponent
       onChangeText={Text => setMyObject({ ...myObject, email: (Text) })}
       label="Email Address"
-      value={teacher.email}
+      value={student.email}
       placeholder="john23@gmail.com"
       secureTextEntry={false}
       keyboardType="default"
       editable={false}
     />
-     <TextInputComponent
-    onChangeText={Text => setMyObject({ ...myObject, experience: (Text) })}
-      label="Years of Experience"
-      placeholder="4"
-      value={teacher.experience}
-      secureTextEntry={false}
-      keyboardType="numeric"
-      editable={false}
-    />
-     <TextInputComponent
-    onChangeText={Text => setMyObject({ ...myObject, majorSubject: (Text) })}
-      label="Major Subject"
-      placeholder="Databases"
-      value={teacher.majorSubject}
-      secureTextEntry={false}
-      keyboardType="default"
-      editable={false}
-    />
+    
+    
      <TextInputComponent
       onChangeText={Text => setMyObject({ ...myObject, qualification: (Text) })}
-      label="Qualification"
+      label="Class"
       placeholder="Bachelors of Computer Sciences(or BSCS)"
       secureTextEntry={false}
       editable={false}
-      value={teacher.qualification}
+      value={student.qualification}
+      keyboardType="default"
+    />
+    <TextInputComponent
+      onChangeText={Text => setMyObject({ ...myObject, parentEmail: (Text) })}
+      label="Parent Email"
+      placeholder="Bachelors of Computer Sciences(or BSCS)"
+      secureTextEntry={false}
+      editable={false}
+      value={student.parentEmail}
       keyboardType="default"
     />
 
     <TextInputComponent
       onChangeText={Text => setMyObject({ ...myObject, phone: (Text) })}
       label="Contact No."
-      value={teacher.phone}
+      value={student.phone}
       placeholder="+923456675634"
       secureTextEntry={false}
       keyboardType="numeric"
       editable={false}
     />
 
-<TouchableOpacity onPress={() => openDocumentInBrowser()}>
-<View style={{height:hp(3)}}></View>
-<View style={[styles.btn]}>
-  <Text style={{ color: 'white' }}>Open CV</Text>
-</View>
-</TouchableOpacity>
-          <TouchableOpacity onPress={() => approveRequest()}>
-            <View style={[styles.btn]}>
-              <Text style={{ color: 'white' }}>Approve</Text>
-            </View>
-          </TouchableOpacity>
 
-          
-          <TouchableOpacity onPress={() => rejectRequest()}>
-            <View style={[styles.btn]}>
-              <Text style={{ color: 'white' }}>Reject</Text>
-            </View>
-          </TouchableOpacity>
 
   
   </View>
@@ -200,7 +145,7 @@ console.log(error)  ;  }
   );
 };
 
-export default TeacherDetails;
+export default StudentSearchDetails;
 
 const styles = StyleSheet.create({
 
