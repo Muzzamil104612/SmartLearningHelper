@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import { Image, View } from 'react-native';
-import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, InputToolbar, Send } from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
 import { themeColors } from '../../theme';
 import { Text } from 'react-native';
