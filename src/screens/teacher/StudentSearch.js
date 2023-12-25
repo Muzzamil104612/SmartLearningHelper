@@ -22,6 +22,21 @@ import InAppBrowser from 'react-native-inappbrowser-reborn';
 const StudentSearchd = ({ route, navigation }) => {
   const { student } = route.params;
   
+
+  const handleSendMessage = () => {
+    console.log(student.name+"------------");
+        navigation.navigate('ChatMessages', {
+          studentId: student.userID, 
+          studentUsername:student.name,
+          studentImageURL:student.ImageURL
+        
+        });
+      
+    };
+  
+
+
+
   
   return (
  
@@ -117,6 +132,15 @@ const StudentSearchd = ({ route, navigation }) => {
       editable={false}
     />
 
+
+<TouchableOpacity onPress={()=>{
+  handleSendMessage(student.userID,student.name,student.ImageURL)
+}}>
+
+  <Text>
+    contact 
+  </Text>
+</TouchableOpacity>
 
 
   

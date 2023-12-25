@@ -7,9 +7,9 @@ import { themeColors } from '../../theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ScrollView } from 'react-native';
 import RetreiveCount from '../components/retreiveCount';
-import AllTeachers from './AllTeachers';
 
-const ParentChat = ({navigation}) => {
+
+const AllParents = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResultFound, setSearchResultFound] = useState(true); // State to track search result status
   const [selectedFilter, setSelectedFilter] = useState('');
@@ -20,8 +20,7 @@ const ParentChat = ({navigation}) => {
    useEffect(() => {
     if (searchQuery === '') {
       firestore()
-        .collection('TeachersChat')
-        .orderBy('createdAt','desc')
+        .collection('Parents')
         .get()
         .then((querySnapshot) => {
           const data = [];
@@ -34,22 +33,6 @@ const ParentChat = ({navigation}) => {
           console.error('Error fetching data: ', error);
         });
     }
-    else{
-      firestore()
-      .collection('TeachersChat')
-      .orderBy('createdAt','desc')
-      .get()
-      .then((querySnapshot) => {
-        const data = [];
-        querySnapshot.forEach((doc) => {
-          data.push({ id: doc.id, ...doc.data() });
-        });
-        setFilteredData(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data: ', error);
-      });
-    }
   }, [searchQuery]);
   const handleSearch = async (query) => {
     try {
@@ -57,18 +40,16 @@ const ParentChat = ({navigation}) => {
     if (selectedFilter === 'Name' || query ==='Name') {
         // Search for teachers by name based on searchQuery
         querySnapshot = await firestore()
-          .collection('TeachersChat')
-          .orderBy('createdAt','desc')
-          .where('teacherName', '>=', searchQuery)
-          .where('teacherName', '<=', searchQuery + '\uf8ff')
+          .collection('Parents')
+          .where('name', '>=', searchQuery)
+          .where('name', '<=', searchQuery + '\uf8ff')
          
           .get();
       }
       else
       {
         querySnapshot = await firestore()
-        .collection('TeachersChat')
-        .orderBy('createdAt','desc')
+        .collection('Parents')
         .get();
 
       }
@@ -77,7 +58,7 @@ const ParentChat = ({navigation}) => {
       const data = [];
     querySnapshot.forEach((doc) => {
       const docData = doc.data();
-   
+     
       data.push({ id: doc.id, ...docData });
     });
 
@@ -93,12 +74,11 @@ const ParentChat = ({navigation}) => {
 
 
   
-  const handleSendMessage = (teacherId,teacherUsername,teacherImageURL) => {
-        navigation.navigate('ParentChatMessages', {
-          teacherId, 
-          teacherUsername,
-          teacherImageURL
-        
+  const handleSendMessage = (parentId,parentUsername,parentImageURL) => {
+        navigation.navigate('ParentsChatMessages', {
+           parentId, 
+            parentUsername
+        ,parentImageURL
         });
       
     };
@@ -109,7 +89,7 @@ const ParentChat = ({navigation}) => {
       <View>
         {filteredData.map((item, index) => (
        
-       <View key={item.teacherId} style={[styles.reqpart]}>
+       <View key={item.userID} style={[styles.reqpart]}>
        <View style={{flexDirection:'row'}}>
           <View style={styles.circle}>
           <Image source={{ uri: item.ImageURL }} style={styles.selectedImage} />
@@ -117,19 +97,12 @@ const ParentChat = ({navigation}) => {
      
        <View >
          <View style={{flexDirection:'row',width:wp(49)}}>
-       <Text style={styles.text2}>{item.teacherName}</Text>
+       <Text style={styles.text2}>{item.name}</Text>
        
-
-       {item.unread==true? (
-                <Text style={{ color: 'red', fontWeight: '600' ,marginTop:hp(10) ,marginLeft:40}}>New Messages</Text>
-              )
-              :(  null
-              )
-              }
        </View>
       
        </View>
-       <TouchableOpacity onPress={() => handleSendMessage(item.teacherId,item.teacherName,item.ImageURL)}>
+       <TouchableOpacity onPress={() => handleSendMessage(item.userID,item.name,item.ImageURL)}>
        <Ionicons name="chatbox-outline" size={30}    style={{marginTop:35 ,marginLeft:12}} color={themeColors.bg2}
             />
        </TouchableOpacity>
@@ -143,7 +116,7 @@ const ParentChat = ({navigation}) => {
 
 
   return (
-    <ScrollView style={{marginBottom:8}}>
+    <ScrollView style={{marginBottom:20}}>
       <Text
      style={{
       color:'white',
@@ -167,7 +140,7 @@ const ParentChat = ({navigation}) => {
       elevation: 8,
      }}
 
-     >Your Chats with Teachers</Text>
+     >All Parents</Text>
       <View style={styles.center}>
         <TextInput
           style={styles.searchbox}
@@ -181,43 +154,19 @@ const ParentChat = ({navigation}) => {
           <FontAwesome name="search" size={19} color="#191D88" style={{marginLeft:wp(9)}}/>
         </TouchableOpacity>
         
-
-        
       </View>
-
-
       <View style={{height:hp(4),}}></View>
       {filteredData.length > 0 ? (
       renderFilteredData()
-
-
     ) : (
       <Text style={styles.noRecordText}></Text>
     )}
-
-
     
      {!searchResultFound && (
         <Text style={styles.noRecordText}>𝙎𝙤𝙧𝙧𝙮, 𝙉𝙤 𝙍𝙚𝙘𝙤𝙧𝙙 𝙁𝙤𝙪𝙣𝙙</Text>
       )}
 
-<TouchableOpacity
-style={{
-  marginTop:hp(23),
-  marginLeft:wp(85),
-  
-    }}
-
-onPress={() =>{
-
-navigation.navigate('AllTeachers');
-}
-
-}>
-  
-  <FontAwesome name="comment" size={37} color="#191D88" />
-</TouchableOpacity>
-
+     
     </ScrollView>
   );
 };
@@ -366,4 +315,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ParentChat;
+export default AllParents;

@@ -1,11 +1,13 @@
 import React, { useState,useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image,StyleSheet, TextInput, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, Image,StyleSheet, TextInput, Modal, ScrollView } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useIsFocused } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import { themeColors } from '../../theme';
 import { useFocusEffect } from '@react-navigation/native';
+
+
 const TeacherSearch = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterActive, setFilterActive] = useState(false);
@@ -52,7 +54,7 @@ const TeacherSearch = ({navigation}) => {
       } else if (selectedFilter === 'teacher') {
         // Search for teachers by name based on searchQuery
         querySnapshot = await firestore()
-          .collection('Teachers')
+          .collection('Students')
          
           .where('name', '>=', searchQuery)
           .where('name', '<=', searchQuery + '\uf8ff')
@@ -62,7 +64,7 @@ const TeacherSearch = ({navigation}) => {
       else
       {
         querySnapshot = await firestore()
-        .collection('Teachers')
+        .collection('Students')
      
         .where('majorSubject', '>=', searchQuery)
         .where('majorSubject', '<=', searchQuery + '\uf8ff')
@@ -116,11 +118,7 @@ const TeacherSearch = ({navigation}) => {
        <Text style={styles.text2}>{item.name}</Text>
        
        </View>
-       {selectedFilter === 'student' ? (
-                <Text style={styles.text}>Class =&gt; {item.qualification}</Text>
-              ) : (
-                <Text style={styles.text}>{item.qualification}</Text>
-              )}
+      
        </View>
        <TouchableOpacity onPress={() => viewDetails(item)}>
          <View style={[styles.btn]}>
@@ -137,7 +135,7 @@ const TeacherSearch = ({navigation}) => {
 
 
   return (
-    <View>
+    <ScrollView  style={{marginBottom:hp(10)}}>
       <View style={styles.center}>
         <TextInput
           style={styles.searchbox}
@@ -178,16 +176,16 @@ const TeacherSearch = ({navigation}) => {
               <Text style={styles.filterOption}>𝓢𝓽𝓾𝓭𝓮𝓷𝓽</Text>
             </TouchableOpacity>
            
-            <TouchableOpacity onPress={() => handleFilter('subject')}>
+           {/* <TouchableOpacity onPress={() => handleFilter('subject')}>
               <Text style={styles.filterOption}>𝓢𝓾𝓫𝓳𝓮𝓬𝓽</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity onPress={() => setShowFilterModal(false)}>
               <Text style={styles.cancelText}>𝐂𝐚𝐧𝐜𝐞𝐥</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 };
 

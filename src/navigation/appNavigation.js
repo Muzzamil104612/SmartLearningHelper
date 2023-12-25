@@ -30,6 +30,18 @@ import ChatMessages from '../screens/student/ChatMessages';
 import StudentChat from '../screens/student/StudentChat';
 import TeacherChatMessages from '../screens/teacher/TeacherChatMessages';
 import ChatsData from '../screens/teacher/ChatsData';
+import StoreCount from '../screens/components/storeCount';
+import RetreiveCount from '../screens/components/retreiveCount';
+import ParentChatMessages from '../screens/parent/ParentChatMessages';
+import ParentChat from '../screens/parent/ParentChat';
+import AllTeachers from '../screens/parent/AllTeachers';
+import ChatOptions from '../screens/teacher/ChatOptions';
+import ParentsChat from '../screens/teacher/ParentsChat';
+import TeacherChat from '../screens/teacher/TeacherChat';
+import ParentsChatMessages from '../screens/teacher/ParentsChatMessages';
+import AllStudents from '../screens/teacher/AllStudents';
+import AllParents from '../screens/teacher/AllParents';
+import AllSTeachers from '../screens/student/AllSTeachers';
 
 const Stack = createNativeStackNavigator();
 
@@ -64,7 +76,20 @@ export default function AppNavigation() {
         <Stack.Screen name="StudentChat" options={{headerShown: false}} component={StudentChat} />
         <Stack.Screen name="TeacherChatMessages" options={{headerShown: false}} component={TeacherChatMessages} />
         <Stack.Screen name="ChatsData" options={{headerShown: false}} component={ChatsData} />
+        <Stack.Screen name="StoreCount" options={{headerShown: false}} component={StoreCount} />
+        <Stack.Screen name="RetreiveCount" options={{headerShown: false}} component={RetreiveCount} />
+        <Stack.Screen name="ParentChatMessages" options={{headerShown: false}} component={ParentChatMessages} />
+        <Stack.Screen name="TeacherChat" options={{headerShown: false}} component={TeacherChat} />
 
+        <Stack.Screen name="ParentChat" options={{headerShown: false}} component={ParentChat} />
+
+        <Stack.Screen name="AllTeachers" options={{headerShown: false}} component={AllTeachers} />
+        <Stack.Screen name="ChatOptions" options={{headerShown: false}} component={ChatOptions} />
+        <Stack.Screen name="ParentsChat" options={{headerShown: false}} component={ParentsChat} />
+        <Stack.Screen name="ParentsChatMessages" options={{headerShown: false}} component={ParentsChatMessages} />
+        <Stack.Screen name="AllStudents" options={{headerShown: false}} component={AllStudents} />
+        <Stack.Screen name="AllParents" options={{headerShown: false}} component={AllParents} />
+        <Stack.Screen name="AllSTeachers" options={{headerShown: false}} component={AllSTeachers} />
 
       </Stack.Navigator>
       </Provider>

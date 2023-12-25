@@ -1,115 +1,106 @@
 import React, { useState,useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image,StyleSheet, TextInput, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, Image,StyleSheet, TextInput, Modal, ScrollView } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp, heightPercentageToDP } from 'react-native-responsive-screen';
 import firestore from '@react-native-firebase/firestore';
 import { themeColors } from '../../theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ScrollView } from 'react-native';
 import RetreiveCount from '../components/retreiveCount';
-import AllTeachers from './AllTeachers';
 
-const ParentChat = ({navigation}) => {
+const ParentsChat = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResultFound, setSearchResultFound] = useState(true); // State to track search result status
   const [selectedFilter, setSelectedFilter] = useState('');
   const [filteredData, setFilteredData] = useState([]);
 
-
-
-   useEffect(() => {
-    if (searchQuery === '') {
-      firestore()
-        .collection('TeachersChat')
-        .orderBy('createdAt','desc')
-        .get()
-        .then((querySnapshot) => {
-          const data = [];
-          querySnapshot.forEach((doc) => {
-            data.push({ id: doc.id, ...doc.data() });
-          });
-          setFilteredData(data);
-        })
-        .catch((error) => {
-          console.error('Error fetching data: ', error);
-        });
-    }
-    else{
-      firestore()
-      .collection('TeachersChat')
-      .orderBy('createdAt','desc')
-      .get()
-      .then((querySnapshot) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let querySnapshot;
+  
+        if (searchQuery === '') {
+          // Fetch all parents if search query is empty
+          querySnapshot = await firestore()
+            .collection('ParentsChat')
+            .orderBy('createdAt', 'desc')
+            .get();
+        } else {
+          // Search for parents by name based on searchQuery
+          querySnapshot = await firestore()
+            .collection('ParentsChat')
+            .where('parentName', '>=', searchQuery || '')
+            .where('parentName', '<=', searchQuery ? searchQuery + '\uf8ff' : '\uf8ff')
+            .get();
+        }
+  
         const data = [];
+  
         querySnapshot.forEach((doc) => {
           data.push({ id: doc.id, ...doc.data() });
         });
+  
         setFilteredData(data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error fetching data: ', error);
-      });
-    }
+      }
+    };
+  
+    fetchData(); // Call fetchData when the component mounts
+  
   }, [searchQuery]);
-  const handleSearch = async (query) => {
+  
+  const handleSearch = async () => {
     try {
       let querySnapshot;
-    if (selectedFilter === 'Name' || query ==='Name') {
-        // Search for teachers by name based on searchQuery
+  
+      if (selectedFilter === 'Name') {
+        // Search for parents by name based on searchQuery
         querySnapshot = await firestore()
-          .collection('TeachersChat')
-          .orderBy('createdAt','desc')
-          .where('teacherName', '>=', searchQuery)
-          .where('teacherName', '<=', searchQuery + '\uf8ff')
-         
+          .collection('ParentsChat')
+          .where('parentName', '>=', searchQuery || '')
+          .where('parentName', '<=', searchQuery ? searchQuery + '\uf8ff' : '\uf8ff')
+          .get();
+      } else {
+        // Fetch all parents if selectedFilter is not 'Name'
+        querySnapshot = await firestore()
+          .collection('ParentsChat')
+          .orderBy('createdAt', 'desc')
           .get();
       }
-      else
-      {
-        querySnapshot = await firestore()
-        .collection('TeachersChat')
-        .orderBy('createdAt','desc')
-        .get();
-
-      }
-
   
       const data = [];
-    querySnapshot.forEach((doc) => {
-      const docData = doc.data();
-   
-      data.push({ id: doc.id, ...docData });
-    });
-
-
+  
+      querySnapshot.forEach((doc) => {
+        const docData = doc.data();
+        data.push({ id: doc.id, ...docData });
+      });
+  
       setFilteredData(data);
-      setSearchResultFound(data.length > 0); 
+      setSearchResultFound(data.length > 0);
     } catch (error) {
       console.error('Error searching data: ', error);
     }
   };
   
 
-
-
   
-  const handleSendMessage = (teacherId,teacherUsername,teacherImageURL) => {
-        navigation.navigate('ParentChatMessages', {
-          teacherId, 
-          teacherUsername,
-          teacherImageURL
+  const handleSendMessage = (parentId,parentUsername,parentImageURL) => {
+        navigation.navigate('ParentsChatMessages', {
+            parentId, 
+          parentUsername,
+          parentImageURL
         
         });
       
     };
   
 
-  const renderFilteredData = () => {
+  const renderFilteredData =  () => {
     return (
       <View>
         {filteredData.map((item, index) => (
        
-       <View key={item.teacherId} style={[styles.reqpart]}>
+       <View key={item.parentId} style={[styles.reqpart]}>
        <View style={{flexDirection:'row'}}>
           <View style={styles.circle}>
           <Image source={{ uri: item.ImageURL }} style={styles.selectedImage} />
@@ -117,9 +108,8 @@ const ParentChat = ({navigation}) => {
      
        <View >
          <View style={{flexDirection:'row',width:wp(49)}}>
-       <Text style={styles.text2}>{item.teacherName}</Text>
-       
-
+       <Text style={styles.text2}>{item.parentName}</Text>
+   
        {item.unread==true? (
                 <Text style={{ color: 'red', fontWeight: '600' ,marginTop:hp(10) ,marginLeft:40}}>New Messages</Text>
               )
@@ -129,8 +119,8 @@ const ParentChat = ({navigation}) => {
        </View>
       
        </View>
-       <TouchableOpacity onPress={() => handleSendMessage(item.teacherId,item.teacherName,item.ImageURL)}>
-       <Ionicons name="chatbox-outline" size={30}    style={{marginTop:35 ,marginLeft:12}} color={themeColors.bg2}
+       <TouchableOpacity onPress={() => handleSendMessage(item.parentId,item.parentName,item.ImageURL)}>
+       <Ionicons name="chatbox-outline" size={30}    style={{marginTop:35 ,marginLeft:22}} color={themeColors.bg2}
             />
        </TouchableOpacity>
        </View>
@@ -143,8 +133,8 @@ const ParentChat = ({navigation}) => {
 
 
   return (
-    <ScrollView style={{marginBottom:8}}>
-      <Text
+    <ScrollView style={{marginBottom:hp(8)}}>
+       <Text
      style={{
       color:'white',
       margin:15,
@@ -167,7 +157,7 @@ const ParentChat = ({navigation}) => {
       elevation: 8,
      }}
 
-     >Your Chats with Teachers</Text>
+     >Your Chats with Parents</Text>
       <View style={styles.center}>
         <TextInput
           style={styles.searchbox}
@@ -178,39 +168,32 @@ const ParentChat = ({navigation}) => {
           value={searchQuery}
         />
         <TouchableOpacity onPress={() => handleSearch('Name')}>
-          <FontAwesome name="search" size={19} color="#191D88" style={{marginLeft:wp(9)}}/>
+          <FontAwesome name="search" size={19} color="#191D88" style={{marginLeft:wp(5)}} />
         </TouchableOpacity>
-        
-
-        
+      
       </View>
-
-
       <View style={{height:hp(4),}}></View>
       {filteredData.length > 0 ? (
       renderFilteredData()
-
-
     ) : (
       <Text style={styles.noRecordText}></Text>
     )}
-
-
     
      {!searchResultFound && (
         <Text style={styles.noRecordText}>𝙎𝙤𝙧𝙧𝙮, 𝙉𝙤 𝙍𝙚𝙘𝙤𝙧𝙙 𝙁𝙤𝙪𝙣𝙙</Text>
       )}
 
+
 <TouchableOpacity
 style={{
-  marginTop:hp(23),
+  marginTop:hp(53),
   marginLeft:wp(85),
   
     }}
 
 onPress={() =>{
 
-navigation.navigate('AllTeachers');
+navigation.navigate('AllParents');
 }
 
 }>
@@ -218,6 +201,7 @@ navigation.navigate('AllTeachers');
   <FontAwesome name="comment" size={37} color="#191D88" />
 </TouchableOpacity>
 
+     
     </ScrollView>
   );
 };
@@ -254,8 +238,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
     elevation: 8,
   }, 
-  
-  circle:
+   circle:
   {
     backgroundColor: 'white',
     height: hp(10),
@@ -274,7 +257,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 4,
     elevation: 8,
-  }, selectedImage: {
+  }, 
+  selectedImage: {
     backgroundColor: 'white',
     height: hp(10),
     width: wp(20),
@@ -366,4 +350,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ParentChat;
+export default ParentsChat;

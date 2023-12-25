@@ -14,6 +14,7 @@ import TeacherProfile from './TeacherProfile';
 import TeacherSetting from './TeacherSetting';
 import TeacherHomePage from './TeacherHomePage';
 import TeacherSearch from './TeacherSearch';
+import ChatOptions from './ChatOptions';
 const Tab = createBottomTabNavigator();
 const styles = StyleSheet.create({
   image: {height: hp(3.5), width: hp(4.1),},
@@ -133,8 +134,8 @@ const HomeScreenForTeacher=()=> {
       
         
   <Tab.Screen
-        name="TeacherChat"
-        component={TeacherChat}
+        name="ChatOptions"
+        component={ChatOptions}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (

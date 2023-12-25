@@ -36,6 +36,7 @@ console.log("teacher....."+teacher.userID);
       navigation.navigate('ChatMessages', {
         teacherId: teacher.userID, 
         teacherUsername:teacher.name,
+        teacherImageURL:teacher.ImageURL
       
       });
     

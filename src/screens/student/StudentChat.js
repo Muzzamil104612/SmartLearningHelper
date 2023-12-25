@@ -6,6 +6,8 @@ import firestore from '@react-native-firebase/firestore';
 import { themeColors } from '../../theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ScrollView } from 'react-native';
+import RetreiveCount from '../components/retreiveCount';
+
 
 const StudentChat = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -13,18 +15,13 @@ const StudentChat = ({navigation}) => {
   const [selectedFilter, setSelectedFilter] = useState('');
   const [filteredData, setFilteredData] = useState([]);
 
-  const handleFilter = async (filterType) => {
-    setSelectedFilter(filterType);
-    setShowFilterModal(false);
-    setSearchQuery(''); // Clear search query when filter changes
-    setFilteredData([]); // Clear filtered data when filter changes
-  };
+
 
    useEffect(() => {
     if (searchQuery === '') {
-      // Fetch all teachers if search query is empty
       firestore()
-        .collection('Teachers')
+        .collection('TeacherStudentChat')
+        .orderBy('createdAt','desc')
         .get()
         .then((querySnapshot) => {
           const data = [];
@@ -37,6 +34,22 @@ const StudentChat = ({navigation}) => {
           console.error('Error fetching data: ', error);
         });
     }
+    else{
+      firestore()
+      .collection('TeacherStudentChat')
+      .orderBy('createdAt','desc')
+      .get()
+      .then((querySnapshot) => {
+        const data = [];
+        querySnapshot.forEach((doc) => {
+          data.push({ id: doc.id, ...doc.data() });
+        });
+        setFilteredData(data);
+      })
+      .catch((error) => {
+        console.error('Error fetching data: ', error);
+      });
+    }
   }, [searchQuery]);
   const handleSearch = async (query) => {
     try {
@@ -44,30 +57,25 @@ const StudentChat = ({navigation}) => {
     if (selectedFilter === 'Name' || query ==='Name') {
         // Search for teachers by name based on searchQuery
         querySnapshot = await firestore()
-          .collection('Teachers')
-         
-          .where('name', '>=', searchQuery)
-          .where('name', '<=', searchQuery + '\uf8ff')
+          .collection('TeacherStudentChat')
+
+          .where('teacherName', '>=', searchQuery)
+          .where('teacherName', '<=', searchQuery + '\uf8ff')
          
           .get();
       }
       else
       {
         querySnapshot = await firestore()
-        .collection('Teachers')
-      
+        .collection('TeacherStudentChat')
         .get();
 
       }
 
-  
       const data = [];
     querySnapshot.forEach((doc) => {
       const docData = doc.data();
-      if (selectedFilter !== 'student' && docData.Status !== 'approved') {
-        // Skip non-approved records for filters other than 'student'
-        return;
-      }
+     
       data.push({ id: doc.id, ...docData });
     });
 
@@ -83,10 +91,11 @@ const StudentChat = ({navigation}) => {
 
 
   
-  const handleSendMessage = (teacherId,teacherUsername) => {
+  const handleSendMessage = (teacherId,teacherUsername,teacherImageURL) => {
         navigation.navigate('ChatMessages', {
           teacherId, 
-          teacherUsername
+          teacherUsername,
+          teacherImageURL
         
         });
       
@@ -98,7 +107,7 @@ const StudentChat = ({navigation}) => {
       <View>
         {filteredData.map((item, index) => (
        
-       <View key={item.id} style={[styles.reqpart]}>
+       <View key={item.teacherId} style={[styles.reqpart]}>
        <View style={{flexDirection:'row'}}>
           <View style={styles.circle}>
           <Image source={{ uri: item.ImageURL }} style={styles.selectedImage} />
@@ -106,12 +115,17 @@ const StudentChat = ({navigation}) => {
      
        <View >
          <View style={{flexDirection:'row',width:wp(49)}}>
-       <Text style={styles.text2}>{item.name}</Text>
-       
+       <Text style={styles.text2}>{item.teacherName}</Text>
+       {item.unread==true? (
+                <Text style={{ color: 'red', fontWeight: '600' ,marginTop:hp(10) ,marginLeft:40}}>New Messages</Text>
+              )
+              :(  null
+              )
+              }
        </View>
       
        </View>
-       <TouchableOpacity onPress={() => handleSendMessage(item.id,item.name)}>
+       <TouchableOpacity onPress={() => handleSendMessage(item.teacherId,item.teacherName,item.ImageURL)}>
        <Ionicons name="chatbox-outline" size={30}    style={{marginTop:35 ,marginLeft:12}} color={themeColors.bg2}
             />
        </TouchableOpacity>
@@ -125,7 +139,7 @@ const StudentChat = ({navigation}) => {
 
 
   return (
-    <ScrollView style={{marginBottom:20}}>
+    <ScrollView style={{marginBottom:8}}>
       <Text
      style={{
       color:'white',
@@ -174,6 +188,25 @@ const StudentChat = ({navigation}) => {
      {!searchResultFound && (
         <Text style={styles.noRecordText}>𝙎𝙤𝙧𝙧𝙮, 𝙉𝙤 𝙍𝙚𝙘𝙤𝙧𝙙 𝙁𝙤𝙪𝙣𝙙</Text>
       )}
+
+      
+<TouchableOpacity
+style={{
+  marginTop:hp(25),
+  marginLeft:wp(85),
+  
+    }}
+
+onPress={() =>{
+
+navigation.navigate('AllSTeachers');
+}
+
+}>
+  
+  <FontAwesome name="comment" size={37} color="#191D88" />
+</TouchableOpacity>
+
 
      
     </ScrollView>

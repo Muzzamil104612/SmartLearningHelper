@@ -5,6 +5,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp, heightPercentage
 import firestore from '@react-native-firebase/firestore';
 import { themeColors } from '../../theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import RetreiveCount from '../components/retreiveCount';
 
 const TeacherChat = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -12,24 +13,19 @@ const TeacherChat = ({navigation}) => {
   const [selectedFilter, setSelectedFilter] = useState('');
   const [filteredData, setFilteredData] = useState([]);
 
-  const handleFilter = async (filterType) => {
-    setSelectedFilter(filterType);
-    setShowFilterModal(false);
-    setSearchQuery(''); // Clear search query when filter changes
-    setFilteredData([]); // Clear filtered data when filter changes
-  };
 
-   useEffect(() => {
+  useEffect(() => {
     if (searchQuery === '') {
-      // Fetch all teachers if search query is empty
       firestore()
-        .collection('Students')
+        .collection('StudentsChat')
+        .orderBy('createdAt','desc')
         .get()
         .then((querySnapshot) => {
           const data = [];
           querySnapshot.forEach((doc) => {
             data.push({ id: doc.id, ...doc.data() });
           });
+          console.log('Fetched data:', data); // Log the fetched data
           setFilteredData(data);
         })
         .catch((error) => {
@@ -37,24 +33,23 @@ const TeacherChat = ({navigation}) => {
         });
     }
   }, [searchQuery]);
+  
   const handleSearch = async (query) => {
     try {
       let querySnapshot;
-    if (selectedFilter === 'Name' || query ==='Name') {
-        // Search for teachers by name based on searchQuery
+    if (selectedFilter == 'Name' || query ==='Name') {
         querySnapshot = await firestore()
-          .collection('Students')
-         
-          .where('name', '>=', searchQuery)
-          .where('name', '<=', searchQuery + '\uf8ff')
+          .collection('StudentsChat')
+          .where('studentName', '>=', searchQuery)
+          .where('studentName', '<=', searchQuery + '\uf8ff')
          
           .get();
       }
       else
       {
         querySnapshot = await firestore()
-        .collection('Students')
-      
+        .collection('StudentsChat')
+        .orderBy('createdAt','desc')
         .get();
 
       }
@@ -68,6 +63,7 @@ const TeacherChat = ({navigation}) => {
 
       setFilteredData(data);
       setSearchResultFound(data.length > 0); 
+
     } catch (error) {
       console.error('Error searching data: ', error);
     }
@@ -76,49 +72,55 @@ const TeacherChat = ({navigation}) => {
 
 
   
-  const handleSendMessage = (studentId,studentUsername) => {
+  const handleSendMessage = (studentId,studentUsername,studentImageURL) => {
         navigation.navigate('TeacherChatMessages', {
           studentId, 
           studentUsername
+          ,studentImageURL
         
         });
       
     };
   
 
-  const renderFilteredData = () => {
+  const renderFilteredData =  () => {
     return (
       <View>
-        {filteredData.map((item, index) => (
-       
-       <View key={item.id} style={[styles.reqpart]}>
-       <View style={{flexDirection:'row'}}>
-          <View style={styles.circle}>
-          <Image source={{ uri: item.ImageURL }} style={styles.selectedImage} />
-          </View>
-     
-       <View >
-         <View style={{flexDirection:'row',width:wp(49)}}>
-       <Text style={styles.text2}>{item.name}</Text>
-       
-       </View>
-      
-       </View>
-       <TouchableOpacity onPress={() => handleSendMessage(item.id,item.name)}>
-       <Ionicons name="chatbox-outline" size={30}    style={{marginTop:35 ,marginLeft:22}} color={themeColors.bg2}
-            />
-       </TouchableOpacity>
-       </View>
-     
-     </View>
-        ))}
+        {filteredData.map( (item, index) => (
+  <View key={item.studentId} style={[styles.reqpart]}>
+    <View style={{ flexDirection: 'row' }}>
+      <View style={styles.circle}>
+        <Image source={{ uri: item.ImageURL }} style={styles.selectedImage} />
+      </View>
+
+      <View>
+        <View style={{ flexDirection: 'row', width: wp(49) }}>
+          {console.log('item:', item)}
+          {console.log('studentName:', item.studentName)}
+          <Text style={styles.text2}>{item.studentName}</Text>
+          {item.unread==true? (
+                <Text style={{ color: 'red', fontWeight: '600' ,marginTop:hp(10) ,marginLeft:40}}>New Messages</Text>
+              )
+              :(  null
+              )
+              }
+        </View>
+      </View>
+
+      <TouchableOpacity onPress={() =>handleSendMessage (item.studentId, item.studentName,item.ImageURL)}>
+        <Ionicons name="chatbox-outline" size={30} style={{ marginTop: 35, marginLeft: 22 }} color={themeColors.bg2} />
+      </TouchableOpacity>
+    </View>
+  </View>
+))}
+
       </View>
     );
   };
 
 
   return (
-    <ScrollView style={{marginBottom:hp(10)}}>
+    <ScrollView style={{marginBottom:hp(8)}} >
        <Text
      style={{
       color:'white',
@@ -167,6 +169,23 @@ const TeacherChat = ({navigation}) => {
      {!searchResultFound && (
         <Text style={styles.noRecordText}>𝙎𝙤𝙧𝙧𝙮, 𝙉𝙤 𝙍𝙚𝙘𝙤𝙧𝙙 𝙁𝙤𝙪𝙣𝙙</Text>
       )}
+
+<TouchableOpacity
+style={{
+  marginTop:hp(53),
+  marginLeft:wp(85),
+  
+    }}
+
+onPress={() =>{
+
+navigation.navigate('AllStudents');
+}
+
+}>
+  
+  <FontAwesome name="comment" size={37} color="#191D88" />
+</TouchableOpacity>
 
      
     </ScrollView>

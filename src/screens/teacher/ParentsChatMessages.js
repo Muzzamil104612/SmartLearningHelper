@@ -8,20 +8,19 @@ import { Text } from 'react-native';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import StoreCount from '../components/storeCount';
 
-const TeacherChatMessages = ({ route }) => {
+const ParentsChatMessages = ({ route }) => {
   const teacher = useSelector(state => state.value.TeacherData);
   const [messages, setMessages] = useState([]);
-  const { studentId,studentUsername,studentImageURL } = route.params;
-  let counter=0;
-  useEffect(() => {
-    const teacherDocId = teacher.userID;
-    const studentDocId = studentId;
-    console.log(studentUsername);
+  const { parentId, parentUsername,parentImageURL } = route.params;
+  
 
-    const docid = teacher.userID + studentDocId;
+  useEffect(() => {
+    
+
+    const docid = teacher.userID + parentId;
 
     const messageRef = firestore()
-      .collection('TSChats')
+      .collection('PTChats')
       .doc(docid)
       .collection('messages')
       .orderBy('createdAt', 'desc');
@@ -53,7 +52,7 @@ const TeacherChatMessages = ({ route }) => {
     return () => {
       unSubscribe();
     };
-  }, [studentId, teacher.userID]);
+  }, [parentId, teacher.userID]);
 
   const onSend = async (messageArray) => {
     const msg = messageArray[0];
@@ -61,100 +60,97 @@ const TeacherChatMessages = ({ route }) => {
       ...msg,
       sentByid: teacher.userID,
       sentByusername: teacher.name,
-      sentToid: studentId,
-      sentTousername: studentUsername,
+      sentToid: parentId,
+      sentTousername: parentUsername,
       createdAt: new Date(),
 
 
     };
     setMessages(previousMessages => GiftedChat.append(previousMessages, mymsg));
-    const teacherDocId = teacher.userID;
-    const studentDocId = studentId;
+   
 
 
-    const docid = teacher.userID + studentDocId;
+    const docid = teacher.userID + parentId;
 
 
     await firestore()
-      .collection('TSChats')
+      .collection('PTChats')
       .doc(docid)
       .collection('messages')
       .add({ ...mymsg, createdAt: firestore.FieldValue.serverTimestamp() });
 
-      const teacherChatSnapshot = await firestore()
-      .collection('TeacherStudentChat')
-      .where('teacherId', '==', teacher.userID)
-      .get();
-    
-    if (teacherChatSnapshot.size == 0) {
-      await firestore()
-        .collection('TeacherStudentChat')
+
+    const teacherChatSnapshot = await firestore().collection('TeachersChat').where('teacherId', '==', teacher.userID).get();
+
+    if (teacherChatSnapshot.size==0) {
+      firestore()
+        .collection('TeachersChat')
         .add({
           teacherId: teacher.userID,
           teacherName: teacher.name,
           ImageURL: teacher.ImageURL,
-          unread: true,
+          unread:true,
           createdAt: firestore.FieldValue.serverTimestamp(),
+
         });
-    
-      console.log("Data added to teacher chats");
-    } else {
+
+        console.log("data added to teacher chats");
+
+    }
+    else {
       // If the teacherId already exists, update the existing record
       const docId = teacherChatSnapshot.docs[0].id;
     
-      if (docId) {
-        await firestore()
-          .collection('TeacherStudentChat')
-          .doc(docId)
-          .update({
-            unread:true,
-            createdAt: firestore.FieldValue.serverTimestamp(),
-           
-          });
-    
-        console.log("Data updated in TeachersChat");
-      } else {
-        console.error("Snapshot is empty or document ID is undefined");
-      }
-    }
-    
-    const studentChatSnapshot = await firestore()
-      .collection('StudentsChat')
-      .where('studentId', '==', studentId)
-      .get();
-    
-    if (studentChatSnapshot.size == 0) {
       await firestore()
-        .collection('StudentsChat')
-        .add({
-          studentId: studentId,
-          studentName: studentUsername,
-          ImageURL: studentImageURL,
-          unread: false,
+        .collection('TeachersChat')
+        .doc(docId)
+        .update({
+            unread:true,
           createdAt: firestore.FieldValue.serverTimestamp(),
+       
         });
     
-      console.log("Data added to students chats");
-    } else {
-      // If the studentId already exists, update the existing record
-      const docId = studentChatSnapshot.docs[0].id;
+      console.log("Data updated in TeachersChat");
+    }
+
+
     
-      if (docId) {
-        await firestore()
-          .collection('StudentsChat')
-          .doc(docId)
-          .update({
-            unread: false,
-            createdAt: firestore.FieldValue.serverTimestamp(),
-       
-          });
+    const parentChatSnapshot =await firestore().collection('ParentsChat').where('parentId', '==', parentId).get();
+
+    if (parentChatSnapshot.size==0) {
+      firestore()
+        .collection('ParentsChat')
+        .add({
+          parentId: parentId,
+          parentName: parentUsername,
+          ImageURL: parentImageURL,
+          unread:false,
+          createdAt: firestore.FieldValue.serverTimestamp(),
+
+
+        });
+
+        console.log("data added to parents chats");
+
+    }
+    else {
+      // If the teacherId already exists, update the existing record
+      const docId = parentChatSnapshot.docs[0].id;
     
-        console.log("Data updated in StudentsChat");
-      } else {
-        console.error("Snapshot is empty or document ID is undefined");
-      }
+      await firestore()
+        .collection('ParentsChat')
+        .doc(docId)
+        .update({
+            unread:false,
+          createdAt: firestore.FieldValue.serverTimestamp(),
+         
+
+        });
+    
+      console.log("Data updated in ParentsChat");
     }
     
+
   };
 
   return (
@@ -182,7 +178,7 @@ const TeacherChatMessages = ({ route }) => {
     elevation: 8,
   }}
 >
-  Chatting with {studentUsername} 
+  Chatting with {parentUsername} 
 </Text>
 
       <GiftedChat
@@ -234,4 +230,4 @@ const TeacherChatMessages = ({ route }) => {
   );
 };
 
-export default TeacherChatMessages;
+export default ParentsChatMessages;
