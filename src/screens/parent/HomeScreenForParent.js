@@ -14,6 +14,11 @@ import ParentProfile from './ParentProfile';
 import ParentSearch from './ParentSearch';
 import ParentSetting from './ParentSetting';
 import ParentChat from './ParentChat';
+import firestore from '@react-native-firebase/firestore';
+import { themeColors } from '../../theme';
+
+
+
 const Tab = createBottomTabNavigator();
 const styles = StyleSheet.create({
   image: {height: hp(3.5), width: hp(4.1),},
@@ -27,6 +32,26 @@ const styles = StyleSheet.create({
   });
 
 const HomeScreenForParent=()=> {
+const [readval,setReadVal]=useState('');
+
+useEffect(() => {
+  const unsubscribe = firestore()
+    .collection('TeachersChat')
+    .onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'added' || change.type === 'modified') {
+          const newData = change.doc.data();
+          const isUnread = newData.unread;
+
+          setReadVal(isUnread);
+          console.log(isUnread ? 'true' : 'false');
+        }
+      });
+    });
+
+  return () => unsubscribe();
+}, []); 
+
 
 
   return (
@@ -129,25 +154,54 @@ const HomeScreenForParent=()=> {
         }}
       />
       
+
+
+      {
+        readval===true?(
+          <Tab.Screen
+          name="ParentChat"
+          component={ParentChat}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="chatbubble-outline" size={25}    style={styles.image} color={'red'}
+              />
+            ),
+            tabBarLabel: ({ focused }) => (
+              <Text style={[styles.label, {  color: focused ? '#F4BC1C' :'#191D88'}]}>
+                CHAT
+              </Text>
+            ),
+          }}
+        />
+       
+        ):(
+
+          <Tab.Screen
+          name="ParentChat"
+          component={ParentChat}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="chatbox-outline" size={25}    style={styles.image} color={color}
+              />
+    
+            ),
+            tabBarLabel: ({ focused }) => (
+              <Text style={[styles.label, {  color: focused ? '#F4BC1C' :'#191D88'}]}>
+                CHAT
+              </Text>
+            ),
+          }}
+        />
         
-  <Tab.Screen
-        name="ParentChat"
-        component={ParentChat}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbox-outline" size={25}    style={styles.image} color={color}
-            />
-  
-          ),
-          tabBarLabel: ({ focused }) => (
-            <Text style={[styles.label, {  color: focused ? '#F4BC1C' :'#191D88'}]}>
-              CHAT
-            </Text>
-          ),
-        }}
-      />
-      
+
+
+
+        )
+      }
+        
+
     
       
          

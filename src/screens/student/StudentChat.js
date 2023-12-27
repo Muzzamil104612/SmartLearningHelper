@@ -17,6 +17,40 @@ const StudentChat = ({navigation}) => {
 
 
 
+  useEffect(() => {
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      
+      console.log('Screen focused');
+      setSearchQuery(''); 
+    });
+
+    const unsubscribeBlur = navigation.addListener('blur', () => {
+     
+      console.log('Screen blurred');
+      firestore()
+      .collection('TeacherStudentChat')
+      .orderBy('createdAt','desc')
+      .get()
+      .then((querySnapshot) => {
+        const data = [];
+        querySnapshot.forEach((doc) => {
+          data.push({ id: doc.id, ...doc.data() });
+        });
+        setFilteredData(data);
+      })
+      .catch((error) => {
+        console.error('Error fetching data: ', error);
+      });
+     
+    });
+
+    return () => {
+      unsubscribeFocus();
+      unsubscribeBlur();
+    };
+  }, [navigation]);
+
+
    useEffect(() => {
     if (searchQuery === '') {
       firestore()
@@ -91,13 +125,31 @@ const StudentChat = ({navigation}) => {
 
 
   
-  const handleSendMessage = (teacherId,teacherUsername,teacherImageURL) => {
+  const handleSendMessage = async(teacherId,teacherUsername,teacherImageURL) => {
+    try {
+      const TeacherChatSnapshot = await firestore().collection('TeacherStudentChat').where('teacherId', '==',teacherId).get();
+    
+        const docId = TeacherChatSnapshot.docs[0].id;
+    
+        await firestore().collection('TeacherStudentChat').doc(docId).update({
+          unread: false,
+         
+        });
+    
+        console.log("Data updated in TeacherStudentChat");
+      
+    } catch (error) {
+      console.error("Error fetching TeacherChatSnapshot:", error);
+    }
+    
+
         navigation.navigate('ChatMessages', {
           teacherId, 
           teacherUsername,
           teacherImageURL
         
         });
+
       
     };
   
@@ -189,25 +241,25 @@ const StudentChat = ({navigation}) => {
         <Text style={styles.noRecordText}>𝙎𝙤𝙧𝙧𝙮, 𝙉𝙤 𝙍𝙚𝙘𝙤𝙧𝙙 𝙁𝙤𝙪𝙣𝙙</Text>
       )}
 
-      
+
 <TouchableOpacity
 style={{
-  marginTop:hp(25),
-  marginLeft:wp(85),
-  
-    }}
-
+  marginTop:hp(10),
+  marginLeft:wp(-2),
+  backgroundColor:themeColors.bg2,
+  alignSelf:'center',
+  padding:9,
+  borderRadius:9
+      }}
 onPress={() =>{
-
 navigation.navigate('AllSTeachers');
 }
 
 }>
-  
-  <FontAwesome name="comment" size={37} color="#191D88" />
+  <Text style={{color:'#191D88' ,marginRight:7 }}> All Teachers 
+<Text>   </Text>
+  <FontAwesome name="comment" size={20} color="#191D88" /></Text>
 </TouchableOpacity>
-
-
      
     </ScrollView>
   );

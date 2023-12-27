@@ -14,6 +14,44 @@ const TeacherChat = ({navigation}) => {
   const [filteredData, setFilteredData] = useState([]);
 
 
+  
+  useEffect(() => {
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      
+      console.log('Screen focused');
+      setSearchQuery(''); 
+    });
+
+    const unsubscribeBlur = navigation.addListener('blur', () => {
+      if (searchQuery === '') {
+        firestore()
+          .collection('StudentsChat')
+          .orderBy('createdAt','desc')
+          .get()
+          .then((querySnapshot) => {
+            const data = [];
+            querySnapshot.forEach((doc) => {
+              data.push({ id: doc.id, ...doc.data() });
+            });
+            console.log('Fetched data:', data); // Log the fetched data
+            setFilteredData(data);
+          })
+          .catch((error) => {
+            console.error('Error fetching data: ', error);
+          });
+      }
+      
+    });
+
+    return () => {
+      unsubscribeFocus();
+      unsubscribeBlur();
+    };
+  }, [navigation]);
+
+
+
+
   useEffect(() => {
     if (searchQuery === '') {
       firestore()
@@ -72,7 +110,27 @@ const TeacherChat = ({navigation}) => {
 
 
   
-  const handleSendMessage = (studentId,studentUsername,studentImageURL) => {
+  const handleSendMessage = async (studentId,studentUsername,studentImageURL) => {
+
+
+    try {
+      const TeacherChatSnapshot = await firestore().collection('StudentsChat').where('studentId', '==',studentId).get();
+    
+        const docId = TeacherChatSnapshot.docs[0].id;
+    
+        await firestore().collection('StudentsChat').doc(docId).update({
+          unread: false,
+         
+        });
+    
+        console.log("Data updated in StudentsChat");
+      
+    } catch (error) {
+      console.error("Error fetching StudentsChat", error);
+    }
+
+
+
         navigation.navigate('TeacherChatMessages', {
           studentId, 
           studentUsername
@@ -172,19 +230,21 @@ const TeacherChat = ({navigation}) => {
 
 <TouchableOpacity
 style={{
-  marginTop:hp(53),
-  marginLeft:wp(85),
-  
-    }}
-
+  marginTop:hp(10),
+  marginLeft:wp(-2),
+  backgroundColor:themeColors.bg2,
+  alignSelf:'center',
+  padding:9,
+  borderRadius:9
+      }}
 onPress={() =>{
-
 navigation.navigate('AllStudents');
 }
 
 }>
-  
-  <FontAwesome name="comment" size={37} color="#191D88" />
+  <Text style={{color:'#191D88' ,marginRight:7 }}> All Students 
+<Text>   </Text>
+  <FontAwesome name="comment" size={20} color="#191D88" /></Text>
 </TouchableOpacity>
 
      

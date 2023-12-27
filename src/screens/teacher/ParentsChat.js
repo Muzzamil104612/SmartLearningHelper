@@ -13,6 +13,62 @@ const ParentsChat = ({navigation}) => {
   const [selectedFilter, setSelectedFilter] = useState('');
   const [filteredData, setFilteredData] = useState([]);
 
+
+
+  
+  useEffect(() => {
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      
+      console.log('Screen focused');
+      setSearchQuery(''); 
+    });
+
+    const unsubscribeBlur = navigation.addListener('blur', () => {
+     
+      const fetchData = async () => {
+      try {
+        let querySnapshot;
+  
+        if (searchQuery === '') {
+          // Fetch all parents if search query is empty
+          querySnapshot = await firestore()
+            .collection('ParentsChat')
+            .orderBy('createdAt', 'desc')
+            .get();
+        } else {
+          // Search for parents by name based on searchQuery
+          querySnapshot = await firestore()
+            .collection('ParentsChat')
+            .where('parentName', '>=', searchQuery || '')
+            .where('parentName', '<=', searchQuery ? searchQuery + '\uf8ff' : '\uf8ff')
+            .get();
+        }
+  
+        const data = [];
+  
+        querySnapshot.forEach((doc) => {
+          data.push({ id: doc.id, ...doc.data() });
+        });
+  
+        setFilteredData(data);
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+    };
+  
+    fetchData(); 
+     
+    });
+
+    return () => {
+      unsubscribeFocus();
+      unsubscribeBlur();
+    };
+  }, [navigation]);
+
+
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,7 +140,27 @@ const ParentsChat = ({navigation}) => {
   
 
   
-  const handleSendMessage = (parentId,parentUsername,parentImageURL) => {
+  const handleSendMessage = async(parentId,parentUsername,parentImageURL) => {
+
+
+    try {
+      const TeacherChatSnapshot = await firestore().collection('ParentsChat').where('parentId', '==',parentId).get();
+    
+        const docId = TeacherChatSnapshot.docs[0].id;
+    
+        await firestore().collection('ParentsChat').doc(docId).update({
+          unread: false,
+         
+        });
+    
+        console.log("Data updated in ParentsChat");
+      
+    } catch (error) {
+      console.error("Error fetching ParentsChat:", error);
+    }
+
+
+
         navigation.navigate('ParentsChatMessages', {
             parentId, 
           parentUsername,
@@ -186,19 +262,21 @@ const ParentsChat = ({navigation}) => {
 
 <TouchableOpacity
 style={{
-  marginTop:hp(53),
-  marginLeft:wp(85),
-  
-    }}
-
+  marginTop:hp(10),
+  marginLeft:wp(-2),
+  backgroundColor:themeColors.bg2,
+  alignSelf:'center',
+  padding:9,
+  borderRadius:9
+      }}
 onPress={() =>{
-
 navigation.navigate('AllParents');
 }
 
 }>
-  
-  <FontAwesome name="comment" size={37} color="#191D88" />
+  <Text style={{color:'#191D88' ,marginRight:7 }}> All Parents 
+<Text>   </Text>
+  <FontAwesome name="comment" size={20} color="#191D88" /></Text>
 </TouchableOpacity>
 
      

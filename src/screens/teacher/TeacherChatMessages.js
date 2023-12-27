@@ -81,13 +81,15 @@ const TeacherChatMessages = ({ route }) => {
       .collection('messages')
       .add({ ...mymsg, createdAt: firestore.FieldValue.serverTimestamp() });
 
+
       const teacherChatSnapshot = await firestore()
       .collection('TeacherStudentChat')
       .where('teacherId', '==', teacher.userID)
       .get();
-    
-    if (teacherChatSnapshot.size == 0) {
-      await firestore()
+  
+    if (teacherChatSnapshot.size === 0) {
+      // If no document exists, create a new one
+      firestore()
         .collection('TeacherStudentChat')
         .add({
           teacherId: teacher.userID,
@@ -96,28 +98,24 @@ const TeacherChatMessages = ({ route }) => {
           unread: true,
           createdAt: firestore.FieldValue.serverTimestamp(),
         });
-    
-      console.log("Data added to teacher chats");
+  
+      console.log("Data added to TeacherStudentChat");
+  
     } else {
-      // If the teacherId already exists, update the existing record
+      // If a document exists, update it
       const docId = teacherChatSnapshot.docs[0].id;
-    
-      if (docId) {
-        await firestore()
-          .collection('TeacherStudentChat')
-          .doc(docId)
-          .update({
-            unread:true,
-            createdAt: firestore.FieldValue.serverTimestamp(),
-           
-          });
-    
-        console.log("Data updated in TeachersChat");
-      } else {
-        console.error("Snapshot is empty or document ID is undefined");
-      }
+  
+      await firestore()
+        .collection('TeacherStudentChat')
+        .doc(docId)
+        .update({
+          unread: true,
+          createdAt: firestore.FieldValue.serverTimestamp(),
+        });
+  
+      console.log("Data updated in TeacherStudentChat");
     }
-    
+  
     const studentChatSnapshot = await firestore()
       .collection('StudentsChat')
       .where('studentId', '==', studentId)

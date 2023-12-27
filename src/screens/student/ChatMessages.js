@@ -83,7 +83,6 @@ const ChatMessages = ({ route }) => {
       .collection('messages')
       .add({ ...mymsg, createdAt: firestore.FieldValue.serverTimestamp() });
 
-    StoreCount(data.userID, counter + 1);
 
     
 
@@ -131,10 +130,9 @@ const ChatMessages = ({ route }) => {
 
 
 
-// ...
 
 try {
-  const TeacherChatSnapshot = await firestore().collection('TeacherStudentChat').where('teacherId', '==', data.userID).get();
+  const TeacherChatSnapshot = await firestore().collection('TeacherStudentChat').where('teacherId', '==',teacherId).get();
 
   if (TeacherChatSnapshot.size == 0) {
     await firestore().collection('TeacherStudentChat').add({
@@ -161,7 +159,7 @@ try {
   console.error("Error fetching TeacherChatSnapshot:", error);
 }
 
-// ...
+
 
 
   };

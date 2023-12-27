@@ -1656,10 +1656,10 @@
   dependencies:
     invariant "^2.2.4"
 
-"@react-native-firebase/app@^18.2.0", "@react-native-firebase/app@18.6.1":
-  version "18.6.1"
-  resolved "https://registry.npmjs.org/@react-native-firebase/app/-/app-18.6.1.tgz"
-  integrity sha512-lqINQLLTCmBSeln/cSPfvuJNQuwsPY9n6QyxSRRCTjyZdEPI3EY2df7isOCp8BwuxqYmkR9YhTNw2yFI72th+w==
+"@react-native-firebase/app@^18.7.3", "@react-native-firebase/app@18.6.1", "@react-native-firebase/app@18.7.3":
+  version "18.7.3"
+  resolved "https://registry.npmjs.org/@react-native-firebase/app/-/app-18.7.3.tgz"
+  integrity sha512-KlUuLSCYrBMHXE2Evye1fzrqunUjFEPihxcpzuUyJ5yQyAuCNws7VGdEPIaXoKz1esof0uv8wMSxD+G6W+Vi8Q==
   dependencies:
     opencollective-postinstall "^2.0.3"
     superstruct "^0.6.2"
@@ -1676,10 +1676,10 @@
   resolved "https://registry.npmjs.org/@react-native-firebase/database/-/database-18.6.1.tgz"
   integrity sha512-jkEqf0s3RzDZju7jbtTEcoB9WvXMzEf/eaOL3sRhbdDb89nFZVfm1jPgNYiZf+QZk0kvk9BPAwIa7BeXrGab5Q==
 
-"@react-native-firebase/firestore@^18.3.0":
-  version "18.6.1"
-  resolved "https://registry.npmjs.org/@react-native-firebase/firestore/-/firestore-18.6.1.tgz"
-  integrity sha512-D3jGxNUMJg2D4CF7bdsXGfBAvs1F1XPOJMSqWJNFZnS/3voxiNclqrm4yxIn9ptFAsJHmXqMUHDA0vASxhZDWA==
+"@react-native-firebase/firestore@^18.7.3":
+  version "18.7.3"
+  resolved "https://registry.npmjs.org/@react-native-firebase/firestore/-/firestore-18.7.3.tgz"
+  integrity sha512-ts5clqDnpXw2nnX7W9H9+AZbh0jyXNIjnhHfTnMpstpCDQ3DCld/d8Ta2n/jzLUGRhtkCd0iALXmvVQBNNOTSQ==
 
 "@react-native-firebase/messaging@^18.2.0":
   version "18.6.1"
