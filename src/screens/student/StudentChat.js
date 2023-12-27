@@ -126,6 +126,16 @@ const StudentChat = ({navigation}) => {
 
   
   const handleSendMessage = async(teacherId,teacherUsername,teacherImageURL) => {
+
+
+    
+    navigation.navigate('ChatMessages', {
+      teacherId, 
+      teacherUsername,
+      teacherImageURL
+    
+    });
+
     try {
       const TeacherChatSnapshot = await firestore().collection('TeacherStudentChat').where('teacherId', '==',teacherId).get();
     
@@ -142,13 +152,6 @@ const StudentChat = ({navigation}) => {
       console.error("Error fetching TeacherChatSnapshot:", error);
     }
     
-
-        navigation.navigate('ChatMessages', {
-          teacherId, 
-          teacherUsername,
-          teacherImageURL
-        
-        });
 
       
     };

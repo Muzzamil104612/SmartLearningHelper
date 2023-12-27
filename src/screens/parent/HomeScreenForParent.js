@@ -32,22 +32,28 @@ const styles = StyleSheet.create({
   });
 
 const HomeScreenForParent=()=> {
-const [readval,setReadVal]=useState('');
+const [readval,setReadVal]=useState(false);
 
 useEffect(() => {
   const unsubscribe = firestore()
-    .collection('TeachersChat')
-    .onSnapshot((snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === 'added' || change.type === 'modified') {
-          const newData = change.doc.data();
-          const isUnread = newData.unread;
+  .collection('TeachersChat')
+  .onSnapshot((snapshot) => {
+    let hasUnread = false;
 
-          setReadVal(isUnread);
-          console.log(isUnread ? 'true' : 'false');
-        }
-      });
+    snapshot.forEach((doc) => {
+      let newData = doc.data();
+      let isUnread = newData.unread;
+
+      if (isUnread) {
+        hasUnread = true;
+        return;
+      }
+
     });
+
+    setReadVal(hasUnread);
+    console.log(hasUnread + " unread value");
+  });
 
   return () => unsubscribe();
 }, []); 
@@ -157,18 +163,18 @@ useEffect(() => {
 
 
       {
-        readval===true?(
+        readval==true?(
           <Tab.Screen
           name="ParentChat"
           component={ParentChat}
           options={{
             headerShown: false,
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="chatbubble-outline" size={25}    style={styles.image} color={'red'}
+              <Ionicons name="chatbox-outline" size={25}    style={styles.image} color={'red'}
               />
             ),
             tabBarLabel: ({ focused }) => (
-              <Text style={[styles.label, {  color: focused ? '#F4BC1C' :'#191D88'}]}>
+              <Text style={[styles.label, {  color: focused ? 'red' :'red'}]}>
                 CHAT
               </Text>
             ),

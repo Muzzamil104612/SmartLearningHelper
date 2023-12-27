@@ -112,6 +112,12 @@ const TeacherChat = ({navigation}) => {
   
   const handleSendMessage = async (studentId,studentUsername,studentImageURL) => {
 
+    navigation.navigate('TeacherChatMessages', {
+      studentId, 
+      studentUsername
+      ,studentImageURL
+    
+    });
 
     try {
       const TeacherChatSnapshot = await firestore().collection('StudentsChat').where('studentId', '==',studentId).get();
@@ -131,12 +137,6 @@ const TeacherChat = ({navigation}) => {
 
 
 
-        navigation.navigate('TeacherChatMessages', {
-          studentId, 
-          studentUsername
-          ,studentImageURL
-        
-        });
       
     };
   

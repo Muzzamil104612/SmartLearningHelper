@@ -15,6 +15,8 @@ import StudentProfile from './StudentProfile';
 import StudentSetting from './StudentSetting';
 import StudentHomePage from './StudentHomePage';
 import StudentSearch from './StudentSearch';
+import firestore from '@react-native-firebase/firestore';
+
 
 const Tab = createBottomTabNavigator();
 const styles = StyleSheet.create({
@@ -29,6 +31,33 @@ const styles = StyleSheet.create({
   });
 
 const HomeScreenForStudent=()=> {
+
+  const [readval,setReadVal]=useState(false);
+
+  useEffect(() => {
+    const unsubscribe = firestore()
+    .collection('TeacherStudentChat')
+    .onSnapshot((snapshot) => {
+      let hasUnread = false;
+  
+      snapshot.forEach((doc) => {
+        let newData = doc.data();
+        let isUnread = newData.unread;
+  
+        if (isUnread) {
+          hasUnread = true;
+          return;
+        }
+  
+      });
+  
+      setReadVal(hasUnread);
+      console.log(hasUnread + " unread value");
+    });
+  
+    return () => unsubscribe();
+  }, []); 
+
 
 
   return (
@@ -133,25 +162,53 @@ const HomeScreenForStudent=()=> {
         }}
       />
       
+
+
+
+
+      {
+        readval==true?(
+          <Tab.Screen
+          name="StudentChat"
+          component={StudentChat}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="chatbox-outline" size={25}    style={styles.image} color={'red'}
+              />
+    
+            ),
+            tabBarLabel: ({ focused }) => (
+              <Text style={[styles.label, {  color: focused ? 'red' :'red'}]}>
+                CHAT
+              </Text>
+            ),
+          }}
+        />
         
-  <Tab.Screen
-        name="StudentChat"
-        component={StudentChat}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbox-outline" size={25}    style={styles.image} color={color}
-            />
-  
-          ),
-          tabBarLabel: ({ focused }) => (
-            <Text style={[styles.label, {  color: focused ? '#F4BC1C' :'#191D88'}]}>
-              CHAT
-            </Text>
-          ),
-        }}
-      />
-      
+        ):(
+          <Tab.Screen
+          name="StudentChat"
+          component={StudentChat}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="chatbox-outline" size={25}    style={styles.image} color={color}
+              />
+    
+            ),
+            tabBarLabel: ({ focused }) => (
+              <Text style={[styles.label, {  color: focused ? '#F4BC1C' :'#191D88'}]}>
+                CHAT
+              </Text>
+            ),
+          }}
+        />
+        
+        )
+      }
+        
+
     
       
          

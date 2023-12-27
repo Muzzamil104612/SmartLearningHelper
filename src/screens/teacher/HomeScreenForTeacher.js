@@ -15,6 +15,10 @@ import TeacherSetting from './TeacherSetting';
 import TeacherHomePage from './TeacherHomePage';
 import TeacherSearch from './TeacherSearch';
 import ChatOptions from './ChatOptions';
+
+import firestore from '@react-native-firebase/firestore';
+
+
 const Tab = createBottomTabNavigator();
 const styles = StyleSheet.create({
   image: {height: hp(3.5), width: hp(4.1),},
@@ -28,6 +32,56 @@ const styles = StyleSheet.create({
   });
 
 const HomeScreenForTeacher=()=> {
+
+  const [readval, setReadVal] = useState(false);
+
+  useEffect(() => {
+    const unsubscribeParents = firestore().collection('ParentsChat').onSnapshot((snapshot) => {
+      let hasUnread = false;
+  
+      snapshot.forEach((doc) => {
+        let newData = doc.data();
+        let isUnread = newData.unread;
+  
+        if (isUnread) {
+          hasUnread = true;
+          unsubscribeStudents();
+          setReadVal(hasUnread);
+
+          return;
+        }
+      });
+      setReadVal(hasUnread);
+      console.log(hasUnread + " unread value");
+    });
+  
+    const unsubscribeStudents = firestore().collection('StudentsChat').onSnapshot((snapshot) => {
+      let hasUnread = false;
+  
+      snapshot.forEach((doc) => {
+        let newData = doc.data();
+        let isUnread = newData.unread;
+  
+        if (isUnread) {
+          hasUnread = true;
+          unsubscribeParents();
+          setReadVal(hasUnread);
+
+          return;
+        }
+      });
+      setReadVal(hasUnread);
+      console.log(hasUnread + " unread value");
+    });
+  
+    // Return a cleanup function that unsubscribes both listeners
+    return () => {
+      unsubscribeParents();
+      unsubscribeStudents();
+    };
+  }, []);
+  
+
 
 
   return (
@@ -133,25 +187,53 @@ const HomeScreenForTeacher=()=> {
       />
       
         
-  <Tab.Screen
-        name="ChatOptions"
-        component={ChatOptions}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbox-outline" size={25}    style={styles.image} color={color}
-            />
+
+{
+  readval==true?(
+
+    <Tab.Screen
+    name="ChatOptions"
+    component={ChatOptions}
+    options={{
+      headerShown: false,
+      tabBarIcon: ({ color, size }) => (
+        <Ionicons name="chatbox-outline" size={25}    style={styles.image} color={'red'}
+        />
+
+      ),
+      tabBarLabel: ({ focused }) => (
+        <Text style={[styles.label, {  color: focused ? 'red' :'red'}]}>
+          CHAT
+        </Text>
+      ),
+    }}
+  />
   
-          ),
-          tabBarLabel: ({ focused }) => (
-            <Text style={[styles.label, {  color: focused ? '#F4BC1C' :'#191D88'}]}>
-              CHAT
-            </Text>
-          ),
-        }}
-      />
-      
+
+  ):(
     
+  <Tab.Screen
+  name="ChatOptions"
+  component={ChatOptions}
+  options={{
+    headerShown: false,
+    tabBarIcon: ({ color, size }) => (
+      <Ionicons name="chatbox-outline" size={25}    style={styles.image} color={color}
+      />
+
+    ),
+    tabBarLabel: ({ focused }) => (
+      <Text style={[styles.label, {  color: focused ? '#F4BC1C' :'#191D88'}]}>
+        CHAT
+      </Text>
+    ),
+  }}
+/>
+
+
+  )
+}
+
       
          
        <Tab.Screen name="TeacherProfile" component={ TeacherProfile} options={{ headerShown: false,
