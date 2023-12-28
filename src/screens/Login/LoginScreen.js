@@ -11,8 +11,10 @@ import TextInputComponent from '../components/TextInputComponent';
 import * as Animatable from 'react-native-animatable';
 import { useState, useEffect } from 'react';
 import {  parentemail,admindetail ,teacheremail,stdemail} from '../../redux/action';
-
+import ForgotPassword from './ForgotPassword';
 import { useDispatch } from 'react-redux';
+
+
 const LoginScreen = ({ navigation, route }) => {
   // const [role, setRole] = useState(route.params.data);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,21 +34,12 @@ const LoginScreen = ({ navigation, route }) => {
   useEffect(() => {
     const firestoreRef = firestore().collection('Teachers');
     const unsubscribe = firestoreRef.onSnapshot((querySnapshot) => {
-
-
-              
-      if (querySnapshot) {
         const teachers = [];
         querySnapshot.forEach((doc) => {
             teachers.push({ id: doc.id, ...doc.data() });
         });
 
         setTeacherInfo(teachers);
-       
-      }
-
-
-      
 
         
     });
@@ -55,44 +48,32 @@ const LoginScreen = ({ navigation, route }) => {
         unsubscribe();
     };
   }, []);
+
   useEffect(() => {
     const firestoreRef = firestore().collection('Students');
-    const unsubscribe = firestoreRef.onSnapshot((querySnapshot) => {
-      if (querySnapshot) {
-        const Student = [];
-        querySnapshot.forEach((doc) => {
-          Student.push({ id: doc.id, ...doc.data() });
-        });
-  
-        setStdInfo(Student);
+            const unsubscribe = firestoreRef.onSnapshot((querySnapshot) => {
+                const Student = [];
+                querySnapshot.forEach((doc) => {
+                    Student.push({ id: doc.id, ...doc.data() });
+                });
         
-       
-      }
-    });
-  
-    return () => {
-      unsubscribe();
-    };
-  }, []);
-  
-  
+                setStdInfo(Student);
+            });
+            return () => {
+                unsubscribe();
+            };
+        }
+  , []);
   useEffect(() => {
     const firestoreRef = firestore().collection('Admin');
             const unsubscribe = firestoreRef.onSnapshot((querySnapshot) => {
-
-
-              if (querySnapshot) {
                 const Admin = [];
                 querySnapshot.forEach((doc) => {
                     Admin.push({ id: doc.id, ...doc.data() });
                 });
         
                 setAdminInfo(Admin);
-          
-               
-              }
-                
-             
+                console.log(Admin)
             });
             return () => {
                 unsubscribe();
@@ -102,23 +83,13 @@ const LoginScreen = ({ navigation, route }) => {
   useEffect(() => {
     const firestoreRef = firestore().collection('Parents');
             const unsubscribe = firestoreRef.onSnapshot((querySnapshot) => {
-
-
-              
-              if (querySnapshot) {
                 const Parents = [];
                 querySnapshot.forEach((doc) => {
                   Parents.push({ id: doc.id, ...doc.data() });
                 });
         
                 setParentInfo(Parents);
-          
-               
-              }
-
-              
-              
-              
+                console.log(Parents)
             });
             return () => {
                 unsubscribe();
@@ -374,8 +345,9 @@ setMyObject1({ emailError: '', passwordError: '' }); // Clear any error messages
                    />
                 {myObject1.passwordError !== '' && <Text style={{ height: hp(3), color: 'red', marginLeft: wp(2), }}>{myObject1.passwordError}</Text>}
                 {myObject1.passwordError == '' && (
-                  <TouchableOpacity onPress={() => navigation.navigate('')}>
-                    <Text style={styles.forgetpass}>Forget Password?</Text>
+                  <TouchableOpacity onPress={() => {navigation.navigate('ForgotPassword', { role });
+                }}>
+                    <Text style={styles.forgetpass}>Forgot Password?</Text>
                   </TouchableOpacity>
                 )}
                 <View style={{ alignItems: 'center', marginTop: hp(0.9) }}>

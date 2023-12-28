@@ -42,6 +42,7 @@ import ParentsChatMessages from '../screens/teacher/ParentsChatMessages';
 import AllStudents from '../screens/teacher/AllStudents';
 import AllParents from '../screens/teacher/AllParents';
 import AllSTeachers from '../screens/student/AllSTeachers';
+import ForgotPassword from '../screens/Login/ForgotPassword';
 
 const Stack = createNativeStackNavigator();
 
@@ -90,6 +91,7 @@ export default function AppNavigation() {
         <Stack.Screen name="AllStudents" options={{headerShown: false}} component={AllStudents} />
         <Stack.Screen name="AllParents" options={{headerShown: false}} component={AllParents} />
         <Stack.Screen name="AllSTeachers" options={{headerShown: false}} component={AllSTeachers} />
+        <Stack.Screen name="ForgotPassword" options={{headerShown: false}} component={ForgotPassword} />
 
       </Stack.Navigator>
       </Provider>
