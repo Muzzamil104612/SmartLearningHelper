@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, TextInput, StyleSheet, Alert,ScrollView ,ActivityIndicator} from 'react-native'
+import { View, Text, TouchableOpacity, Image, TextInput, StyleSheet, Alert, ScrollView, ActivityIndicator } from 'react-native'
 import React from 'react'
 import { themeColors } from '../../theme'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -12,49 +12,51 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-crop-picker';
 import * as Animatable from 'react-native-animatable';
 import { useState, useEffect } from 'react';
-import { useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 const AdminProfile = ({ navigation }) => {
-  const data= useSelector(state =>state.value.AdminData);
+  const data = useSelector(state => state.value.AdminData);
+
   const [myObject, setMyObject] = useState({
-    userID:'', name: '', email: '', phone: '',experience: '', majorSubject: '', qualification: '',
-     password: '', confirmpassword: '',ImageURL: '',documentURL:'',
-   });
-
-
-useEffect(() => {
-  setMyObject(data);
-
-   
-}, []);
-
-
-  const selectImage = () => {
-    ImagePicker.openPicker({
-        mediaType: 'photo',
-        compressImageMaxWidth: 500,
-        compressImageMaxHeight: 500,
-        compressImageQuality: 0.7,
-        cropping: true,
-    })
-        .then((response) => {
-            if (!response.didCancel) {
-                setMyObject({ ...myObject, ImageURL: response.path });
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-};
+    userID: '', name: '', email: '', phone: '', experience: '', majorSubject: '', qualification: '',
+    password: '', confirmpassword: '', ImageURL: '', documentURL: '',
+  });
 
 
 
+  useEffect(() => {
+    
+    setMyObject(data);
+    fetchDataFromFirestore();
+    const focusListener = navigation.addListener('focus', () => {
+      
+      fetchDataFromFirestore();
+    });
+    
+    return () => {
+      focusListener();
+    };
+  }, [data, navigation]);
 
 
-  
+  const fetchDataFromFirestore = async () => {
+    try {
+      const docRef = await firestore().collection('Admin').doc(myObject.userID).get();
+      const docData = docRef.data();
+      if (docData) {
+        setMyObject(docData);
+      }
+      console.log('data getted is',myObject.name);
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+    }
+  };
+
+
+
   return (
     <ScrollView style={{ backgroundColor: 'white', flex: 1.5 }}>
-      
-              < View >
+
+      < View >
         <SafeAreaView style={styles.container1}>
 
           <View style={styles.upperPart}>
@@ -70,12 +72,12 @@ useEffect(() => {
           <Animatable.View animation="fadeInUpBig" duration={1000} style={styles.imgview}>
             <Text style={{ color: '#F4BC1C', alignSelf: "center", fontSize: 28, fontWeight: "500", marginBottom: hp(1.5) }}>𝙋𝙚𝙧𝙨𝙤𝙣𝙖𝙡 𝙋𝙤𝙧𝙩𝙛𝙤𝙡𝙞𝙤!</Text>
             <View style={styles.circle}>
-            <TouchableOpacity onPress={selectImage}>
-                                {myObject.ImageURL ? (
-                                    <Image source={{ uri: myObject.ImageURL }} style={styles.selectedImage} />
-                                ) : (
-                                  <Icon name="person-add" size={86} color="#F4BC1C" style={styles.person} />
-                                )}
+              <TouchableOpacity onPress={()=>{}}>
+                {myObject.ImageURL ? (
+                  <Image source={{ uri: myObject.ImageURL }} style={styles.selectedImage} />
+                ) : (
+                  <Icon name="person-add" size={86} color="#F4BC1C" style={styles.person} />
+                )}
               </TouchableOpacity>
 
             </View>
@@ -113,8 +115,8 @@ useEffect(() => {
               keyboardType="default"
               editable={false}
             />
-             <TextInputComponent
-            onChangeText={Text => setMyObject({ ...myObject, experience: (Text) })}
+            <TextInputComponent
+              onChangeText={Text => setMyObject({ ...myObject, experience: (Text) })}
               label="Years of Experience"
               placeholder="4"
               value={myObject.experience}
@@ -122,8 +124,8 @@ useEffect(() => {
               keyboardType="numeric"
               editable={false}
             />
-             <TextInputComponent
-            onChangeText={Text => setMyObject({ ...myObject, majorSubject: (Text) })}
+            <TextInputComponent
+              onChangeText={Text => setMyObject({ ...myObject, majorSubject: (Text) })}
               label="Major Subject"
               placeholder="Databases"
               value={myObject.majorSubject}
@@ -131,7 +133,7 @@ useEffect(() => {
               keyboardType="default"
               editable={false}
             />
-             <TextInputComponent
+            <TextInputComponent
               onChangeText={Text => setMyObject({ ...myObject, qualification: (Text) })}
               label="Qualification"
               placeholder="Bachelors of Computer Sciences(or BSCS)"
@@ -161,10 +163,10 @@ useEffect(() => {
               autoCorrect={false}
             />
 
-          
+
           </View>
 
-         
+
         </View>
       </View>
     </ScrollView>
@@ -173,13 +175,13 @@ useEffect(() => {
 
 const styles = StyleSheet.create({
   loadingContainer: {
-    
-      height:hp(100),
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'white', // Add this line to cover the background
-    
-},
+
+    height: hp(100),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white', // Add this line to cover the background
+
+  },
   forgetpass: {
     color: themeColors.bg2,
     marginLeft: 5,
@@ -287,9 +289,9 @@ const styles = StyleSheet.create({
     borderBottomStartRadius: 12,
   },
   container2: {
-    height:hp(103),
+    height: hp(103),
     marginTop: hp(2),
-    marginBottom:hp(1),
+    marginBottom: hp(1),
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     backgroundColor: 'white',

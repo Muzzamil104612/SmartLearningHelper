@@ -43,6 +43,14 @@ import AllStudents from '../screens/teacher/AllStudents';
 import AllParents from '../screens/teacher/AllParents';
 import AllSTeachers from '../screens/student/AllSTeachers';
 import ForgotPassword from '../screens/Login/ForgotPassword';
+import OptionBar from '../screens/components/OptionBar';
+import EditProfile from '../screens/admin/EditProfile';
+import TeachersList from '../screens/admin/TeachersList';
+import TeacherDetail from '../screens/admin/TeacherDetail';
+import StudentsList from '../screens/admin/StudentsList';
+import StudentDetail from '../screens/admin/StudentDetail';
+import ParentsList from '../screens/admin/ParentsList';
+import ParentDetail from '../screens/admin/ParentDetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -92,6 +100,14 @@ export default function AppNavigation() {
         <Stack.Screen name="AllParents" options={{headerShown: false}} component={AllParents} />
         <Stack.Screen name="AllSTeachers" options={{headerShown: false}} component={AllSTeachers} />
         <Stack.Screen name="ForgotPassword" options={{headerShown: false}} component={ForgotPassword} />
+        <Stack.Screen name="OptionBar" options={{headerShown: false}} component={OptionBar} />
+        <Stack.Screen name="EditProfile" options={{headerShown: false}} component={EditProfile} />
+        <Stack.Screen name="TeachersList" options={{headerShown: false}} component={TeachersList} />
+        <Stack.Screen name="TeacherDetail" options={{headerShown: false}} component={TeacherDetail} />
+        <Stack.Screen name="StudentsList" options={{headerShown: false}} component={StudentsList} />
+        <Stack.Screen name="StudentDetail" options={{headerShown: false}} component={StudentDetail} />
+        <Stack.Screen name="ParentsList" options={{headerShown: false}} component={ParentsList} />
+        <Stack.Screen name="ParentDetail" options={{headerShown: false}} component={ParentDetail} />
 
       </Stack.Navigator>
       </Provider>

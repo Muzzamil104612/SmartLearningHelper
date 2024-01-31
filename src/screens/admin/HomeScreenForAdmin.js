@@ -16,13 +16,13 @@ import AdminHomePage from './AdminHomePage';
 import AdminSearch from './AdminSearch';
 const Tab = createBottomTabNavigator();
 const styles = StyleSheet.create({
-    image: {height: hp(3.2), width: hp(3.1),},
+    image: {height: hp(3.5), width: hp(4.1),},
     images: {height: hp(3), width: hp(3),},
     label: {
       fontSize: 10,
       fontWeight: 'bold',
       marginTop: hp(-1.5), 
-      marginBottom:hp(1.7),// Adjust this value as needed for the desired spacing
+      marginBottom:hp(1.7),
     },
   });
 

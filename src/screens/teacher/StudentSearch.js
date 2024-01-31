@@ -133,14 +133,7 @@ const StudentSearchd = ({ route, navigation }) => {
     />
 
 
-<TouchableOpacity onPress={()=>{
-  handleSendMessage(student.userID,student.name,student.ImageURL)
-}}>
 
-  <Text>
-    contact 
-  </Text>
-</TouchableOpacity>
 
 
   

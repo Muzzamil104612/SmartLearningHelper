@@ -15,12 +15,7 @@ const SelectRoleForLogin = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <Animatable.View animation="fadeInDownBig" duration={1000}  >
 
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.arrow}
-        >
-          <ArrowLeftIcon size={20} color="black" />
-        </TouchableOpacity>
+       
 <View style={{justifyContent:'center',alignItems:"center"}}>
         <Text
           style={styles.title}>

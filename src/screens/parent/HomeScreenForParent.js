@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
       fontSize: 10,
       fontWeight: 'bold',
       marginTop: hp(-1.5), 
-      marginBottom:hp(1.7),// Adjust this value as needed for the desired spacing
+      marginBottom:hp(1.7),
     },
   });
 

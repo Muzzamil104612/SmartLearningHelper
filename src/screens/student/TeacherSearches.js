@@ -23,26 +23,6 @@ import auth from '@react-native-firebase/auth';
 const TeacherSearches = ({ route, navigation }) => {
   const { teacher } = route.params;
   
-console.log("teacher....."+teacher.userID);
-
-
-
-
-
- 
-
-  const handleSendMessage = () => {
-  console.log(teacher.name+"------------");
-      navigation.navigate('ChatMessages', {
-        teacherId: teacher.userID, 
-        teacherUsername:teacher.name,
-        teacherImageURL:teacher.ImageURL
-      
-      });
-    
-  };
-
-
  
 
  
@@ -138,18 +118,6 @@ console.log("teacher....."+teacher.userID);
       keyboardType="default"
     />
 
-<TouchableOpacity
-    onPress={()=>handleSendMessage()}
-    style={{
-      backgroundColor: themeColors.bg2,
-      padding: 10,
-      alignSelf: 'center',
-      margin: hp(4),
-      borderRadius: 3,
-    }}
-  >
-    <Text style={{ color: themeColors.bg3 }}>Send Message</Text>
-  </TouchableOpacity>
    
 
 
