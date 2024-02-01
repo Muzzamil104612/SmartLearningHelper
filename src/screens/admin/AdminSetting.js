@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { themeColors } from '../../theme'
+import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import OptionBar from '../components/OptionBar';
 import EditProfile from './EditProfile';
@@ -53,22 +54,26 @@ const AdminSetting = ({ navigation }) => {
   return (
     <View style={styles.container}>
 
+     
       
-      <Image source={require('../../assets/images/logo.jpg')}
-        style={{
-          height: hp(10),
-          width: wp(19),
-          marginLeft:wp(2)
-        }} />
-        <Text style={styles.heading}> {'  '}Settings</Text>
+        
+        <Animatable.View animation="zoomIn" duration={2000}  style={styles.header}>
+       
+        <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+          {/* <Icon name="settings" size={32} color="#191D88" style={styles.set} /> */}
+        <Text style={styles.heading}> {'  '}𝓟𝓻𝓸𝓯𝓲𝓵𝓮 𝓢𝓮𝓽𝓽𝓲𝓷𝓰𝓼</Text>
+        </View>
+         <View style={styles.circle}> 
       {myObject.ImageURL ? (
         <Image source={{ uri: myObject.ImageURL }} style={styles.selectedImage} />
       ) : (
         <Icon name="person-add" size={86} color="#F4BC1C" style={styles.person} />
       )}
-      <Text style={styles.txt}>{myObject.name}</Text>
-      <Text style={styles.txtemail}>{myObject.email}</Text>
-      <View style={{ marginVertical: 10 }}></View>
+      {/* <Text style={styles.txt}>{myObject.name}</Text>
+      <Text style={styles.txtemail}>{myObject.email}</Text> */}
+      </View>
+      </Animatable.View>
+      <View style={{ marginVertical: 50 }}></View>
       <ScrollView style={{}}>
         <OptionBar navigation={navigation} DisplayText='Edit Profile' IconName='user-check'  ></OptionBar>
         <OptionBar navigation={navigation} DisplayText='Teachers Directory' IconName='users' ></OptionBar>
@@ -99,27 +104,67 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+  circle:
+  {
+      backgroundColor: '#191D88',
+      height: hp(19.7),
+      width: wp(41.1),
+      borderRadius: 100,
+      marginTop: 35,
+      marginLeft: 129,
+      alignContent: 'center',
+      justifyContent: 'center',
+     
+  },
+  header:
+    {
+        height: hp(30),
+        width: wp(110),
+        backgroundColor: '#FFCD4B',
+        borderRadius: 200,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+         marginTop: -40,
+         marginLeft: -37,
+    },
+  
   selectedImage: {
     backgroundColor: 'white',
-    height: hp(8),
-    width: wp(16),
+    height: hp(19),
+    width: wp(39),
+    marginLeft:wp(1),
     borderRadius: 100,
     alignContent: 'center',
     justifyContent: 'center',
     shadowColor: '#000000',
     shadowOffset: {
-      width: 0,
-      height: 2,
+        width: 0,
+        height: 2,
     },
     shadowOpacity: 0.8,
     shadowRadius: 4,
     elevation: 5,
-    marginVertical: 9
+},
+  container1: {
+    flex: 0.5,
+
+    alignItems: 'center',
+    backgroundColor: 'white'
   },
 
   person:
   {
     alignSelf: 'center',
+
+  },
+ set:
+  {
+    color: themeColors.bg3,
+   
+alignSelf:'center',
+marginTop:hp(8),
+
+
 
   },
 
@@ -157,13 +202,16 @@ const styles = StyleSheet.create({
     marginTop: -53
   },
   heading: {
-    color: themeColors.bg2,
+    color: themeColors.bg3,
     fontWeight: '500',
-    fontSize: 22,
+    fontSize: 42,
 
-    marginLeft: wp(19),
-    marginTop:hp(-7),
-marginBottom:hp(5)
+alignSelf:'center',
+marginTop:hp(8),
+marginLeft:wp(-4),
+
+  
+
   },
   txtemail: {
     color: themeColors.bg3,

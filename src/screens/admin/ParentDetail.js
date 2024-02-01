@@ -144,23 +144,27 @@ const ParentDetail = ({ route, navigation }) => {
                             );
                         }
                     }}
-                        style={{
-                            backgroundColor: themeColors.bg3,
-                            padding: 10,
-                            width: wp(30),
-                            height: hp(5),
-                            alignItems: 'center',
-                            borderRadius: 5,
-                            shadowColor: 'gray',
-                            shadowOffset: {
-                                width: 1,
-                                height: 1,
-                            },
-                            shadowOpacity: 0.3,
-                            shadowRadius: 1,
-                            elevation: 20,
-                            marginLeft: hp(17),
-                        }}
+                    style={{
+                        margin: 2,
+                        color: 'white',
+                        backgroundColor: themeColors.bg3,
+                        borderRadius: 4,
+                        padding: 6,
+                        height:hp(6),
+                        alignSelf:'center',
+                       
+                        width:wp(70),
+                        justifyContent:'center',
+                        alignItems: 'center',
+                        shadowColor: 'gray',
+                        shadowOffset: {
+                            width: 1,
+                            height: 1,
+                        },
+                        shadowOpacity: 0.3,
+                        shadowRadius: 1,
+                        elevation: 20,
+                    }}
                     >
                         <Text style={{ color: 'white' }}>Delete</Text>
                     </TouchableOpacity>

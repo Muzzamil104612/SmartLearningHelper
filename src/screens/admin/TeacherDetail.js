@@ -165,12 +165,17 @@ const TeacherDetail = ({ route, navigation }) => {
                     }}
 
                         style={{
+                            margin: -12,
+                            color: 'white',
                             backgroundColor: themeColors.bg3,
-                            padding: 10,
-                            width: wp(30),
-                            height: hp(5),
+                            borderRadius: 4,
+                            padding: 6,
+                            height:hp(6),
+                            alignSelf:'center',
+                           
+                            width:wp(70),
+                            justifyContent:'center',
                             alignItems: 'center',
-                            borderRadius: 5,
                             shadowColor: 'gray',
                             shadowOffset: {
                                 width: 1,
@@ -179,7 +184,6 @@ const TeacherDetail = ({ route, navigation }) => {
                             shadowOpacity: 0.3,
                             shadowRadius: 1,
                             elevation: 20,
-                            marginLeft: hp(17),
                         }
 
                         }
@@ -242,9 +246,13 @@ const styles = StyleSheet.create({
     btn: {
         margin: 2,
         color: 'white',
-        backgroundColor: themeColors.bg3,
+        backgroundColor: themeColors.bg2,
         borderRadius: 4,
         padding: 6,
+        height:hp(6),
+        marginLeft:wp(7.5),
+        width:wp(70),
+        justifyContent:'center',
         alignItems: 'center',
         shadowColor: 'gray',
         shadowOffset: {

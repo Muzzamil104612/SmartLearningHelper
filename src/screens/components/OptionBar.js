@@ -53,7 +53,7 @@ const OptionBar = (props) => {
 
 
     return (
-        <View style={{ padding: 3 }}>
+        <View style={{ padding: 5}}>
             <TouchableOpacity
                 onPress={()=>{
                    navigationHandler();
@@ -61,6 +61,7 @@ const OptionBar = (props) => {
                 style={{
                     backgroundColor: 'white',
                     borderRadius: 5,
+                    height:hp(6.8),
                     borderWidth: 1, 
                     borderStyle: 'solid',
                     borderColor: 'transparent', 
@@ -69,9 +70,9 @@ const OptionBar = (props) => {
                         width: 0,
                         height: 0.2,
                     },
-                    shadowOpacity: 0.2,
+                    shadowOpacity: 0.1,
                     shadowRadius: 2,
-                    elevation: 2,
+                    elevation: 1.3
                 }}>
 
                 <Text style={{ color: 'black', padding: 13 }}>
