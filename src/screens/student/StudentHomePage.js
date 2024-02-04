@@ -56,30 +56,25 @@ const StudentHomePage = ({ navigation }) => {
   useEffect(() => {
     const fetchTeachersData = async () => {
       try {
-        // Firestore Query
         const teachersSnapshot = await firestore().collection('Teachers').get();
         const teachersData = [];
-
-        // Iterate through the documents
+    
         for (const doc of teachersSnapshot.docs) {
           const { name, majorSubject } = doc.data();
-          //const url = await storage().refFromURL('gs://smartlearninghelper.appspot.com').getDownloadURL();
-          console.log(name,majorSubject);
-
-           teachersData.push({
+    
+          teachersData.push({
             name,
             majorSubject,
-            //imageURL:url,
           });
         }
-   
+    
         setTeachers(teachersData);
-        console.log(teachersData);
-
+        console.log('Teachers data:', teachersData);
       } catch (error) {
         console.log('Error fetching teachers data:', error);
       }
     };
+    
 
     fetchTeachersData();
   }, []);
@@ -178,7 +173,7 @@ const StudentHomePage = ({ navigation }) => {
 
 
       <View style={{  justifyContent: 'center', alignItems: 'center' ,marginTop:hp(-5) }}>
-    <Slider/>
+  {  /*<Slider/>*/}
       </View>
 
     </View>

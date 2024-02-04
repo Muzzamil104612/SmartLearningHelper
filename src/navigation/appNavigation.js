@@ -51,6 +51,14 @@ import StudentsList from '../screens/admin/StudentsList';
 import StudentDetail from '../screens/admin/StudentDetail';
 import ParentsList from '../screens/admin/ParentsList';
 import ParentDetail from '../screens/admin/ParentDetail';
+import EditParentProfile from '../screens/parent/EditParentProfile';
+import TermsAndConditions from '../screens/components/TermsAndConditions';
+import HelpAndSupport from '../screens/components/HelpAndSupport';
+import StudentSetting from '../screens/student/StudentSetting';
+import EditStudentProfile from '../screens/student/EditStudentProfile';
+import StudentHomePage from '../screens/student/StudentHomePage';
+import TeacherSetting from '../screens/teacher/TeacherSetting';
+import EditTeacherProfile from '../screens/teacher/EditTeacherProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -89,6 +97,8 @@ export default function AppNavigation() {
         <Stack.Screen name="RetreiveCount" options={{headerShown: false}} component={RetreiveCount} />
         <Stack.Screen name="ParentChatMessages" options={{headerShown: false}} component={ParentChatMessages} />
         <Stack.Screen name="TeacherChat" options={{headerShown: false}} component={TeacherChat} />
+        <Stack.Screen name="TeacherSetting" options={{headerShown: false}} component={TeacherSetting} />
+        <Stack.Screen name="EditTeacherProfile" options={{headerShown: false}} component={EditTeacherProfile} />
 
         <Stack.Screen name="ParentChat" options={{headerShown: false}} component={ParentChat} />
 
@@ -108,6 +118,14 @@ export default function AppNavigation() {
         <Stack.Screen name="StudentDetail" options={{headerShown: false}} component={StudentDetail} />
         <Stack.Screen name="ParentsList" options={{headerShown: false}} component={ParentsList} />
         <Stack.Screen name="ParentDetail" options={{headerShown: false}} component={ParentDetail} />
+        <Stack.Screen name="EditParentProfile" options={{headerShown: false}} component={EditParentProfile} />
+        <Stack.Screen name="TermsAndConditions" options={{headerShown: false}} component={TermsAndConditions} />
+        <Stack.Screen name="HelpAndSupport" options={{headerShown: false}} component={HelpAndSupport} />
+        <Stack.Screen name="StudentSetting" options={{headerShown: false}} component={StudentSetting} />
+        <Stack.Screen name="EditStudentProfile" options={{headerShown: false}} component={EditStudentProfile} />
+        <Stack.Screen name="StudentHomePage" options={{headerShown: false}} component={StudentHomePage} />
+
+
 
       </Stack.Navigator>
       </Provider>

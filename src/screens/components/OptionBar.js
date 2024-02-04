@@ -19,15 +19,26 @@ const OptionBar = (props) => {
     else if(DisplayText=='Students Directory') {
         props.navigation.navigate('StudentsList');
     }
+   
     else if(DisplayText=='Parents Directory') {
         props.navigation.navigate('ParentsList');
     }
     else if(DisplayText=='Help and Support') {
-
+        props.navigation.navigate('HelpAndSupport');
+    }
+    else if(DisplayText=='Edit Your Parent Profile') {
+        props.navigation.navigate('EditParentProfile');
     }
     else if(DisplayText=='Terms and Conditions') {
-
+       props.navigation.navigate('TermsAndConditions');
     }
+    //Edit Your Teacher Profile
+    else if(DisplayText=='Edit Your Teacher Profile') {
+        props.navigation.navigate('EditTeacherProfile');
+     }
+    else if(DisplayText=='Edit Your Student Profile') {
+        props.navigation.navigate('EditStudentProfile');
+     }
     else if(DisplayText=='LogOut') {
         Alert.alert(
             'Confirm Logout',

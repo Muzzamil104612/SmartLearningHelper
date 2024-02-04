@@ -27,23 +27,6 @@ useEffect(() => {
 }, []);
 
 
-  const selectImage = () => {
-    ImagePicker.openPicker({
-        mediaType: 'photo',
-        compressImageMaxWidth: 500,
-        compressImageMaxHeight: 500,
-        compressImageQuality: 0.7,
-        cropping: true,
-    })
-        .then((response) => {
-            if (!response.didCancel) {
-                setMyObject({ ...myObject, ImageURL: response.path });
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-};
 
 
 
@@ -69,7 +52,7 @@ useEffect(() => {
           <Animatable.View animation="fadeInUpBig" duration={1000} style={styles.imgview}>
             <Text style={{ color: '#F4BC1C', alignSelf: "center", fontSize: 28, fontWeight: "500", marginBottom: hp(1.5) }}>𝙋𝙚𝙧𝙨𝙤𝙣𝙖𝙡 𝙋𝙤𝙧𝙩𝙛𝙤𝙡𝙞𝙤!</Text>
             <View style={styles.circle}>
-            <TouchableOpacity onPress={selectImage}>
+            <TouchableOpacity onPress={()=>{}}>
                                 {myObject.ImageURL ? (
                                     <Image source={{ uri: myObject.ImageURL }} style={styles.selectedImage} />
                                 ) : (
