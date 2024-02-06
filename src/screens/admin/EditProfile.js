@@ -95,7 +95,7 @@ const fetchDataFromFirestore = async () => {
 
  
   const [myObject1, setMyObject1] = useState({
-    emailError: '',documentError:"", nameError: '', PhoneError: '',imageError: '', experienceError: '', subjectError: '', qualificationError: '', passwordError: '', cpasswordError: '',
+    emailError: '',documentError:"", nameError: '', PhoneError: '',imageError: '', passwordError: '', 
   });
 
 
@@ -163,8 +163,8 @@ const getData = async () => {
 const handleRegistration = async () =>  {
     const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+,-./:;<=>?@[\\])(.{8,})$/;
     if (myObject.name.trim().length < 3 || myObject.email.trim() === '' ||
-      myObject.experience.trim() === '' || myObject.majorSubject.trim() === '' ||
-      myObject.qualification.trim() === '' ||myObject.ImageURL.trim() === ''||
+      
+      myObject.ImageURL.trim() === ''||
       (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(myObject.email)) || myObject.password.trim() === '' || myObject.name.trim() === ''
       || myObject.password.trim() === '' || myObject.name.trim() === ''||
      myObject.phone.trim() === '' || !/^[0-9]*$/.test(myObject.phone) ||  !passwordRegex.test(myObject.password)) {
@@ -185,13 +185,7 @@ const handleRegistration = async () =>  {
           : !/^[0-9]+$/.test(myObject.phone)
             ? "Only Numbers are allowed for Phone Number"
             : "",
-        experienceError: myObject.experience.trim() === '' ? "Please Enter Your Experience"
-          : "",
-        subjectError: myObject.majorSubject.trim() === '' ? "Please Enter Your Major Subject"
-          : "",
-
-        qualificationError: myObject.qualification.trim() === '' ? "Please Enter Your Qualification"
-          : "",
+       
         nameError: myObject.name.trim() === '' ? "please Enter your Name"
           : myObject.name.trim().length < 3
             ? "Username must be atleast 3 characters"
