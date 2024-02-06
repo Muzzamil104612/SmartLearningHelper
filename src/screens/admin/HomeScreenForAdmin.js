@@ -9,7 +9,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AdminChat from './Chat';
+import AdminChat from './TeacherRequests';
 import AdminProfile from './AdminProfile';
 import AdminSetting from './AdminSetting';
 import AdminHomePage from './AdminHomePage';
@@ -138,13 +138,13 @@ const HomeScreenForAdmin=()=> {
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbox-outline" size={25}    style={styles.image} color={color}
+            <Ionicons name="people" size={25}    style={styles.image} color={color}
             />
   
           ),
           tabBarLabel: ({ focused }) => (
             <Text style={[styles.label, {  color: focused ? '#F4BC1C' :'#191D88'}]}>
-              CHAT
+              REQUESTS
             </Text>
           ),
         }}

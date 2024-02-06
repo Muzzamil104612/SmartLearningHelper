@@ -217,7 +217,7 @@ const EditStudentProfile = ({ navigation }) => {
 
                             <View style={styles.upperPart}>
                                 <TouchableOpacity
-                                    onPress={() => navigation.goBack()}
+                                    onPress={() => navigation.navigate('StudentSetting')}
 
                                     style={styles.arrow}
                                 >

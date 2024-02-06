@@ -293,36 +293,8 @@ const handleRegistration = async () =>  {
               keyboardType="numeric"
             />
   {myObject1.PhoneError !== '' && <Text style={{ height: hp(3), color: 'red', marginLeft: wp(2), }}>{myObject1.PhoneError}</Text>}
-            <TextInputComponent
-            onChangeText={Text => setMyObject({ ...myObject, experience: (Text) })}
-              label="Years of Experience"
-              placeholder="4"
-              value={myObject.experience}
-              secureTextEntry={false}
-              keyboardType="numeric"
-            />
-            {myObject1.experienceError !== '' && <Text style={{ height: hp(3), color: 'red', marginLeft: wp(2), }}>{myObject1.experienceError}</Text>}
-
-            <TextInputComponent
-            onChangeText={Text => setMyObject({ ...myObject, majorSubject: (Text) })}
-              label="Major Subject"
-              placeholder="Databases"
-              value={myObject.majorSubject}
-              secureTextEntry={false}
-              keyboardType="default"
-            />
-           {myObject1.subjectError !== '' && <Text style={{ height: hp(3), color: 'red', marginLeft: wp(2), }}>{myObject1.subjectError}</Text>}
-
-            <TextInputComponent
-              onChangeText={Text => setMyObject({ ...myObject, qualification: (Text) })}
-              label="Qualification"
-              value={myObject.qualification}
-              placeholder="Bachelors of Computer Sciences(or BSCS)"
-              secureTextEntry={false}
-              keyboardType="default"
-            />
-            {myObject1.qualificationError !== '' && <Text style={{ height: hp(3), color: 'red', marginLeft: wp(2), }}>{myObject1.qualificationError}</Text>}
-
+      
+      
 
             <TextInputComponent
               onChangeText={Text => setMyObject({ ...myObject, password: (Text) })}
@@ -359,12 +331,6 @@ const handleRegistration = async () =>  {
             </View>
           </View>
 
-          <View style={styles.bottonPart}>
-            <Text style={styles.bottomtxt}>Already have an account?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.linkbtn}>Sign In</Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </View>)}
     </ScrollView>

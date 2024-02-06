@@ -59,6 +59,7 @@ import EditStudentProfile from '../screens/student/EditStudentProfile';
 import StudentHomePage from '../screens/student/StudentHomePage';
 import TeacherSetting from '../screens/teacher/TeacherSetting';
 import EditTeacherProfile from '../screens/teacher/EditTeacherProfile';
+import TeacherRequests from '../screens/admin/TeacherRequests';
 
 const Stack = createNativeStackNavigator();
 
@@ -124,6 +125,7 @@ export default function AppNavigation() {
         <Stack.Screen name="StudentSetting" options={{headerShown: false}} component={StudentSetting} />
         <Stack.Screen name="EditStudentProfile" options={{headerShown: false}} component={EditStudentProfile} />
         <Stack.Screen name="StudentHomePage" options={{headerShown: false}} component={StudentHomePage} />
+        <Stack.Screen name="TeacherRequests" options={{headerShown: false}} component={TeacherRequests} />
 
 
 

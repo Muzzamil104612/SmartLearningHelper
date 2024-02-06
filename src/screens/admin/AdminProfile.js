@@ -115,33 +115,8 @@ const AdminProfile = ({ navigation }) => {
               keyboardType="default"
               editable={false}
             />
-            <TextInputComponent
-              onChangeText={Text => setMyObject({ ...myObject, experience: (Text) })}
-              label="Years of Experience"
-              placeholder="4"
-              value={myObject.experience}
-              secureTextEntry={false}
-              keyboardType="numeric"
-              editable={false}
-            />
-            <TextInputComponent
-              onChangeText={Text => setMyObject({ ...myObject, majorSubject: (Text) })}
-              label="Major Subject"
-              placeholder="Databases"
-              value={myObject.majorSubject}
-              secureTextEntry={false}
-              keyboardType="default"
-              editable={false}
-            />
-            <TextInputComponent
-              onChangeText={Text => setMyObject({ ...myObject, qualification: (Text) })}
-              label="Qualification"
-              placeholder="Bachelors of Computer Sciences(or BSCS)"
-              secureTextEntry={false}
-              editable={false}
-              value={myObject.qualification}
-              keyboardType="default"
-            />
+          
+          
 
             <TextInputComponent
               onChangeText={Text => setMyObject({ ...myObject, phone: (Text) })}
@@ -291,7 +266,7 @@ const styles = StyleSheet.create({
   container2: {
     height: hp(103),
     marginTop: hp(2),
-    marginBottom: hp(1),
+   
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     backgroundColor: 'white',
