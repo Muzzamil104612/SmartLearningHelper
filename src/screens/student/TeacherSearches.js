@@ -2,10 +2,14 @@
 import  { useEffect, useState } from 'react';
 
 import { firebase } from '@react-native-firebase/firestore';
+
+import auth from '@react-native-firebase/auth';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { themeColors } from '../../theme';
 import { View, Text, TouchableOpacity, Image, TextInput, StyleSheet, Alert,ScrollView ,ActivityIndicator} from 'react-native'
 import React from 'react'
+
+
 
 
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -16,12 +20,83 @@ import TextInputComponent from '../components/TextInputComponent';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import * as Animatable from 'react-native-animatable';
+import { useSelector} from 'react-redux';
 
 import InAppBrowser from 'react-native-inappbrowser-reborn';
-import auth from '@react-native-firebase/auth';
+
+
 
 const TeacherSearches = ({ route, navigation }) => {
   const { teacher } = route.params;
+  const [loading, setLoading] = useState(false);
+const data= useSelector(state =>state.value. stdData);
+const [myObject1, setMyObject] = useState({
+  name: '', email: '', phone: '', parentEmail:'',password: '', confirmpassword: '',ImageURL: '',
+});
+
+const [isRequestSent, setIsRequestSent] = useState(false);
+
+  useEffect(() => {
+    setMyObject(data);
+
+    // Check if request has already been sent
+    // (You need to implement the logic to check this based on your application structure)
+    const checkRequestStatus = async () => {
+      try {
+        const requestsRef = firebase.firestore().collection('requests');
+
+        const existingRequest = await requestsRef
+          .where('studentEmail', '==', myObject1.email)
+          .where('parentEmail', '==', myObject1.parentEmail)
+          .where('teacherEmail', '==', teacher.email)
+          .where('majorSubject', '==', teacher.majorSubject)
+          .get();
+
+        setIsRequestSent(!existingRequest.empty);
+      } catch (error) {
+        console.error('Error checking request:', error);
+      }
+    };
+
+    checkRequestStatus();
+  }, [myObject1.email, myObject1.parentEmail, teacher.email, teacher.majorSubject]);
+  const sendRequest = async () => {
+    try {
+      // If request has already been sent, do nothing
+      if (isRequestSent || loading) {
+        return;
+      }
+
+      // Set loading to true when sending request
+      setLoading(true);
+
+      // Get the Firestore reference to your requests collection
+      const requestsRef = firebase.firestore().collection('requests');
+
+      // Add a new document with the relevant information
+      await requestsRef.add({
+        studentEmail: myObject1.email,
+        parentEmail: myObject1.parentEmail,
+        teacherEmail: teacher.email,
+        majorSubject: teacher.majorSubject,
+        status: 'pending',
+      });
+
+      // Set the state to indicate that the request has been sent
+      setIsRequestSent(true);
+
+      // Alert the user that the request has been sent successfully
+      Alert.alert('Request Sent', 'Your request has been sent successfully.');
+    } catch (error) {
+      console.error('Error sending request:', error);
+      Alert.alert('Error', 'There was an error sending the request. Please try again.');
+    }
+    finally {
+      // Set loading to false, regardless of success or error
+      setLoading(false);
+    }
+  };
+
   
  
 
@@ -117,6 +192,21 @@ const TeacherSearches = ({ route, navigation }) => {
       value={teacher.qualification}
       keyboardType="default"
     />
+      <View style={{ alignItems: 'center', marginTop: hp(0.9) }}>
+      <TouchableOpacity
+              style={styles.btn1}
+              onPress={sendRequest}
+              disabled={isRequestSent || loading} // Disable button if request sent or already loading
+            >
+              {loading ? (
+                <ActivityIndicator size="small" color="#191D88" style={{alignSelf:'center',marginTop:(13)}}  />
+              ) : (
+                <Text style={styles.btntxt1}>
+                  {isRequestSent ? 'Requested' : 'Send Request'}
+                </Text>
+              )}
+            </TouchableOpacity>
+            </View>
 
    
 
@@ -399,6 +489,31 @@ bottomtxt: {
     color:themeColors.bg3,
    },subtxt:{
     fontWeight:'400'
-   }
+   },
+   btn1: {
+    backgroundColor: themeColors.bg2,
+    borderRadius: 7,
+    marginTop: hp(5),
+    width: wp(60),
+    height: hp(6.3),
+    alignContent: 'center',
+    alignItems: 'center',
+    elevation: 2.5, // Increased elevation for a more raised appearance
+    shadowColor: 'black',
+    shadowOpacity: 0.5,
+    shadowRadius: 50,
+
+
+  },
+  btntxt1: {
+    color: "#191D88",
+    alignSelf: "center",
+    paddingVertical: 12,
+    fontSize: 18,
+    paddingHorizontal: 45,
+    fontWeight: "700",
+
+
+  },
   });
   

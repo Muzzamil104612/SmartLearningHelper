@@ -2,7 +2,8 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import StudentsDetail from '../screens/teacher/studentDetail';
+import StdRequests from '../screens/teacher/stdRequests';
 import SelectRole from '../screens/registrationPages/SelectRole';
 import WelcomeScreen from '../screens/splashScreen/WelcomeScreen';
 import TeacherSignUp from '../screens/registrationPages/TeacherSignUp';
@@ -46,6 +47,7 @@ import ForgotPassword from '../screens/Login/ForgotPassword';
 import OptionBar from '../screens/components/OptionBar';
 import EditProfile from '../screens/admin/EditProfile';
 import TeachersList from '../screens/admin/TeachersList';
+import GroupDetails from '../screens/teacher/GroupDetails';
 import TeacherDetail from '../screens/admin/TeacherDetail';
 import StudentsList from '../screens/admin/StudentsList';
 import StudentDetail from '../screens/admin/StudentDetail';
@@ -60,7 +62,10 @@ import StudentHomePage from '../screens/student/StudentHomePage';
 import TeacherSetting from '../screens/teacher/TeacherSetting';
 import EditTeacherProfile from '../screens/teacher/EditTeacherProfile';
 import TeacherRequests from '../screens/admin/TeacherRequests';
-
+import Groups from '../screens/teacher/groups';
+import Studygroups from '../screens/student/studygroups';
+import NoticeList from '../screens/teacher/addmaterial';
+import StdGroupDetails from '../screens/student/stdGroupDetails';
 const Stack = createNativeStackNavigator();
 
 
@@ -69,6 +74,13 @@ export default function AppNavigation() {
     <NavigationContainer>
         <Provider store={store}>
       <Stack.Navigator initialRouteName='Login'>
+      <Stack.Screen name="StdGroupDetails" options={{headerShown: false}} component={StdGroupDetails} />
+      <Stack.Screen name="NoticeList" options={{headerShown: false}} component={NoticeList} />
+      <Stack.Screen name="GroupDetails" options={{headerShown: false}} component={GroupDetails} />
+      <Stack.Screen name="Studygroups" options={{headerShown: false}} component={Studygroups} />
+      <Stack.Screen name="Groups" options={{headerShown: false}} component={Groups} />
+      <Stack.Screen name="StudentsDetail" options={{headerShown: false}} component={StudentsDetail} />
+      <Stack.Screen name="StdRequests" options={{headerShown: false}} component={StdRequests} />
       <Stack.Screen name="StudentSearchd" options={{headerShown: false}} component={StudentSearchd} />
       <Stack.Screen name="SubjectSearchd" options={{headerShown: false}} component={SubjectSearchd} />
       <Stack.Screen name="TeacherSearches" options={{headerShown: false}} component={TeacherSearches} />

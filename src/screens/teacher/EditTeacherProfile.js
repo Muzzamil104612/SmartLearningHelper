@@ -127,7 +127,7 @@ const getData = async () => {
                 ImageURL: downloadURL,
               });
               setIsLoading(false);
-              navigation.navigate('TeacherSetting');
+              navigation.navigate('HomeScreenForTeacher');
           
   
             
@@ -140,7 +140,7 @@ const getData = async () => {
         {
             dispatch(teacheremail(myObject));
             setIsLoading(false);
-            navigation.navigate('TeacherSetting');
+            navigation.navigate('HomeScreenForTeacher');
          
             
         }
@@ -266,15 +266,18 @@ const handleRegistration = async () =>  {
            {myObject1.nameError !== '' && <Text style={{ height: hp(3), color: 'red', marginLeft: wp(2), }}>{myObject1.nameError}</Text>}
 
 
-            <TextInputComponent
-            onChangeText={Text => setMyObject({ ...myObject, email: (Text) })}
+           <Text style={styles.Title}>Email</Text>
+        <TextInput
               label="Email Address"
+          
+              onChangeText={Text => setMyObject({ ...myObject, email: (Text) })}
               value={myObject.email}
+              style={styles.Inputbox}
               placeholder="john23@gmail.com"
               secureTextEntry={false}
               keyboardType="default"
+              editable={false}
             />
-   {myObject1.emailError !== '' && <Text style={{ height: hp(3), color: 'red', marginLeft: wp(2), }}>{myObject1.emailError}</Text>}
             <TextInputComponent
             onChangeText={Text => setMyObject({ ...myObject, phone: (Text) })}
               label="Contact No."
@@ -401,6 +404,11 @@ const styles = StyleSheet.create({
     marginTop: hp(5),
   }
   ,
+  Title: {
+    marginTop: hp(1.7),
+    color: "#191D88",
+    
+  },
   container1: {
     flex: 0.5,
 
@@ -585,7 +593,22 @@ const styles = StyleSheet.create({
     color: 'black',
     width: wp(60),
 
-  }
+  },
+  Inputbox: {
+    elevation: 3, // Increased elevation for a more raised appearance
+    shadowColor: 'black',
+    shadowOpacity: 0.5,
+    shadowRadius: 50,
+    backgroundColor: "lightgray",
+    color: "red",
+    borderRadius: 7,
+    marginVertical: 2,
+
+    paddingHorizontal: 12,
+  height:hp(7),
+  width:wp(85),
+  marginTop:hp(0.8),
+  },
 });
 
 export default EditTeacherProfile;

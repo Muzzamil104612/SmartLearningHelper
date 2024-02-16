@@ -9,7 +9,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AdminChat from './TeacherRequests';
+
+import TeacherRequests from './TeacherRequests';
 import AdminProfile from './AdminProfile';
 import AdminSetting from './AdminSetting';
 import AdminHomePage from './AdminHomePage';
@@ -133,8 +134,8 @@ const HomeScreenForAdmin=()=> {
       
         
   <Tab.Screen
-        name="AdminChat"
-        component={AdminChat}
+        name="TeacherRequests"
+        component={TeacherRequests}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (

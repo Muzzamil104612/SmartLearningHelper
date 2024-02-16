@@ -131,6 +131,7 @@ const EditParentProfile = ({ navigation }) => {
               ImageURL: downloadURL,
             });
             setIsLoading(false);
+           
             navigation.navigate('ParentSetting');
 
 
@@ -142,8 +143,10 @@ const EditParentProfile = ({ navigation }) => {
       }
       else {
         dispatch(parentemail(myObject));
+        
         setIsLoading(false);
-        navigation.navigate('ParentSetting');
+        
+       navigation.navigate('ParentSetting');
 
 
       }
@@ -266,15 +269,18 @@ const EditParentProfile = ({ navigation }) => {
                 {myObject1.nameError !== '' && <Text style={{ height: hp(3), color: 'red', marginLeft: wp(2), }}>{myObject1.nameError}</Text>}
 
 
-                <TextInputComponent
-                  onChangeText={Text => setMyObject({ ...myObject, email: (Text) })}
-                  label="Email Address"
-                  value={myObject.email}
-                  placeholder="john23@gmail.com"
-                  secureTextEntry={false}
-                  keyboardType="default"
-                />
-                {myObject1.emailError !== '' && <Text style={{ height: hp(3), color: 'red', marginLeft: wp(2), }}>{myObject1.emailError}</Text>}
+                <Text style={styles.Title}>Email</Text>
+        <TextInput
+              label="Email Address"
+          
+              onChangeText={Text => setMyObject({ ...myObject, email: (Text) })}
+              value={myObject.email}
+              style={styles.Inputbox}
+              placeholder="john23@gmail.com"
+              secureTextEntry={false}
+              keyboardType="default"
+              editable={false}
+            />
                 <TextInputComponent
                   onChangeText={Text => setMyObject({ ...myObject, phone: (Text) })}
                   label="Contact No."
@@ -397,6 +403,21 @@ const styles = StyleSheet.create({
     color: 'black'
 
   },
+  Inputbox: {
+    elevation: 3, // Increased elevation for a more raised appearance
+    shadowColor: 'black',
+    shadowOpacity: 0.5,
+    shadowRadius: 50,
+    backgroundColor: "lightgray",
+    color: "red",
+    borderRadius: 7,
+    marginVertical: 2,
+
+    paddingHorizontal: 12,
+  height:hp(7),
+  width:wp(85),
+  marginTop:hp(0.8),
+  },
   documentButtonText: {
     color: '#3DB489',
     fontWeight: 'bold',
@@ -407,6 +428,11 @@ const styles = StyleSheet.create({
     marginTop: hp(0.1),
     alignSelf: 'center',
     color: 'red'
+  },
+  Title: {
+    marginTop: hp(1.7),
+    color: "#191D88",
+    
   },
   selectedImage: {
     backgroundColor: 'white',
@@ -506,14 +532,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     color: "gray",
   },
-  Inputbox: {
-
-    backgroundColor: "#D8D8D8",
-    color: "gray",
-    borderRadius: 7,
-    marginVertical: 2,
-    paddingHorizontal: 12,
-  },
+ 
 
   btn: {
     backgroundColor: themeColors.bg2,

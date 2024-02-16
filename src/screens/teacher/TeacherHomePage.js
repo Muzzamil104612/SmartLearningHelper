@@ -1,328 +1,466 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView } from 'react-native';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import { View, Text, TouchableOpacity, StyleSheet,FlatList,ScrollView,Image,SafeAreaView } from 'react-native';
+import { firebase } from '@react-native-firebase/firestore';
+import * as Animatable from 'react-native-animatable';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { themeColors } from '../../theme';
-import { BookOpenIcon } from 'react-native-heroicons/solid';
-import { ArrowLeftIcon } from 'react-native-heroicons/solid';
-
-
-const TeacherHomePage = ({ navigation }) => {
-
-
-  const [user, setUser] = useState(null);
-
+import { useSelector } from 'react-redux';
+import Icon from 'react-native-vector-icons/Ionicons';
+import firestore from '@react-native-firebase/firestore';
+import OptionCom from '../components/OptionCom';
+const TeacherHomepage = ({navigation}) => {
+  
+  const data = useSelector(state => state.value.TeacherData);
+  const [myObject, setMyObject] = useState({
+    userID: '', name: '', email: '', phone: '', experience: '', majorSubject: '', qualification: '',
+    password: '', confirmpassword: '', ImageURL: '', documentURL: '',
+  });
+  const [teachers, setTeachers] = useState('');
   useEffect(() => {
-    const unsubscribe = auth().onAuthStateChanged((authenticatedUser) => {
-      if (authenticatedUser) {
-        // getting data from firestore...
-        firestore()
-          .collection('Teachers')
-          .doc(authenticatedUser.uid)
-          .get()
-          .then((documentSnapshot) => {
-
-            if (documentSnapshot.exists) {
-
-              setUser({
-                uid: authenticatedUser.uid,
-                email: authenticatedUser.email,
-                username: documentSnapshot.data().name,
-                imageURL: documentSnapshot.data().ImageURL,
-              });
-
-            }
-          })
-          .catch((error) => {
-            console.log('Error fetching user data: ', error);
+    const fetchTeachersData = async () => {
+      try {
+        const teachersSnapshot = await firestore().collection('Teachers').get();
+        const teachersData = [];
+    
+        for (const doc of teachersSnapshot.docs) {
+          const { name, majorSubject,ImageURL } = doc.data();
+    
+          teachersData.push({
+            ImageURL,
+            name,
+            majorSubject,
+           
           });
-      } else {
-        setUser(null);
+        }
+    
+        setTeachers(teachersData);
+        console.log('Teachers data:', teachersData);
+      } catch (error) {
+        console.log('Error fetching teachers data:', error);
       }
-    });
+    };
+    
 
-    return () => unsubscribe();
+    fetchTeachersData();
   }, []);
 
+  useEffect(() => {
 
-  const courses = [
-    { key: 1, title: 'Computer' },
-    { key: 2, title: 'Pak-Studies' },
-    { key: 3, title: 'Mathematics' },
-    { key: 4, title: 'Islamiyat' },
+    setMyObject(data);
+    fetchDataFromFirestore();
+    const focusListener = navigation.addListener('focus', () => {
+      fetchDataFromFirestore();
 
-  ];
+    });
+
+    return () => {
+      focusListener();
+    };
+  }, [data, navigation]);
 
 
-  const transactions = [
-    { key: 1, title: 'Normal Fee', Time: '11-Nov-2023', Amount: 7000 },
-    { key: 2, title: 'Remaining Charges', Time: '01-Dec-2023', Amount: 3000 },
-    { key: 3, title: 'half Month Fee', Time: '11-Nov-2023', Amount: 2500 },
-    { key: 4, title: 'Remaining Charges', Time: '01-Dec-2023', Amount: 900 },
-    { key: 5, title: 'Remaining Charges', Time: '01-Dec-2023', Amount: 900 },
+  const fetchDataFromFirestore = async () => {
+    try {
+      const docRef = await firestore().collection('Teachers').doc(myObject.userID).get();
+      const docData = docRef.data();
+      if (docData) {
+        setMyObject(docData);
+      }
+      console.log('data getted is', myObject.name);
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+    }
+  };
 
-  ];
+
+
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
+    <ScrollView style={styles.container}>
+         <Animatable.View animation="zoomIn" duration={2000}  style={styles.header}>
+       
+       <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+        
+       <Text style={styles.heading}> {'  '}𝓦𝓮𝓵𝓬𝓸𝓶𝓮 𝓑𝓪𝓬𝓴</Text>
+       </View>
+        <View style={styles.circles}> 
+     {myObject.ImageURL ? (
+       <Image source={{ uri: myObject.ImageURL }} style={styles.selectedImage} />
+     ) : (
+       <Icon name="person-add" size={86} color="#F4BC1C" style={styles.person} />
+     )}
+     {/* <Text style={styles.txt}>{myObject.name}</Text>
+     <Text style={styles.txtemail}>{myObject.email}</Text> */}
+     </View>
+     </Animatable.View>
+     {/* <View style={{flexDirection:'row',marginTop:hp(2)}}>
+    <Text style={styles.headtxt1}>Popular Teachers</Text>
+    <TouchableOpacity>
+    <Text style={styles.headtxt2}>View All {'>'}</Text>
+    </TouchableOpacity>
+    </View>
+     <View style={{height:hp(25)}}>
+      <FlatList
+        data={teachers}
+        keyExtractor={(item) => item.name}
+        renderItem={({ item }) => (
+          <View style={styles.categoriesView1}>
+            <TouchableOpacity style={styles.iconbtn1}>
+            <Image style={styles.selectedImageq1} source={{ uri: item.ImageURL }}/>
 
-        style={styles.arrow}
-      >
-        <ArrowLeftIcon size="20" color="black" />
+            <Text style={[styles.Teachtxt, {color:themeColors.bg3}]}>Name:</Text>
+            <Text style={styles.Teachtxt}>{item.name}</Text>
+            <Text style={[styles.Teachtxt, {color:themeColors.bg3}]}>Major Subject: </Text>
+            <Text style={[styles.Teachtxt]}>{item.majorSubject}</Text>
+            </TouchableOpacity>
+           
+             </View>
+             
+  )}
+  horizontal
+  showsHorizontalScrollIndicator={false}
+      />
+    </View> */}
 
-      </TouchableOpacity>
-
-      {console.log("this is" + user)}
-      {user ? (
-        <>
-          {user.imageURL ? (
-            <Image source={{ uri: user.imageURL }} style={styles.img} />
-          ) : (
-            <Text style={styles.txt}>No Image</Text>
-          )}
-
-          <Text style={[styles.txt, styles.txtView]}>Hello, {user.username} !</Text>
-          <Text style={[styles.subtxt, styles.subtxtView]}> Welcome to Your Home Page </Text>
-
-        </>
-      ) : (
-        <Text style={[styles.txt, { marginTop: hp(10) }]}>Loading...</Text>
-      )}
-      <Text style={styles.headtxt}>All Categories</Text>
-      <View>
-
-        <FlatList
-          data={courses}
-
-          keyExtractor={(item) => item.key.toString()}
-          renderItem={({ item }) => (
-
-            <View style={styles.categoriesView}>
-
-
-              <View style={styles.iconbtn}>
-                <TouchableOpacity
-                  style={{ alignSelf: 'center' }}
-                  onPress={() => {
-
+     <View style={{flexDirection:'row',marginTop:hp(5), marginLeft:wp(10)}}>
+                 
+                     <OptionCom
+                    name={"Groups"}
+                    iconname={"group"}
+                        iconLibrary={"FontAwesome"}
+                        onPress={()=>{
+                       navigation.navigate('Groups')
+                      }}
+                    />
+                       <OptionCom 
+                    name={"Payments"}
+                    iconname={"payments"}
+                        iconLibrary={"MaterialIcons"}
+                        onPress={()=>{
+                            //navigation.navigate('UserDetail');
+                        }}
+                    />
+                    <OptionCom
+                    name={"Feedback"}
+                    iconname={"preview"}
+                        iconLibrary={"MaterialIcons"}
+                        onPress={()=>{
+                           // navigation.navigate('ClassDetails');
+                        }}
+                    />
+                    
+                   
+                    </View>
+                    <View style={{flexDirection:'row',marginTop:hp(-6), marginLeft:wp(10)}}>
+                 
+                 <OptionCom
+                name={"Students"}
+                iconname={"user-graduate"}
+                    iconLibrary={"FontAwesome5"}
+                    onPress={()=>{
+                    //    // navigation.navigate('NotifySplashScreen')
                   }}
-                >
-                  <BookOpenIcon style={styles.icon} color={themeColors.bg2} size={40} />
-                </TouchableOpacity>
-                <Text style={styles.subtxt}>{item.title}</Text>
-              </View>
-            </View>
-          )}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        />
+                />
+                   <OptionCom 
+                name={"Video Calling"}
+                iconname={"video"}
+                    iconLibrary={"FontAwesome5"}
+                    onPress={()=>{
+                        //navigation.navigate('UserDetail');
+                    }}
+                />
+                <OptionCom
+                    name={"Request Box"}
+                    iconname={"progress-check"}
+                        iconLibrary={"MaterialCommunityIcons"}
+                        onPress={()=>{
+                           navigation.navigate('StdRequests');
+                        }}
+                    />
+               
+                </View>
 
-      </View>
-      <Text style={styles.headtxt1}>All Transactions</Text>
 
-      <ScrollView style={{marginBottom:hp(10),}}>
-  {transactions.map((item) => (
-    <View key={item.key} style={styles.categoriesView1}>
-      <TouchableOpacity style={styles.iconbtn1}>
-        <Image style={styles.icon1} source={require('../../assets/images/student.png')} />
-        <Text style={[styles.TName1, { color: themeColors.bg3 }]}> {item.title}</Text>
-        <Text style={[styles.TTime1, { color: themeColors.bg2}]}>{item.Time}</Text>
-        <Text style={[styles.TAmount1, { color: themeColors.bg3 }]}>{item.Amount}Rs.</Text>
-      </TouchableOpacity>
-    </View>
-  ))}
-</ScrollView>
 
-    </View>
+    </ScrollView>
   );
 };
 
+export default TeacherHomepage;
+
 const styles = StyleSheet.create({
-  img1: {
-    height: hp(1),
-    width: wp(1),
-    borderRadius: 5,
+  
 
+  circles:
+  {
+      backgroundColor: '#191D88',
+      height: hp(19.7),
+      width: wp(41.1),
+      borderRadius: 100,
+      marginTop: 25,
+      marginLeft: 129,
+      alignContent: 'center',
+      justifyContent: 'center',
+     
   },
-  categoriesView1: {
-
+  header:
+    {
+        height: hp(30),
+        width: wp(110),
+        backgroundColor: '#FFCD4B',
+        borderRadius: 200,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+         marginTop: -40,
+         marginLeft: -18,
+         marginBottom:hp(10)
+    },
+    selectedImageq1: {
+      backgroundColor: 'white',
+      height: hp(10),
+      width: wp(20),
+      borderRadius: 100,
+      borderWidth:hp(0.3),
+      borderStyle:'solid',
+      borderColor:themeColors.bg3,
+      alignContent: 'center',
+      justifyContent: 'center',
+      shadowColor: '#000000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.8,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+  
+  selectedImage: {
+    backgroundColor: 'white',
+    height: hp(19),
+    width: wp(39),
+    marginLeft:wp(1),
+    borderRadius: 100,
+    alignContent: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOffset: {
+        width: 0,
+        height: 2,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
+    elevation: 5,
     
-    marginTop: hp(1),
-    marginLeft: wp(5),
-    backgroundColor: "#fafafa",
+},
+categoriesView1:{
+   
+   
+  marginTop:hp(2),
+  marginLeft:wp(5),
 
-    borderRadius: 11,
-    shadowColor: '#888888',
-    shadowOffset: {
-      width: 1,
-      height: 2,
-    },
-    shadowOpacity: 1.2,
-    shadowRadius: 10,
-    elevation: 8,
-
-  }, iconbtn1: {
-    flexDirection:'column',
-    padding: 10,
-    borderRadius: 11,
-
-    marginBottom: hp(11)
+},iconbtn1:{
+  backgroundColor:"#fafafa",
+  padding:10,
+  borderRadius:11,
+  shadowColor: '#888888',
+  shadowOffset: {
+    width: 1,
+    height: 2,
   },
-  TName1: {
+  shadowOpacity: 1.2,
+  shadowRadius: 10,
+  elevation: 8,
+  marginBottom:hp(9)
+},
+Teachtxt1:{
+  color:themeColors.bg2,
+  textAlign:'center'
+  
+},
+Teachtxt:{
+  color:themeColors.bg2,
+ 
+  
+},
+iconbtn: {
+  marginLeft: wp(5),
+ marginTop: hp(12),
+  backgroundColor: "#fafafa",
+  padding: 10,
+  borderRadius: 10,
+  shadowColor: '#888888',
+  shadowOffset: {
+    width: 1,
+    height: 2,
+  },
+  shadowOpacity: 1.2,
+  shadowRadius: 10,
+  elevation: 8,
+  marginBottom:hp(9)
+
+},
+subtxt: {
+  color: themeColors.bg2,
+
+},
+subtxtView: {
+  marginTop: hp(-7.6),
+  fontSize: 12,
+  marginLeft: wp(33),
+},
+teachdata:{
+  justifyContent:'center'
+},
+iconView: {
+  flexDirection: "row",
+  justifyContent: "center",
+},
+icon: {
+  height: hp(10),
+  width: wp(20),
+
+}, headtxt: {
+  color: themeColors.bg3,
+  position: "absolute",
+  marginLeft: wp(4),
+  fontWeight: "600",
+  fontSize: 16,
+  marginTop: hp(22)
+
+
+},
+
+headtxt1:{
+color: themeColors.bg3,
+width:wp(75),
+marginLeft:wp(4),
+fontWeight: "700",
+fontSize: 20,
+
+
+},
+headtxt2:{
+color: themeColors.bg3,
+
+fontWeight: "400",
+fontSize: 15,
+
+
+},
+txt: {
+
+  color: themeColors.bg3,
+  fontWeight: "bold",
+  alignSelf: "center",
+  marginLeft:wp(10),
+  fontSize: 20,
+},
+
+
+container: {
+  flex: 1,
+
+  backgroundColor: 'white'
+},
+
+
+img: {
+  height: hp(10),
+  width: wp(20),
+  margin: 20,
+  marginTop: hp(9),
+  borderRadius: 50,
+  backgroundColor: '#CCCCCC',
+  borderColor: themeColors.bg3,
+  borderWidth: 2,
+  shadowColor: '#888888',
+  shadowOffset: {
+    width: 2,
+    height: 2,
+  },
+  shadowOpacity: 1.2,
+  shadowRadius: 10,
+  elevation: 8,
+ 
+},
+
+
+arrow: {
+  position: "absolute",
+  marginTop: hp(1),
+  marginLeft: wp(-47),
+  backgroundColor: themeColors.bg2,
+  padding: 8,
+  borderTopEndRadius: 12,
+  borderBottomStartRadius: 12,
+},
+
+txtView: {
+  position: "absolute",
+  marginTop: hp(10.6),
+  marginLeft: wp(-11),
+},
+arrow: {
+  position: "absolute",
+  marginTop: hp(2),
+  marginLeft: wp(4),
+  backgroundColor: themeColors.bg2,
+  padding: 8,
+  borderTopEndRadius: 12,
+  borderBottomStartRadius: 12,
+},
+
+categoriesView:{
+  margin:5,
+},
+
+
+  heading: {
     color: themeColors.bg3,
-    fontWeight:"800",
-    position:'absolute',
-    marginLeft:wp(28),
-    marginTop:hp(3)
+    fontWeight: '500',
+    fontSize: 39,
+alignSelf:'center',
+marginTop:hp(8),
+marginLeft:wp(-4),
+
+  
 
   },
-  TTime1: {
-    color: themeColors.bg2,
-    position:"absolute",
-    marginLeft: wp(29),
-    marginTop: hp(6),
-    fontSize: 12,
+  person:
+  {
+    alignSelf: 'center',
 
   },
-  TAmount1: {
-    color: themeColors.bg2,
-    position:'absolute',
-    marginLeft: wp(77),
-    marginTop: hp(3),
-    fontSize: 12,
-  },
-  iconbtn: {
-    marginLeft: wp(5),
-    marginTop: hp(12),
-    backgroundColor: "#fafafa",
-    padding: 10,
-    borderRadius: 10,
-    shadowColor: '#888888',
-    shadowOffset: {
-      width: 1,
-      height: 2,
-    },
-    shadowOpacity: 1.2,
-    shadowRadius: 10,
-    elevation: 8,
-    marginBottom: hp(9)
 
-  },
-  subtxt: {
-    color: themeColors.bg2,
 
-  },
-  subtxtView: {
-    marginTop: hp(-7.6),
-    fontSize: 12,
-    marginLeft: wp(33),
-  },
-  teachdata: {
-    justifyContent: 'center'
-  },
-  iconView: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  icon: {
+  circle:
+  {
+    backgroundColor: 'white',
     height: hp(10),
     width: wp(20),
+    borderRadius: 100,
+   
+    marginTop: hp(2),
 
-  }, headtxt: {
-    color: themeColors.bg3,
-    position: "absolute",
-    marginLeft: wp(4),
-    fontWeight: "600",
-    fontSize: 16,
-    marginTop: hp(22)
-
-
-  },
-  headtxt1: {
-    color: themeColors.bg3,
-    position: "absolute",
-    marginLeft: wp(4),
-    fontWeight: "600",
-    fontSize: 16,
-    marginTop: hp(43)
-
-  }
-  ,
-  txt: {
-
-    color: themeColors.bg3,
-    fontWeight: "bold",
-    alignSelf: "center",
-
-    fontSize: 20,
-  },
-
+    alignContent: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
+    elevation: 8,
+  }, 
 
   container: {
-    flex: 1,
-
-    backgroundColor: 'white'
-  },
-  icon1: {
-    height: hp(10),
-    width: wp(20),
-   marginBottom:hp(-9)
-  },
-
-  img: {
-    height: hp(10),
-    width: wp(20),
-    margin: 20,
-    marginTop: hp(9),
-    borderRadius: 50,
-    backgroundColor: '#CCCCCC',
-    borderColor: themeColors.bg3,
-    borderWidth: 2,
-    shadowColor: '#888888',
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 1.2,
-    shadowRadius: 10,
-    elevation: 8,
-  },
-
-
-  arrow: {
-    position: "absolute",
-    marginTop: hp(1),
-    marginLeft: wp(-47),
-    backgroundColor: themeColors.bg2,
-    padding: 8,
-    borderTopEndRadius: 12,
-    borderBottomStartRadius: 12,
-  },
-
-  txtView: {
-    position: "absolute",
-    marginTop: hp(10.6),
-    marginLeft: wp(8),
-  },
-  arrow: {
-    position: "absolute",
-    marginTop: hp(2),
-    marginLeft: wp(4),
-    backgroundColor: themeColors.bg2,
-    padding: 8,
-    borderTopEndRadius: 12,
-    borderBottomStartRadius: 12,
-  },
-
-  categoriesView: {
-    margin: 5,
+    
+    backgroundColor: "white",
+   
+    flex:1,
   }
+
+  
 });
-
-export default TeacherHomePage;
-
-
-

@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
          marginLeft: -18,
     },
   
-  selectedImage: {
+  selectedImage1: {
     backgroundColor: 'white',
     height: hp(19),
     width: wp(39),
@@ -285,8 +285,9 @@ marginLeft:wp(-4),
   color:'black',
   backgroundColor:themeColors.bg2,
   borderRadius:4,
-  padding:hp(0.7),
+  padding:hp(0.3),
   width:wp(17),
+  marginLeft:wp(-9)
 
  
  

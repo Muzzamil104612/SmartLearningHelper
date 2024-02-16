@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet,ScrollView,Image,SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet,FlatList,ScrollView,Image,SafeAreaView } from 'react-native';
 import { firebase } from '@react-native-firebase/firestore';
 import * as Animatable from 'react-native-animatable';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -7,6 +7,7 @@ import { themeColors } from '../../theme';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import firestore from '@react-native-firebase/firestore';
+import OptionCom from '../components/OptionCom';
 const AdminHomepage = ({navigation}) => {
   
   const data = useSelector(state => state.value.AdminData);
@@ -14,7 +15,34 @@ const AdminHomepage = ({navigation}) => {
     userID: '', name: '', email: '', phone: '', experience: '', majorSubject: '', qualification: '',
     password: '', confirmpassword: '', ImageURL: '', documentURL: '',
   });
+  const [teachers, setTeachers] = useState('');
+  useEffect(() => {
+    const fetchTeachersData = async () => {
+      try {
+        const teachersSnapshot = await firestore().collection('Teachers').get();
+        const teachersData = [];
+    
+        for (const doc of teachersSnapshot.docs) {
+          const { name, majorSubject,ImageURL } = doc.data();
+    
+          teachersData.push({
+            ImageURL,
+            name,
+            majorSubject,
+           
+          });
+        }
+    
+        setTeachers(teachersData);
+        console.log('Teachers data:', teachersData);
+      } catch (error) {
+        console.log('Error fetching teachers data:', error);
+      }
+    };
+    
 
+    fetchTeachersData();
+  }, []);
 
   useEffect(() => {
 
@@ -65,7 +93,70 @@ const AdminHomepage = ({navigation}) => {
      <Text style={styles.txtemail}>{myObject.email}</Text> */}
      </View>
      </Animatable.View>
+     <View style={{flexDirection:'row',marginTop:hp(2)}}>
+    <Text style={styles.headtxt1}>Popular Teachers</Text>
+    <TouchableOpacity>
+    <Text style={styles.headtxt2}>View All {'>'}</Text>
+    </TouchableOpacity>
+    </View>
+     <View style={{height:hp(25)}}>
+      <FlatList
+        data={teachers}
+        keyExtractor={(item) => item.name}
+        renderItem={({ item }) => (
+          <View style={styles.categoriesView1}>
+            <TouchableOpacity style={styles.iconbtn1}>
+            <Image style={styles.selectedImageq1} source={{ uri: item.ImageURL }}/>
 
+            <Text style={[styles.Teachtxt, {color:themeColors.bg3}]}>Name:</Text>
+            <Text style={styles.Teachtxt}>{item.name}</Text>
+            <Text style={[styles.Teachtxt, {color:themeColors.bg3}]}>Major Subject: </Text>
+            <Text style={[styles.Teachtxt]}>{item.majorSubject}</Text>
+            </TouchableOpacity>
+           
+             </View>
+             
+  )}
+  horizontal
+  showsHorizontalScrollIndicator={false}
+      />
+    </View>
+
+     <View style={{flexDirection:'row',marginTop:hp(-0.7),}}>
+                 
+                     <OptionCom
+                    name={"Groups"}
+                    iconname={"group"}
+                        iconLibrary={"FontAwesome"}
+                        onPress={()=>{
+                        //    // navigation.navigate('NotifySplashScreen')
+                      }}
+                    />
+                       <OptionCom 
+                    name={"Payments"}
+                    iconname={"payments"}
+                        iconLibrary={"MaterialIcons"}
+                        onPress={()=>{
+                            //navigation.navigate('UserDetail');
+                        }}
+                    />
+                    <OptionCom
+                    name={"Feedback"}
+                    iconname={"preview"}
+                        iconLibrary={"MaterialIcons"}
+                        onPress={()=>{
+                           // navigation.navigate('ClassDetails');
+                        }}
+                    />
+                     <OptionCom
+                    name={"Progress"}
+                    iconname={"progress-check"}
+                        iconLibrary={"MaterialCommunityIcons"}
+                        onPress={()=>{
+                           // navigation.navigate('SubjectDetails');
+                        }}
+                    />
+                    </View>
 
 
 
@@ -102,6 +193,25 @@ const styles = StyleSheet.create({
          marginLeft: -18,
          marginBottom:hp(10)
     },
+    selectedImageq1: {
+      backgroundColor: 'white',
+      height: hp(10),
+      width: wp(20),
+      borderRadius: 100,
+      borderWidth:hp(0.3),
+      borderStyle:'solid',
+      borderColor:themeColors.bg3,
+      alignContent: 'center',
+      justifyContent: 'center',
+      shadowColor: '#000000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.8,
+      shadowRadius: 4,
+      elevation: 5,
+    },
   
   selectedImage: {
     backgroundColor: 'white',
@@ -120,6 +230,167 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     
+},
+categoriesView1:{
+   
+   
+  marginTop:hp(2),
+  marginLeft:wp(5),
+
+},iconbtn1:{
+  backgroundColor:"#fafafa",
+  padding:10,
+  borderRadius:11,
+  shadowColor: '#888888',
+  shadowOffset: {
+    width: 1,
+    height: 2,
+  },
+  shadowOpacity: 1.2,
+  shadowRadius: 10,
+  elevation: 8,
+  marginBottom:hp(9)
+},
+Teachtxt1:{
+  color:themeColors.bg2,
+  textAlign:'center'
+  
+},
+Teachtxt:{
+  color:themeColors.bg2,
+ 
+  
+},
+iconbtn: {
+  marginLeft: wp(5),
+ marginTop: hp(12),
+  backgroundColor: "#fafafa",
+  padding: 10,
+  borderRadius: 10,
+  shadowColor: '#888888',
+  shadowOffset: {
+    width: 1,
+    height: 2,
+  },
+  shadowOpacity: 1.2,
+  shadowRadius: 10,
+  elevation: 8,
+  marginBottom:hp(9)
+
+},
+subtxt: {
+  color: themeColors.bg2,
+
+},
+subtxtView: {
+  marginTop: hp(-7.6),
+  fontSize: 12,
+  marginLeft: wp(33),
+},
+teachdata:{
+  justifyContent:'center'
+},
+iconView: {
+  flexDirection: "row",
+  justifyContent: "center",
+},
+icon: {
+  height: hp(10),
+  width: wp(20),
+
+}, headtxt: {
+  color: themeColors.bg3,
+  position: "absolute",
+  marginLeft: wp(4),
+  fontWeight: "600",
+  fontSize: 16,
+  marginTop: hp(22)
+
+
+},
+
+headtxt1:{
+color: themeColors.bg3,
+width:wp(75),
+marginLeft:wp(4),
+fontWeight: "700",
+fontSize: 20,
+
+
+},
+headtxt2:{
+color: themeColors.bg3,
+
+fontWeight: "400",
+fontSize: 15,
+
+
+},
+txt: {
+
+  color: themeColors.bg3,
+  fontWeight: "bold",
+  alignSelf: "center",
+  marginLeft:wp(10),
+  fontSize: 20,
+},
+
+
+container: {
+  flex: 1,
+
+  backgroundColor: 'white'
+},
+
+
+img: {
+  height: hp(10),
+  width: wp(20),
+  margin: 20,
+  marginTop: hp(9),
+  borderRadius: 50,
+  backgroundColor: '#CCCCCC',
+  borderColor: themeColors.bg3,
+  borderWidth: 2,
+  shadowColor: '#888888',
+  shadowOffset: {
+    width: 2,
+    height: 2,
+  },
+  shadowOpacity: 1.2,
+  shadowRadius: 10,
+  elevation: 8,
+ 
+},
+
+
+arrow: {
+  position: "absolute",
+  marginTop: hp(1),
+  marginLeft: wp(-47),
+  backgroundColor: themeColors.bg2,
+  padding: 8,
+  borderTopEndRadius: 12,
+  borderBottomStartRadius: 12,
+},
+
+txtView: {
+  position: "absolute",
+  marginTop: hp(10.6),
+  marginLeft: wp(-11),
+},
+arrow: {
+  position: "absolute",
+  marginTop: hp(2),
+  marginLeft: wp(4),
+  backgroundColor: themeColors.bg2,
+  padding: 8,
+  borderTopEndRadius: 12,
+  borderBottomStartRadius: 12,
+},
+
+categoriesView:{
+  margin:5,
 },
 
 
