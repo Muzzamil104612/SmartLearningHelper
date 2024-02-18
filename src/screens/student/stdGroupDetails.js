@@ -113,10 +113,10 @@ const StdGroupDetails = ({ route, navigation }) => {
         <SafeAreaView style={{ flex: 1 }}>
             <Animatable.View animation="zoomIn" duration={2000} style={styles.container}>
                 <Text style={styles.header}>𝘾𝙡𝙖𝙨𝙨 𝘿𝙞𝙨𝙘𝙪𝙨𝙨𝙞𝙤𝙣</Text>
-                <Text style={styles.txt}>Teacher : <Text style={{ color: themeColors.bg2 }}>{teacherName}</Text></Text>
-                <Text style={styles.txt}>Student : <Text style={{ color: themeColors.bg2 }}>{studentName}</Text></Text>
+                <Text style={styles.txt}>𝓣𝓮𝓪𝓬𝓱𝓮𝓻 : <Text style={{ color: themeColors.bg2,   fontSize:16 }}>{teacherName}</Text></Text>
+                <Text style={styles.txt}>𝓢𝓽𝓾𝓭𝓮𝓷𝓽 : <Text style={{ color: themeColors.bg2,   fontSize:16  }}>{studentName}</Text></Text>
               {/*  <Text style={styles.txt}>Parent : <Text style={{ color: themeColors.bg2 }}>{parentName}</Text></Text>*/} 
-                <Text style={styles.txt}>Subject : <Text style={{ color: themeColors.bg2 }}>{subject}</Text></Text>
+                <Text style={styles.txt}>𝓢𝓾𝓫𝓳𝓮𝓬𝓽 : <Text style={{ color: themeColors.bg2 ,   fontSize:16 }}>{subject}</Text></Text>
 
                 <FlatList
                     data={filteredData.length > 0 ? filteredData : noticeList}
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
 
         alignSelf: 'center',
         color: themeColors.bg3,
-
+       fontSize:22,
     }
 
 
