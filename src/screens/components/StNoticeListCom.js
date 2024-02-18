@@ -137,23 +137,23 @@ const styles = StyleSheet.create({
     classItem:
     {
         fontSize: wp(4),
-      color:'black',
+       color:'black',
         marginLeft: wp(2),
      
     },
     classItemt:
     {
-        fontSize: wp(6),
-      color:'green',
-        marginLeft: wp(2),
-        marginTop:hp(-7)
+        fontSize: wp(5),
+       color:'green',
+        marginLeft: wp(3),
+        marginTop:hp(-2),
      
     },
     classItem1:
     {
         fontSize: wp(4.8),
         color: 'black',
-        marginLeft: wp(2),
+        marginLeft: wp(2.5),
         color:'red'
 
     },
