@@ -19,7 +19,7 @@ const NoticeList = ({ route, navigation }) => {
       setIsLoading(true);
       const result = await DocumentPicker.pick({
         type: [DocumentPicker.types.allFiles],
-        copyTo: 'cachesDirectory', // Specify the type of document to pick
+        copyTo: 'cachesDirectory', 
       });
   
       console.log(result);

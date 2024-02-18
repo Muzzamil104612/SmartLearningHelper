@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView,ScrollView, KeyboardAvoidingView ,TextInput, Modal, FlatList, Alert } from 'react-native';
-import React, { useState, useEffect ,useRef} from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, KeyboardAvoidingView, TextInput, Modal, FlatList, Alert } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import firestore from '@react-native-firebase/firestore';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -10,74 +10,133 @@ import * as Animatable from 'react-native-animatable';
 const StdGroupDetails = ({ route, navigation }) => {
     const { groupId } = route.params;
     const [noticeList, setNoticeList] = useState([]);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [filteredData, setFilteredData] = useState([]); 
-   
+    const [filteredData, setFilteredData] = useState([]);
+    const [subject, setSubject] = useState('');
+    const [teacherEmail, setteacherEmail] = useState('');
+    const [studentEmail, setstudentEmail] = useState('');
+    const [parenttEmail, setparentEmail] = useState('');
+    const [teacherName, setTeacherName] = useState('');
+    const [studentName, setStudentName] = useState('');
+    const [parentName, setParentName] = useState('');
+
     useEffect(() => {
         const unsubscribe = firestore()
-        .collection('groups')
-        .doc(groupId)
-        .collection('SubjectMaterial')
-          .onSnapshot((querySnapshot) => {
-            const noticeData = querySnapshot.docs.map((documentSnapshot) => {
-              return {
-                id: documentSnapshot.id,
-                ...documentSnapshot.data(),
-              };
+            .collection('groups')
+            .doc(groupId)
+            .collection('SubjectMaterial')
+            .onSnapshot((querySnapshot) => {
+                const noticeData = querySnapshot.docs.map((documentSnapshot) => {
+                    return {
+                        id: documentSnapshot.id,
+                        ...documentSnapshot.data(),
+                    };
+                });
+                setNoticeList(noticeData);
             });
-            setNoticeList(noticeData);
-           
-          });
-    
+
         return () => unsubscribe();
-      }, []);
-      
- 
-      
-     
-    
-      
-      const renderItem = ({ item }) => {
-  
+    }, []);
+
+    useEffect(() => {
+        const unsubscribe = firestore()
+            .collection('groups')
+            .doc(groupId)
+            .onSnapshot((doc) => {
+                const subjectData = doc.data().Subject;
+                const teacherEmail = doc.data().teacherEmail;
+                const studentEmail = doc.data().studentEmail;
+                const parentEmail = doc.data().parentEmail;
+                console.log(parentEmail);
+
+                setparentEmail(parentEmail);
+                setSubject(subjectData);
+                setteacherEmail(teacherEmail);
+                setstudentEmail(studentEmail);
+               
+
+
+             {/*   firestore().collection('Parents').where('email', '==', parentEmail).get()
+                .then(querySnapshot => {
+                    if (!querySnapshot.empty) {
+                        const parent = querySnapshot.docs[0].data();
+                        setParentName(parent.name);
+                    }
+                })
+                .catch(error => console.error('Error fetching parent data: ', error));
+                */} 
+                firestore().collection('Teachers').where('email', '==', teacherEmail).get()
+                    .then(querySnapshot => {
+                        if (!querySnapshot.empty) {
+                            const teacher = querySnapshot.docs[0].data();
+                            setTeacherName(teacher.name);
+                        }
+                    })
+                    .catch(error => console.error('Error fetching teacher data: ', error));
+
+                
+                firestore().collection('Students').where('email', '==', studentEmail).get()
+                    .then(querySnapshot => {
+                        if (!querySnapshot.empty) {
+                            const student = querySnapshot.docs[0].data();
+                            setStudentName(student.name);
+                        }
+                    })
+                    .catch(error => console.error('Error fetching student data: ', error));
+
+                
+                
+            });
+
+        return () => unsubscribe();
+    }, []);
+
+
+    const renderItem = ({ item }) => {
+
         return (
             <NoticeListCom
-                name={item.title}   
+                name={item.title}
                 Rollnumber={item.message}
-                
-               documentName={item.documentName} // Pass the document name here
-               documentUrl={item.documentURL}
+
+                documentName={item.documentName}
+                documentUrl={item.documentURL}
                 onEdit={() => navigation.navigate('EdtNotice', { data: item })}
-                onDelete={() => deleteNotice(item.id,item.documentName)}
-                
+                onDelete={() => deleteNotice(item.id, item.documentName)}
+
             />
         );
     };
 
-   
+
     return (
-       
+
         <SafeAreaView style={{ flex: 1 }}>
-  <Animatable.View animation="zoomIn" duration={2000}  style={styles.container}>
-  <Text style={styles.header}>𝘾𝙡𝙖𝙨𝙨 𝘿𝙞𝙨𝙘𝙪𝙨𝙨𝙞𝙤𝙣</Text>
+            <Animatable.View animation="zoomIn" duration={2000} style={styles.container}>
+                <Text style={styles.header}>𝘾𝙡𝙖𝙨𝙨 𝘿𝙞𝙨𝙘𝙪𝙨𝙨𝙞𝙤𝙣</Text>
+                <Text style={styles.txt}>Teacher : <Text style={{ color: themeColors.bg2 }}>{teacherName}</Text></Text>
+                <Text style={styles.txt}>Student : <Text style={{ color: themeColors.bg2 }}>{studentName}</Text></Text>
+              {/*  <Text style={styles.txt}>Parent : <Text style={{ color: themeColors.bg2 }}>{parentName}</Text></Text>*/} 
+                <Text style={styles.txt}>Subject : <Text style={{ color: themeColors.bg2 }}>{subject}</Text></Text>
+
                 <FlatList
-                   data={filteredData.length > 0 ? filteredData : noticeList} // Use the filtered data for rendering if available
+                    data={filteredData.length > 0 ? filteredData : noticeList}
                     renderItem={renderItem}
                     keyExtractor={(item) => item.id}
-                   removeClippedSubviews={false}
+                    removeClippedSubviews={false}
 
 
                 />
-          
 
-               
-       
-              
 
-               
+
+
+
+
+
             </Animatable.View>
-          
+
         </SafeAreaView>
-     
+
     );
 };
 
@@ -94,13 +153,13 @@ const styles = StyleSheet.create({
 
     },
     header: {
-        textAlign:'center',
-           fontSize: 25,
-           fontWeight: 'bold',
-         marginTop:hp(3),
-         marginBottom: hp(2),
-         color:themeColors.bg3
-         },
+        textAlign: 'center',
+        fontSize: 25,
+        fontWeight: 'bold',
+        marginTop: hp(3),
+        marginBottom: hp(2),
+        color: themeColors.bg3
+    },
     center:
     {
         height: hp(6),
@@ -113,7 +172,7 @@ const styles = StyleSheet.create({
         borderRadius: wp(3),
 
     },
-   
+
     add:
     {
         height: hp(99),
@@ -149,7 +208,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
- 
+
 
     scrollViewContent: {
         flexGrow: 1,
@@ -158,12 +217,17 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
-  
-    
-   
-   
-   
-    
+    txt: {
+
+        alignSelf: 'center',
+        color: themeColors.bg3,
+
+    }
+
+
+
+
+
 });
 
 export default StdGroupDetails;

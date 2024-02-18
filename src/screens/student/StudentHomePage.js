@@ -12,6 +12,8 @@ import OptionCom from '../components/OptionCom';
 const StudentHomepage = ({navigation}) => {
   
   const data = useSelector(state => state.value.stdData);
+
+    const currentUserEmail = data.email;
   const [myObject, setMyObject] = useState({
     name: '', email: '', phone: '', parentEmail:'',password: '', confirmpassword: '',ImageURL: '',
   });
@@ -24,12 +26,15 @@ const StudentHomepage = ({navigation}) => {
         const teachersData = [];
     
         for (const doc of teachersSnapshot.docs) {
-          const { name, majorSubject,ImageURL } = doc.data();
+          const { name, majorSubject,ImageURL,experience,qualification,email } = doc.data();
     
           teachersData.push({
             ImageURL,
             name,
             majorSubject,
+            experience,
+            qualification,
+            email
            
           });
         }
@@ -112,7 +117,17 @@ const StudentHomepage = ({navigation}) => {
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
           <View style={styles.categoriesView1}>
-            <TouchableOpacity style={styles.iconbtn1}>
+            <TouchableOpacity 
+             
+             onPress={()=>{
+              navigation.navigate('TeacherInfo', {
+                teacher: item ,
+                source:'StudentHomePage',
+                stdemail:currentUserEmail,
+              })
+             }}
+
+            style={styles.iconbtn1}>
             <Image style={styles.selectedImageq1} source={{ uri: item.ImageURL }}/>
 
             <Text style={[styles.Teachtxt, {color:themeColors.bg3}]}>Name:</Text>
@@ -141,7 +156,7 @@ const StudentHomepage = ({navigation}) => {
                     iconname={"chalkboard-teacher"}
                         iconLibrary={"FontAwesome5"}
                         onPress={()=>{
-                            //navigation.navigate('UserDetail');
+                            navigation.navigate('TutorOptions');
                         }}
                     />
                      <OptionCom

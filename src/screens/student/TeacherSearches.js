@@ -39,8 +39,7 @@ const [isRequestSent, setIsRequestSent] = useState(false);
   useEffect(() => {
     setMyObject(data);
 
-    // Check if request has already been sent
-    // (You need to implement the logic to check this based on your application structure)
+ 
     const checkRequestStatus = async () => {
       try {
         const requestsRef = firebase.firestore().collection('requests');
@@ -196,7 +195,7 @@ const [isRequestSent, setIsRequestSent] = useState(false);
       <TouchableOpacity
               style={styles.btn1}
               onPress={sendRequest}
-              disabled={isRequestSent || loading} // Disable button if request sent or already loading
+              disabled={isRequestSent || loading} 
             >
               {loading ? (
                 <ActivityIndicator size="small" color="#191D88" style={{alignSelf:'center',marginTop:(13)}}  />
@@ -206,26 +205,12 @@ const [isRequestSent, setIsRequestSent] = useState(false);
                 </Text>
               )}
             </TouchableOpacity>
-            </View>
-
-   
-
-
-
-  
+     </View>  
   </View>
-
- 
 </View>
 </View>
 
-      
-       
-
- 
-      
-
-          </ScrollView>
+</ScrollView>
 
          
       

@@ -66,6 +66,10 @@ import Groups from '../screens/teacher/groups';
 import Studygroups from '../screens/student/studygroups';
 import NoticeList from '../screens/teacher/addmaterial';
 import StdGroupDetails from '../screens/student/stdGroupDetails';
+import TutorOptions from '../screens/student/TutorOptions';
+import PendingTeachers from '../screens/student/PendingTeachers';
+import CurrentTeachers from '../screens/student/CurrentTeachers';
+import TeacherInfo from '../screens/student/TeacherInfo';
 const Stack = createNativeStackNavigator();
 
 
@@ -138,6 +142,10 @@ export default function AppNavigation() {
         <Stack.Screen name="EditStudentProfile" options={{headerShown: false}} component={EditStudentProfile} />
         <Stack.Screen name="StudentHomePage" options={{headerShown: false}} component={StudentHomePage} />
         <Stack.Screen name="TeacherRequests" options={{headerShown: false}} component={TeacherRequests} />
+        <Stack.Screen name="TutorOptions" options={{headerShown: false}} component={TutorOptions} />
+        <Stack.Screen name="PendingTeachers" options={{headerShown: false}} component={PendingTeachers} />
+        <Stack.Screen name="CurrentTeachers" options={{headerShown: false}} component={CurrentTeachers} />
+        <Stack.Screen name="TeacherInfo" options={{headerShown: false}} component={TeacherInfo} />
 
 
 

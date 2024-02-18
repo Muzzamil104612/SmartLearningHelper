@@ -13,7 +13,6 @@ const Studygroups = () => {
     userID: '',
     name: '',
     email: '',
-    // Add other properties as needed
   });
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
