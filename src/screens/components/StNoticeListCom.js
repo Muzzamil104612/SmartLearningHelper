@@ -4,27 +4,62 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { Linking } from 'react-native';
 const NoticeListCom = ({ name, Rollnumber, documentUrl,documentName, onEdit, onDelete }) => {
    
-    const openDocument = () => {
+    const openDocument = async () => {
         console.log("Opening document:", documentUrl);
-    
+      
         if (documentUrl) {
-          
-            Linking.openURL(documentUrl);
+            const supported = await Linking.canOpenURL(documentUrl);
+            if (supported) {
+                Linking.openURL(documentUrl);
+            } else {
+                console.error("Cannot open URL:", documentUrl);
+            }
         }
     };
+    
+    const handleLinkPress = (url) => {
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            url = 'http://' + url;
+        }
+        Linking.openURL(url);
+    };
+    
 
+    const renderDescriptionWithLinks = (description) => {
+     
+        if (!description) return null;
+        console.log('hye.......')
+        const urlRegex = /(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9-]+\.[a-zA-Z]{2,})(?:\/\S*)?/g;
+        const segments = description.split(urlRegex);
+        console.log('hye.......',segments,description)
+        return segments.map((segment, index) => {
+            if (segment && segment.match && segment.match(urlRegex)) {
+                const url = segment;
+                return (
+                    <TouchableOpacity key={index}
+                  
+                    onPress={() => handleLinkPress(url)}>
+                    <Text style={{ color: 'blue',fontSize:14,fontWeight:'500'}}>{segment}</Text>
+                </TouchableOpacity>
+                
+                );
+            } else {
+                return <Text key={index}>{' '}{segment}</Text>;
+            }
+        });
+    };
+    
+    
     return (
      <View>
         <View style={styles.render}>
             
-      
-  
         <View style={styles.texting}>
-          <Text style={styles.classItemt}>𝐓𝐢𝐭𝐥𝐞:
+          <Text style={styles.classItemt}>𝐓𝐢𝐭𝐥𝐞 :
          <Text  style={styles.classItem}> {name}</Text>
          </Text>
-            <Text style={styles.classItem1}>𝐃𝐞𝐬𝐜𝐫𝐢𝐩𝐭𝐢𝐨𝐧:
-            <Text  style={styles.classItem} selectable={true}>{Rollnumber}</Text>
+            <Text style={styles.classItem1}>𝐃𝐞𝐬𝐜𝐫𝐢𝐩𝐭𝐢𝐨𝐧 : 
+            <Text  style={styles.classItem} selectable={true}>{renderDescriptionWithLinks(Rollnumber)}</Text>
             </Text>
            
             </View>

@@ -26,7 +26,7 @@ const NoticeList = ({ route, navigation }) => {
       
       if (result && result.length > 0) {
         const documentUri = result[0].fileCopyUri;
-        setDocument(result); // Store the selected document
+        setDocument(result);
     
         // Upload the document to cloud storage
         const documentName = result[0].name;
