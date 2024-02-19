@@ -278,7 +278,16 @@ const TeacherInfo = ({ route, navigation }) => {
 
                         {renderButton()}
                         {rendersendrequestBtn()}
-
+                        <View>
+                            <TouchableOpacity
+                             onPress={()=>{
+                                navigation.navigate('Feedback');
+                             }}
+                             style={styles.btn}
+                            >
+                            <Text style={styles.btntxt}>Give Feedback</Text>
+                            </TouchableOpacity>
+                        </View>
 
                     </View>
 
