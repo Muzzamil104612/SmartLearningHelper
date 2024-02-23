@@ -8,8 +8,9 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import * as Animatable from 'react-native-animatable';
 
-const TutorOptions = ({ navigation }) => {
-
+const ChildDetail = ({ route, navigation }) => {
+    const { student } = route.params;
+    console.log('student is',student);
   
   return (
     <SafeAreaView style={styles.container}>
@@ -19,23 +20,31 @@ const TutorOptions = ({ navigation }) => {
 <View style={{justifyContent:'center',alignItems:"center"}}>
         <Text
           style={styles.title}>
-           𝐂𝐡𝐨𝐨𝐬𝐞 𝐓𝐮𝐭𝐨𝐫 𝐒𝐭𝐚𝐭𝐮𝐬!
+            𝘾𝙝𝙞𝙡𝙙 𝘽𝙤𝙭 𝙈𝙖𝙣𝙖𝙜𝙚𝙢𝙚𝙣𝙩!
         </Text>
 
         <View style={styles.midPart}>
         <TouchableOpacity
-               onPress={() => navigation.navigate('PendingTeachers')}
+              onPress={() => navigation.navigate('TutorOptions')}
               style={styles.btn}>
-              <Text style={styles.btntxt}>Pending Tutors</Text>
+              <Text style={styles.btntxt}>Tutors</Text>
             </TouchableOpacity>
         
             <TouchableOpacity
-             onPress={() => navigation.navigate('CurrentTeachers')}
+              onPress={() => navigation.navigate('Studygroups')}
               style={styles.btn}>
-              <Text style={styles.btntxt}>Current Tutors</Text>
+              <Text style={styles.btntxt}>Groups</Text>
             </TouchableOpacity>
          
-            
+            <TouchableOpacity
+                 onPress={() => navigation.navigate('PaymentList')}
+              style={styles.btn}>
+              <Text style={styles.btntxt}>Payment</Text>
+            </TouchableOpacity>
+        
+
+         
+         
           
             </View>
         </View>
@@ -52,9 +61,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#F4BC1C',
-    fontSize: 33,
+    fontSize: 28,
     alignSelf: "center",
-    marginTop:hp(-19),
     // fontWeight: 'bold',
   },
   btn: {
@@ -78,7 +86,7 @@ const styles = StyleSheet.create({
     fontWeight:'500'
   },
   midPart: {
-    marginTop: hp(6),
+    marginTop: 23,
   },
   arrow: {
     position: "absolute",
@@ -91,4 +99,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TutorOptions;
+export default ChildDetail;

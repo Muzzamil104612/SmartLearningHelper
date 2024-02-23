@@ -5,7 +5,12 @@ export const ADMIN_DETAIL = "ADMIN_DETAIL";
 export const PARENT_EMAIL = "PARENT_EMAIL";
 
 
-  
+export const saveStudentInfo = (studentInfo) => {
+  return {
+    type: 'SAVE_STUDENT_INFO',
+    payload: studentInfo,
+  };
+};
   export const teacheremail = value => ({
     type:TEACHER_EMAIL,
     payload: value,

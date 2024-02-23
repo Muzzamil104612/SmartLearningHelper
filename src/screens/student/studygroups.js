@@ -8,17 +8,24 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 
 const Studygroups = () => {
   const navigation = useNavigation();
+  const [groups, setGroups] = useState([]);
+  const [loading, setLoading] = useState(true);
   const data = useSelector((state) => state.value.stdData);
+  const data1 = useSelector(state => state.value.selectedStudent);
   const [myObject, setMyObject] = useState({
     userID: '',
     name: '',
     email: '',
   });
-  const [groups, setGroups] = useState([]);
-  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
-    setMyObject(data);
+   
+    if (data && data.email) {
+      setMyObject(data);
+    } else if (data1 && data1.email) {
+      setMyObject(data1);
+    }
   }, [data]);
 
   useEffect(() => {
@@ -48,9 +55,32 @@ const Studygroups = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>My Groups</Text>
+      <View style={{justifyContent:'center',alignItems:"center",alignContent:"center"}}>
+           <Text
+            style={{
+                
+                fontSize: 24,
+                fontWeight: '800',
+                color:themeColors.bg2,
+                padding:12,
+                backgroundColor:'white',
+                width:wp(50),
+                borderRadius:hp(1),
+                shadowColor: '#000000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.8,
+        shadowRadius: 4,
+        elevation:2,
+        textAlign:'center',
+        marginBottom:hp(2),
+        
+
+            }}>My Groups</Text></View>
       {loading ? (
-        <ActivityIndicator size="large" color={themeColors.bg3} style={styles.loadingIndicator} />
+        <ActivityIndicator size="large" color={themeColors.bg2} style={styles.loadingIndicator} />
       ) : groups.length === 0 ? (
         <Text style={{ alignSelf: 'center', marginTop: hp(20), color: themeColors.bg2, fontSize: 30, textAlign: 'center' }}>𝓝𝓸 𝓰𝓻𝓸𝓾𝓹 𝓕𝓸𝓾𝓷𝓭</Text>
       ) : (
@@ -115,7 +145,7 @@ const styles = StyleSheet.create({
     marginLeft: wp(4),
   },
   loadingIndicator: {
-    marginTop: 20,
+    marginTop: hp(30),
   },
 });
 

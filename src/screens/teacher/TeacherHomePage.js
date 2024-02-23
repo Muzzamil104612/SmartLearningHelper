@@ -137,7 +137,7 @@ const TeacherHomepage = ({navigation}) => {
                     iconname={"payments"}
                         iconLibrary={"MaterialIcons"}
                         onPress={()=>{
-                            //navigation.navigate('UserDetail');
+                            navigation.navigate('PaymentIndex');
                         }}
                     />
                     <OptionCom
@@ -158,7 +158,7 @@ const TeacherHomepage = ({navigation}) => {
                 iconname={"user-graduate"}
                     iconLibrary={"FontAwesome5"}
                     onPress={()=>{
-                    //    // navigation.navigate('NotifySplashScreen')
+                     navigation.navigate('CurrentStudent')
                   }}
                 />
                    <OptionCom 

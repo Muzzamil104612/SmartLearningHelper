@@ -198,7 +198,7 @@ setMyObject1({ emailError: '', passwordError: '' }); // Clear any error messages
               setMyObject({ ...myObject, Email: '', Password: '' });
               navigation.navigate('HomeScreenForTeacher');
               setIsLoading(false);
-              Alert.alert('Success', 'Successfully Logged In!');
+              Alert.alert(Error, '𝙎𝙪𝙘𝙘𝙚𝙨𝙨𝙁𝙪𝙡𝙡𝙮 𝙇𝙤𝙜𝙜𝙚𝙙 𝙄𝙣....');
             } else if(teacher.Status != 'approved') {
     
               navigation.navigate('StatusPage', { teacherInfo: teacher });

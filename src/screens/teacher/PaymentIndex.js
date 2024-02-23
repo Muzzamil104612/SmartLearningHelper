@@ -8,8 +8,8 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import * as Animatable from 'react-native-animatable';
 
-const TutorOptions = ({ navigation }) => {
-
+const PaymentIndex = ({ navigation }) => {
+    
   
   return (
     <SafeAreaView style={styles.container}>
@@ -19,23 +19,26 @@ const TutorOptions = ({ navigation }) => {
 <View style={{justifyContent:'center',alignItems:"center"}}>
         <Text
           style={styles.title}>
-           𝐂𝐡𝐨𝐨𝐬𝐞 𝐓𝐮𝐭𝐨𝐫 𝐒𝐭𝐚𝐭𝐮𝐬!
+            𝑺𝒆𝒍𝒆𝒄𝒕 𝑶𝒏𝒆 𝑶𝒑𝒕𝒊𝒐𝒏!
         </Text>
 
         <View style={styles.midPart}>
         <TouchableOpacity
-               onPress={() => navigation.navigate('PendingTeachers')}
+              onPress={() => navigation.navigate('AdminPaymentList')}
               style={styles.btn}>
-              <Text style={styles.btntxt}>Pending Tutors</Text>
+              <Text style={styles.btntxt}>Send Payment</Text>
             </TouchableOpacity>
         
             <TouchableOpacity
-             onPress={() => navigation.navigate('CurrentTeachers')}
+              onPress={() => navigation.navigate('StudentsPayment')}
               style={styles.btn}>
-              <Text style={styles.btntxt}>Current Tutors</Text>
+              <Text style={styles.btntxt}>Recieve Payment</Text>
             </TouchableOpacity>
          
-            
+        
+
+         
+         
           
             </View>
         </View>
@@ -52,9 +55,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#F4BC1C',
-    fontSize: 33,
+    fontSize: 28,
     alignSelf: "center",
-    marginTop:hp(-19),
     // fontWeight: 'bold',
   },
   btn: {
@@ -75,10 +77,10 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     padding: 12,
     fontSize: 17,
-    fontWeight:'500'
+    fontWeight:'700'
   },
   midPart: {
-    marginTop: hp(6),
+    marginTop: 23,
   },
   arrow: {
     position: "absolute",
@@ -91,4 +93,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TutorOptions;
+export default PaymentIndex;

@@ -70,6 +70,20 @@ import TutorOptions from '../screens/student/TutorOptions';
 import PendingTeachers from '../screens/student/PendingTeachers';
 import CurrentTeachers from '../screens/student/CurrentTeachers';
 import TeacherInfo from '../screens/student/TeacherInfo';
+import CurrentStudent from '../screens/teacher/CurrentStudent';
+import StudentInfo from '../screens/teacher/StudentInfo';
+import ChildDetail from '../screens/parent/ChildDetail';
+import Group from '../screens/admin/Groups';
+import PaymentList from '../screens/parent/PaymentList';
+import SpecificPayments from '../screens/parent/SpecificPayments';
+import SpecificStudentPayment from '../screens/teacher/SpecificStudentPayment';
+import StudentsPayment from '../screens/teacher/StudentsPayment';
+import PaymentIndex from '../screens/teacher/PaymentIndex';
+import AddAdminPayment from '../screens/teacher/AddAdminPayment';
+import AdminPaymentList from '../screens/teacher/AdminPaymentList';
+import GroupDetail from '../screens/admin/GroupDetails';
+import PaymentByTeacher from '../screens/admin/PaymentByTeacher';
+import SpecificTeacherPayment from '../screens/admin/SpecificTeacherPayment';
 const Stack = createNativeStackNavigator();
 
 
@@ -78,6 +92,21 @@ export default function AppNavigation() {
     <NavigationContainer>
         <Provider store={store}>
       <Stack.Navigator initialRouteName='Login'>
+      <Stack.Screen name="PaymentByTeacher" options={{headerShown: false}} component={PaymentByTeacher} />
+      <Stack.Screen name="SpecificTeacherPayment" options={{headerShown: false}} component={SpecificTeacherPayment} />
+      <Stack.Screen name="GroupDetail" options={{headerShown: false}} component={GroupDetail} />
+      <Stack.Screen name="Group" options={{headerShown: false}} component={Group} />
+      <Stack.Screen name="AddAdminPayment" options={{headerShown: false}} component={AddAdminPayment} />
+      <Stack.Screen name="AdminPaymentList" options={{headerShown: false}} component={AdminPaymentList} />
+      <Stack.Screen name="SpecificPayments" options={{headerShown: false}} component={SpecificPayments} />
+      <Stack.Screen name="SpecificStudentPayment" options={{headerShown: false}} component={SpecificStudentPayment} />
+      <Stack.Screen name="StudentsPayment" options={{headerShown: false}} component={StudentsPayment} />
+      <Stack.Screen name="PaymentIndex" options={{headerShown: false}} component={PaymentIndex} />
+     
+      <Stack.Screen name="PaymentList" options={{headerShown: false}} component={PaymentList} />
+      <Stack.Screen name="ChildDetail" options={{headerShown: false}} component={ChildDetail} />
+      <Stack.Screen name="StudentInfo" options={{headerShown: false}} component={StudentInfo} />
+      <Stack.Screen name="CurrentStudent" options={{headerShown: false}} component={CurrentStudent} />
       <Stack.Screen name="StdGroupDetails" options={{headerShown: false}} component={StdGroupDetails} />
       <Stack.Screen name="NoticeList" options={{headerShown: false}} component={NoticeList} />
       <Stack.Screen name="GroupDetails" options={{headerShown: false}} component={GroupDetails} />

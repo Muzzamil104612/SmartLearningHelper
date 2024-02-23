@@ -129,7 +129,7 @@ const AdminHomepage = ({navigation}) => {
                     iconname={"group"}
                         iconLibrary={"FontAwesome"}
                         onPress={()=>{
-                        //    // navigation.navigate('NotifySplashScreen')
+                      navigation.navigate('Group')
                       }}
                     />
                        <OptionCom 
@@ -137,7 +137,7 @@ const AdminHomepage = ({navigation}) => {
                     iconname={"payments"}
                         iconLibrary={"MaterialIcons"}
                         onPress={()=>{
-                            //navigation.navigate('UserDetail');
+                            navigation.navigate('PaymentByTeacher');
                         }}
                     />
                     <OptionCom

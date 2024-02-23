@@ -94,8 +94,8 @@ const StdRequests = ({ navigation }) => {
       ) : requestedStudents.length === 0 ? (
         <Text style={{ alignSelf: 'center', marginTop: hp(27) , color:themeColors.bg2,fontSize:27,textAlign:'center'}}>𝓝𝓸 𝓢𝓽𝓾𝓭𝓮𝓷𝓽 𝓡𝓮𝓺𝓾𝓮𝓼𝓽𝓼 𝓪𝓻𝓮 𝓬𝓾𝓻𝓻𝓮𝓷𝓽𝓵𝔂 𝓟𝓻𝓮𝓼𝓮𝓷𝓽! !</Text>
       ) : (
-    requestedStudents.map((request) => (
-  <View key={request.studentDetails.id} style={[styles.reqpart]}>
+    requestedStudents.map((request,index) => (
+  <View key={index} style={[styles.reqpart]}>
     <View style={{flexDirection:'row'}}>
        <View style={styles.circle}>
        <Image source={{ uri: request.studentDetails.ImageURL }} style={styles.selectedImage} />

@@ -1,12 +1,12 @@
 
-import  { useState } from 'react';
+import  { useState,useEffect } from 'react';
 
 import { firebase } from '@react-native-firebase/firestore';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { themeColors } from '../../theme';
-import { View, Text, TouchableOpacity, Image, TextInput, StyleSheet, Alert,ScrollView ,ActivityIndicator} from 'react-native'
+import { View, Text, TouchableOpacity, Image, TextInput, StyleSheet, Alert,ScrollView,Modal ,ActivityIndicator} from 'react-native'
 import React from 'react'
-
+import firestore from '@react-native-firebase/firestore';
 
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -16,14 +16,91 @@ import TextInputComponent from '../components/TextInputComponent';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import * as Animatable from 'react-native-animatable';
-
+import { useSelector} from 'react-redux';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 const TeacherSearchs = ({ route, navigation }) => {
   const { teacher } = route.params;
   
+const [isRequestSent, setIsRequestSent] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [acceptLoading, setAcceptLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [groupName, setGroupName] = useState('');
+  const data= useSelector(state =>state.value. parentData);
+  const [myObject, setMyObject] = useState({
+    userID: '', name: '', email: '', phone: '', password: '', confirmpassword: '',ImageURL: '',
+  });
 
- 
+
+useEffect(() => {
+  setMyObject(data);
+
+   
+}, []);
+const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+  
+    const fetchStudents = async () => {
+      try {
+        const studentsRef = firestore().collection('Students');
+        const snapshot = await studentsRef.where('parentEmail', '==', myObject.email).get();
+        const studentData = snapshot.docs.map(doc => doc.data());
+        setStudents(studentData);
+      } catch (error) {
+        console.error('Error fetching students:', error);
+      }
+    };
+
+    fetchStudents();
+  }, [myObject.email]);
+  const handleAccept = async () => {
+    try {
+      setLoading(true);
+      if (!groupName) {
+        Alert.alert('Error', 'Please enter a student Gmail.');
+        return;
+      }
+
+      // Check if the entered Gmail exists in the students collection
+      const matchingStudent = students.find(student => student.email === groupName);
+
+      if (!matchingStudent) {
+        // If no matching student is found, display an error message
+        Alert.alert(Error, 'No such student Gmail exists for your account.');
+        setLoading(false);
+        return;
+      }
+
+      // If a matching student is found, proceed with the acceptance process
+      const requestsRef = firestore().collection('requests');
+
+      await requestsRef.add({
+        studentEmail: matchingStudent.email,
+        parentEmail: myObject.email,
+        teacherEmail: teacher.email,
+        majorSubject: teacher.majorSubject,
+        status: 'pending',
+      });
+
+      setIsRequestSent(true);
+      setIsModalVisible(false);
+      navigation.goBack();
+
+      // Additional logic for accepting the student
+      // ...
+
+    } catch (error) {
+      console.error('Error accepting student and creating group:', error);
+      Alert.alert('Error', 'An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
 
  
   
@@ -118,14 +195,53 @@ const TeacherSearchs = ({ route, navigation }) => {
       keyboardType="default"
     />
 
-   
+<View style={{ alignItems: 'center', marginTop: hp(0.9) }}>
+      <TouchableOpacity
+              style={styles.btn1}
+              onPress={() => setIsModalVisible(true)}
+              disabled={isRequestSent || loading} 
+            >
+              
+                <Text style={styles.btntxt1}>
+                  {isRequestSent ? 'Requested' : 'Send Request'}
+                </Text>
+             
+            </TouchableOpacity>
+     </View> 
 
 
 
   
   </View>
 
+  <Modal visible={isModalVisible} transparent animationType="slide">
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Student Gmail:</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter Student Gmail"
+                  value={groupName}
+                  placeholderTextColor={"gray"}
+                  onChangeText={(text) => setGroupName(text)}
+                />
+                <TouchableOpacity style={styles.acceptButton}   
+                onPress={handleAccept}
+  >
  
+ {loading ? (
+                <ActivityIndicator size="small" color="#191D88" style={{alignSelf:'center',marginTop:(13)}}  />
+              ) : (
+                <Text style={{fontSize:18,fontWeight:'800',color:'white'}}>
+                 Thank You!
+                </Text>
+              )}
+      
+                </TouchableOpacity>
+               
+              </View>
+            </View>
+          </Modal>
 </View>
 </View>
 
@@ -147,6 +263,95 @@ const TeacherSearchs = ({ route, navigation }) => {
 export default TeacherSearchs;
 
 const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+ 
+   
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 20,
+    shadowColor: 'gray',
+    shadowOffset: {
+        width: 1,
+        height: 1,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    elevation: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color:themeColors.bg3
+  },
+  input: {
+    height: hp(8),
+    width:wp(60),
+    borderColor: 'gray',
+    borderWidth: 1,
+    color:themeColors.bg3,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+  acceptButton: {
+    backgroundColor: 'green',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  cancelButton: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+
+  btn1: {
+    backgroundColor: themeColors.bg2,
+    borderRadius: 7,
+    marginTop: hp(5),
+    width: wp(60),
+    height: hp(6.3),
+    alignContent: 'center',
+    alignItems: 'center',
+    elevation: 2.5, // Increased elevation for a more raised appearance
+    shadowColor: 'black',
+    shadowOpacity: 0.5,
+    shadowRadius: 50,
+
+
+  },
+  btntxt1: {
+    color: "#191D88",
+    alignSelf: "center",
+    paddingVertical: 12,
+    fontSize: 18,
+    paddingHorizontal: 45,
+    fontWeight: "700",
+
+
+  },
+  btntxt: {
+    color:'white',
+    alignSelf: "center",
+    paddingVertical: 12,
+    fontSize: 18,
+    paddingHorizontal: 20,
+    fontWeight: "700",
+
+
+  },
 
     container: {
       flex: 1,

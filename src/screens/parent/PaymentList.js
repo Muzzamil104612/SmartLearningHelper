@@ -5,7 +5,7 @@ import firestore from '@react-native-firebase/firestore';
 import { useSelector } from 'react-redux';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
-const PendingTeachers = ({ navigation }) => {
+const PaymentList = ({ navigation }) => {
     const [pendingRequests, setPendingRequests] = useState([]);
     const [matchingTeachers, setMatchingTeachers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -18,6 +18,7 @@ const PendingTeachers = ({ navigation }) => {
       currentUserEmail = data.email;
     } else if (data1 && data1.email) {
       currentUserEmail = data1.email;
+      console.log('data is :',data1);
     }
 
     useEffect(() => {
@@ -26,22 +27,18 @@ const PendingTeachers = ({ navigation }) => {
                 const querySnapshot = await firestore()
                     .collection('requests')
                     .where('studentEmail', '==', currentUserEmail)
-                    .where('status', '==', 'pending')
+                    .where('status', '==', 'Accepted')
                     .get();
 
                 const requestsData = querySnapshot.docs.map(doc => doc.data());
                 setPendingRequests(requestsData);
             } catch (error) {
-                console.error('Error fetching pending requests: ', error);
-                setLoading(false);
-              
-                setDelayedLoading(false);
+                console.error('Error fetching accepted requests: ', error);
             } finally {
                 setTimeout(() => {
                     setDelayedLoading(false);
                   }, 2000);
                 setLoading(false); // Set loading to false after fetching data
-              
             }
         };
 
@@ -73,16 +70,16 @@ const PendingTeachers = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-             <View style={{justifyContent:'center',
+            <View style={{justifyContent:'center',
         alignContent:'center',
         alignItems:"center",
         height:hp(10),
-        marginBottom:hp(2),
+        marginBottom:hp(1),
         }}>
             <Text
             style={{
                 
-                fontSize: 21,
+                fontSize: 24,
                 fontWeight: '800',
                 color:themeColors.bg2,
                 padding:12,
@@ -101,62 +98,62 @@ const PendingTeachers = ({ navigation }) => {
         
 
             }}>
-                𝙍𝙚𝙦𝙪𝙚𝙨𝙩𝙚𝙙 𝙏𝙪𝙩𝙤𝙧𝙨
+                𝘾𝙪𝙧𝙧𝙚𝙣𝙩 𝙏𝙪𝙩𝙤𝙧𝙨
             </Text>
             </View>
             {delayedLoading ? (
         // Show a delayed loading indicator
         <ActivityIndicator size="large" color={themeColors.bg2} style={styles.loadingIndicator} />
-      ) :
-            matchingTeachers.length > 0 ? (
-                <View>
+      ) :matchingTeachers.length > 0 ? (
+              <View>
                  
-                             <View style={{marginBottom:hp(15),backgroundColor:'white'}}>
-                    {matchingTeachers.map((child, index) => (
-                      <View key={index} style={[styles.reqpart]}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={styles.circle2}>
-                                <Image source={{ uri: child.ImageURL }} style={styles.selectedImage2} />
-                            </View>
+              <View style={{marginBottom:hp(15),backgroundColor:'white'}}>
+     {matchingTeachers.map((child, index) => (
+       <View key={index} style={[styles.reqpart]}>
+         <View style={{ flexDirection: 'row' }}>
+             <View style={styles.circle2}>
+                 <Image source={{ uri: child.ImageURL }} style={styles.selectedImage2} />
+             </View>
 
-                            <View >
-                                <View style={{ flexDirection: 'row', width: wp(49) }}>
-                                    <Text style={styles.text2}>{child.name}</Text>
+             <View >
+                 <View style={{ flexDirection: 'row', width: wp(49) }}>
+                     <Text style={styles.text2}>{child.name}</Text>
 
-                                </View>
-                                <Text style={styles.text}>{child.qualification}</Text>
-                            </View>
-                            <TouchableOpacity 
-                               onPress={() => 
-                        
-                            navigation.navigate('TeacherInfo', {
-                                teacher: child ,
-                                source:'PendingTeachers',
-                                stdemail:currentUserEmail,
-                              })
-                            }>
-                                <View style={[styles.btn]}>
-                                    <Text style={{ color: 'black', textAlign: 'center' }}>Details</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                        </View>
+                 </View>
+                 <Text style={styles.text}>{child.qualification}</Text>
+             </View>
+             <TouchableOpacity 
+                onPress={() => 
+         
+             navigation.navigate('SpecificPayments', {
+                 teacher: child ,
+              
+                
+               })
+             }>
+                 <View style={[styles.btn]}>
+                     <Text style={{ color: 'black', textAlign: 'center',fontWeight:'700' }}>Payment</Text>
+                 </View>
+             </TouchableOpacity>
+         </View>
+         </View>
 
-                    ))}
-                </View>
-                       
-                </View>
+     ))}
+ </View>
+        
+ </View>
             ) : (
                 <Text
                 style={{
                     color: themeColors.bg3,
                     padding: 10,
-                    fontSize:29,
+                    fontSize:27,
                     marginTop:hp(20),
                     height:hp(100),
                    textAlign:'center'
-                }}>𝑵𝒐 𝑹𝒆𝒒𝒖𝒆𝒔𝒕𝒆𝒅 𝑻𝒖𝒕𝒐𝒓𝒔 𝑭𝒐𝒖𝒏𝒅</Text>
-                )}
+                }}
+                >𝙉𝙤 𝘾𝙪𝙧𝙧𝙚𝙣𝙩 𝙏𝙪𝙩𝙤𝙧𝙨 𝙁𝙤𝙪𝙣𝙙</Text>
+            )}
         </View>
     );
 };
@@ -546,12 +543,15 @@ const styles = StyleSheet.create({
     backgroundColor:themeColors.bg2,
     borderRadius:4,
     padding:hp(0.3),
-    width:wp(17),
-    marginLeft:wp(-9)
+    width:wp(20),
+    height:hp(4),
+    justifyContent:'center',
+    marginLeft:wp(-11)
   
    
    
    }
 });
 
-export default PendingTeachers;
+
+export default PaymentList;

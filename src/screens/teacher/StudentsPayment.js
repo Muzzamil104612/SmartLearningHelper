@@ -3,57 +3,71 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator } fr
 import { themeColors } from '../../theme';
 import firestore from '@react-native-firebase/firestore';
 import { useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
-const PendingTeachers = ({ navigation }) => {
+const StudentsPayment = ({ navigation }) => {
     const [pendingRequests, setPendingRequests] = useState([]);
     const [matchingTeachers, setMatchingTeachers] = useState([]);
+    const [delayedLoading, setDelayedLoading] = useState(true);
     const [loading, setLoading] = useState(true);
-    const [delayedLoading, setDelayedLoading] = useState(true); 
-    const data = useSelector(state => state.value.stdData);
-    const data1 = useSelector(state => state.value.selectedStudent);
-    let currentUserEmail;
-    
-    if (data && data.email) {
-      currentUserEmail = data.email;
-    } else if (data1 && data1.email) {
-      currentUserEmail = data1.email;
-    }
+    const data = useSelector(state => state.value.TeacherData);
+    const currentUserEmail = data.email;
+    const viewDetails = (student) => {
+        console.log(student);
+        navigation.navigate('SpecificStudentPayment', { student });
+      };
 
-    useEffect(() => {
-        const fetchPendingRequests = async () => {
-            try {
-                const querySnapshot = await firestore()
-                    .collection('requests')
-                    .where('studentEmail', '==', currentUserEmail)
-                    .where('status', '==', 'pending')
-                    .get();
+      const fetchPendingRequests = async () => {
+        try {
+            const querySnapshot = await firestore()
+                .collection('requests')
+                .where('teacherEmail', '==', currentUserEmail)
+                .where('status', '==', 'Accepted')
+                .get();
 
-                const requestsData = querySnapshot.docs.map(doc => doc.data());
-                setPendingRequests(requestsData);
-            } catch (error) {
-                console.error('Error fetching pending requests: ', error);
-                setLoading(false);
-              
+            const requestsData = querySnapshot.docs.map(doc => doc.data());
+            setPendingRequests(requestsData);
+
+        } catch (error) {
+            console.error('Error fetching accepted requests: ', error);
+        } finally {
+            setTimeout(() => {
                 setDelayedLoading(false);
-            } finally {
-                setTimeout(() => {
-                    setDelayedLoading(false);
-                  }, 2000);
-                setLoading(false); // Set loading to false after fetching data
-              
-            }
-        };
+              }, 2000);
+            setLoading(false); // Set loading to false after fetching data
+        }
+    };
 
-        fetchPendingRequests();
-    }, [currentUserEmail]);
+    const fetchMatchingTeachers = async () => {
+        try {
+            const teacherEmails = pendingRequests.map(request => request.studentEmail);
+            const querySnapshot = await firestore()
+                .collection('Students')
+                .where('email', 'in', teacherEmails)
+                .get();
+
+            const teachersData = querySnapshot.docs.map(doc => doc.data());
+            setMatchingTeachers(teachersData);
+        } catch (error) {
+            console.error('Error fetching matching teachers: ', error);
+        }
+    };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // Fetch data when the screen gains focus
+            fetchPendingRequests();
+        }, [currentUserEmail])
+    );
+
 
     useEffect(() => {
         const fetchMatchingTeachers = async () => {
             try {
-                const teacherEmails = pendingRequests.map(request => request.teacherEmail);
+                const teacherEmails = pendingRequests.map(request => request.studentEmail);
                 const querySnapshot = await firestore()
-                    .collection('Teachers')
+                    .collection('Students')
                     .where('email', 'in', teacherEmails)
                     .get();
 
@@ -69,20 +83,15 @@ const PendingTeachers = ({ navigation }) => {
         }
     }, [pendingRequests]);
 
-    
+   
 
     return (
         <View style={styles.container}>
-             <View style={{justifyContent:'center',
-        alignContent:'center',
-        alignItems:"center",
-        height:hp(10),
-        marginBottom:hp(2),
-        }}>
-            <Text
+          <View style={{justifyContent:'center',alignItems:"center",alignContent:"center"}}>
+           <Text
             style={{
                 
-                fontSize: 21,
+                fontSize: 24,
                 fontWeight: '800',
                 color:themeColors.bg2,
                 padding:12,
@@ -98,182 +107,59 @@ const PendingTeachers = ({ navigation }) => {
         shadowRadius: 4,
         elevation:2,
         textAlign:'center',
+        marginBottom:hp(2),
         
 
             }}>
-                𝙍𝙚𝙦𝙪𝙚𝙨𝙩𝙚𝙙 𝙏𝙪𝙩𝙤𝙧𝙨
+               𝐌𝐲 𝐒𝐭𝐮𝐝𝐞𝐧𝐭𝐬:
             </Text>
             </View>
             {delayedLoading ? (
         // Show a delayed loading indicator
         <ActivityIndicator size="large" color={themeColors.bg2} style={styles.loadingIndicator} />
-      ) :
-            matchingTeachers.length > 0 ? (
+      ) :matchingTeachers.length > 0 ? (
                 <View>
-                 
-                             <View style={{marginBottom:hp(15),backgroundColor:'white'}}>
-                    {matchingTeachers.map((child, index) => (
+                    {matchingTeachers.map((teacher, index) => (
                       <View key={index} style={[styles.reqpart]}>
                         <View style={{ flexDirection: 'row' }}>
-                            <View style={styles.circle2}>
-                                <Image source={{ uri: child.ImageURL }} style={styles.selectedImage2} />
+                            <View style={styles.circle}>
+                                <Image source={{ uri: teacher.ImageURL }} style={styles.selectedImage} />
                             </View>
 
                             <View >
                                 <View style={{ flexDirection: 'row', width: wp(49) }}>
-                                    <Text style={styles.text2}>{child.name}</Text>
+                                    <Text style={styles.text2}>{teacher.name}</Text>
 
                                 </View>
-                                <Text style={styles.text}>{child.qualification}</Text>
+                                <Text style={styles.text}>{teacher.qualification}</Text>
                             </View>
                             <TouchableOpacity 
-                               onPress={() => 
-                        
-                            navigation.navigate('TeacherInfo', {
-                                teacher: child ,
-                                source:'PendingTeachers',
-                                stdemail:currentUserEmail,
-                              })
-                            }>
-                                <View style={[styles.btn]}>
-                                    <Text style={{ color: 'black', textAlign: 'center' }}>Details</Text>
-                                </View>
+                            onPress={() => viewDetails(teacher)}>
+                                 <View style={[styles.btn]}>
+                     <Text style={{ color: 'black', textAlign: 'center',fontWeight:'700' }}>Payment</Text>
+                 </View>
                             </TouchableOpacity>
                         </View>
                         </View>
 
                     ))}
                 </View>
-                       
-                </View>
+                 
             ) : (
                 <Text
-                style={{
-                    color: themeColors.bg3,
-                    padding: 10,
-                    fontSize:29,
-                    marginTop:hp(20),
-                    height:hp(100),
-                   textAlign:'center'
-                }}>𝑵𝒐 𝑹𝒆𝒒𝒖𝒆𝒔𝒕𝒆𝒅 𝑻𝒖𝒕𝒐𝒓𝒔 𝑭𝒐𝒖𝒏𝒅</Text>
-                )}
+                    style={{
+                        color: themeColors.bg3,
+                        padding: 10,
+                        fontSize: 25,
+                        margin: 15
+                    }}
+                >𝓝𝓸 𝓬𝓾𝓻𝓻𝓮𝓷𝓽 𝓢𝓽𝓾𝓭𝓮𝓷𝓽 𝓕𝓸𝓾𝓷𝓭</Text>
+            )}
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    circle2: {
-        backgroundColor: 'white',
-        height: hp(10),
-        width: wp(20),
-        borderRadius: 100,
-        marginTop: hp(2),
-        alignContent: 'center',
-        justifyContent: 'center',
-        shadowColor: '#000000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.8,
-        shadowRadius: 4,
-        elevation: 8,
-    },
-    text:
-{
-  color:themeColors.bg2,
-  marginLeft:wp(4),
- // marginTop:hp(-1),
-},
-    selectedImage2: {
-        backgroundColor: 'white',
-        height: hp(10),
-        width: wp(20),
-        borderRadius: 100,
-        borderWidth: hp(0.3),
-        borderStyle: 'solid',
-        borderColor: themeColors.bg3,
-        alignContent: 'center',
-        justifyContent: 'center',
-        shadowColor: '#000000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.8,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    container: {
-        flex: 1,
-
-        backgroundColor: 'white',
-        padding: 20
-    },
-    circle: {
-        backgroundColor: 'white',
-        height: hp(10),
-        width: wp(20),
-        borderRadius: 100,
-        marginTop: hp(2),
-        alignContent: 'center',
-        justifyContent: 'center',
-        shadowColor: '#000000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.8,
-        shadowRadius: 4,
-        elevation: 8,
-    },
-    selectedImage: {
-        backgroundColor: 'white',
-        height: hp(10),
-        width: wp(20),
-        borderRadius: 100,
-        borderWidth: hp(0.3),
-        borderStyle: 'solid',
-        borderColor: themeColors.bg3,
-        alignContent: 'center',
-        justifyContent: 'center',
-        shadowColor: '#000000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.8,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    teacherCard: {
-        backgroundColor: 'white',
-        padding: 10,
-        marginVertical: 5,
-        borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.8,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    text2: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginLeft: wp(3.7),
-        marginTop: hp(3),
-        color: themeColors.bg3
-    },
-    text3: {
-        fontSize: 13,
-        fontWeight: '400',
-        marginLeft: wp(-18),
-        marginTop: hp(6.8),
-        color: themeColors.bg2
-    },
     container: {
         flex: 1,
 
@@ -540,18 +426,20 @@ const styles = StyleSheet.create({
       shadowRadius: 1,
       elevation: 8,
     },
-   btn:{
-    marginTop:hp(5.3),
-    color:'black',
-    backgroundColor:themeColors.bg2,
-    borderRadius:4,
-    padding:hp(0.3),
-    width:wp(17),
-    marginLeft:wp(-9)
-  
-   
-   
-   }
+    btn:{
+        marginTop:hp(5.3),
+        color:'black',
+        backgroundColor:themeColors.bg2,
+        borderRadius:4,
+        padding:hp(0.3),
+        width:wp(20),
+        height:hp(4),
+        justifyContent:'center',
+        marginLeft:wp(-11)
+      
+       
+       
+       }
 });
 
-export default PendingTeachers;
+export default StudentsPayment;

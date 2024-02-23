@@ -25,6 +25,7 @@ const TeacherInfo = ({ route, navigation }) => {
     const { teacher, source, stdemail } = route.params;
 
     const data = useSelector(state => state.value.stdData);
+    const data1 = useSelector(state => state.value.selectedStudent);
     const [myObject1, setMyObject] = useState({
         name: '', email: '', phone: '', parentEmail: '', password: '', confirmpassword: '', ImageURL: '',
     });
@@ -33,7 +34,11 @@ const TeacherInfo = ({ route, navigation }) => {
     const [isRequestSent, setIsRequestSent] = useState(false);
 
     useEffect(() => {
-        setMyObject(data);
+        if (data && data.email) {
+            setMyObject(data);
+          } else if (data1 && data1.email) {
+            setMyObject(data1);
+          }
         const checkRequestStatus = async () => {
             try {
                 const requestsRef = firebase.firestore().collection('requests');
@@ -96,7 +101,7 @@ const TeacherInfo = ({ route, navigation }) => {
                     disabled={loading}
                 >
                     {loading ? (
-                        <ActivityIndicator style={styles.btn} color="white" />
+                        <ActivityIndicator style={styles.btntxt} color="white" />
                     ) : (
                         <Text style={styles.btntxt}>Cancel Request</Text>
                     )}
@@ -333,6 +338,8 @@ const styles = StyleSheet.create({
     },
     btn: {
         margin: 10,
+        marginTop:hp(5),
+        width:wp(50),
         color: 'white',
         backgroundColor: themeColors.bg3,
         borderRadius: 4,
@@ -343,6 +350,7 @@ const styles = StyleSheet.create({
             width: 1,
             height: 1,
         },
+        alignSelf:'center',
         shadowOpacity: 0.3,
         shadowRadius: 1,
         elevation: 20,
@@ -531,8 +539,9 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         paddingVertical: 12,
         fontSize: 16,
-        paddingHorizontal: 45,
-        fontWeight: "500",
+     
+       
+        fontWeight: "600",
 
 
     },

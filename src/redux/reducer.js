@@ -8,12 +8,17 @@ const initialState = {
     parentData:'',
    stdData:'',
    TeacherData:'',
+   selectedStudent: null,
    AdminData:'',
   };
   export default itemReducer = (state = initialState, action) => {
     switch (action.type) {
      
-     
+      case 'SAVE_STUDENT_INFO':
+        return {
+          ...state,
+          selectedStudent: action.payload,
+        };
         case ADMIN_DETAIL:
           return {
             ...state,
