@@ -70,6 +70,7 @@ import TutorOptions from '../screens/student/TutorOptions';
 import PendingTeachers from '../screens/student/PendingTeachers';
 import CurrentTeachers from '../screens/student/CurrentTeachers';
 import TeacherInfo from '../screens/student/TeacherInfo';
+
 import CurrentStudent from '../screens/teacher/CurrentStudent';
 import StudentInfo from '../screens/teacher/StudentInfo';
 import ChildDetail from '../screens/parent/ChildDetail';
@@ -84,6 +85,9 @@ import AdminPaymentList from '../screens/teacher/AdminPaymentList';
 import GroupDetail from '../screens/admin/GroupDetails';
 import PaymentByTeacher from '../screens/admin/PaymentByTeacher';
 import SpecificTeacherPayment from '../screens/admin/SpecificTeacherPayment';
+
+
+
 const Stack = createNativeStackNavigator();
 
 
@@ -175,6 +179,7 @@ export default function AppNavigation() {
         <Stack.Screen name="PendingTeachers" options={{headerShown: false}} component={PendingTeachers} />
         <Stack.Screen name="CurrentTeachers" options={{headerShown: false}} component={CurrentTeachers} />
         <Stack.Screen name="TeacherInfo" options={{headerShown: false}} component={TeacherInfo} />
+        <Stack.Screen name="Feedback" options={{headerShown: false}} component={Feedback} />
 
 
 

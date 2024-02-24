@@ -110,7 +110,7 @@ const StdGroupDetails = ({ route, navigation }) => {
 
     return (
 
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1}}>
             <Animatable.View animation="zoomIn" duration={2000} style={styles.container}>
                 <Text style={styles.header}>𝘾𝙡𝙖𝙨𝙨 𝘿𝙞𝙨𝙘𝙪𝙨𝙨𝙞𝙤𝙣</Text>
                 <Text style={styles.txt}>𝓣𝓮𝓪𝓬𝓱𝓮𝓻 : <Text style={{ color: themeColors.bg2,   fontSize:16 }}>{teacherName}</Text></Text>
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        
     },
     txt: {
 
