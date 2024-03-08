@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "574729652413",
+    "project_id": "smartlearninghelper",
+    "storage_bucket": "smartlearninghelper.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:574729652413:android:c0b22647f8196a624b0fd4",
+        "android_client_info": {
+          "package_name": "com.smartlearninghelper"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0T5tRn40yM29uCjb9WbfcmvAwNie1Ccg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
