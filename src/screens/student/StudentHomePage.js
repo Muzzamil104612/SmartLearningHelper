@@ -39,7 +39,8 @@ const StudentHomepage = ({navigation}) => {
            
           });
         }
-    
+        teachersData.sort((a, b) => b.rating - a.rating);
+        
         setTeachers(teachersData);
         console.log('Teachers data:', teachersData);
       } catch (error) {
@@ -73,6 +74,8 @@ const StudentHomepage = ({navigation}) => {
       const docRef = await firestore().collection('Teachers').doc(myObject.userID).get();
       const docData = docRef.data();
       if (docData) {
+        docData.sort((a, b) => b.rating - a.rating);
+
         setMyObject(docData);
       }
       console.log('data getted is', myObject.ImageURL);

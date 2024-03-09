@@ -94,6 +94,7 @@ import PTeacherInfo from '../screens/parent/PTeacherInfo';
 import AllFeedbacks from '../screens/teacher/AllFeedbacks';
 import JoinCall from '../screens/components/JoinCall';
 import MeetingScreen from '../screens/components/MeetingScreen';
+import AdminFeedback from '../screens/admin/AdminFeedback';
 
 
 
@@ -197,7 +198,7 @@ export default function AppNavigation() {
         <Stack.Screen name="AllFeedbacks" options={{headerShown: false}} component={AllFeedbacks} />
         <Stack.Screen name="JoinCall" options={{headerShown: false}} component={JoinCall} />
         <Stack.Screen name="MeetingScreen" options={{headerShown: false}} component={MeetingScreen} />
-
+        <Stack.Screen name="AdminFeedback" options={{headerShown: false}} component={AdminFeedback} />
 
 
       </Stack.Navigator>

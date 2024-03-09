@@ -23,9 +23,6 @@ const SubjectSearchd = ({ route, navigation }) => {
   const { teacher } = route.params;
   
 
- 
-
- 
   
   return (
  

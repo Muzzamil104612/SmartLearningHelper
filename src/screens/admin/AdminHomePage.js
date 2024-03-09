@@ -33,6 +33,7 @@ const AdminHomepage = ({ navigation }) => {
 
           });
         }
+        teachersData.sort((a, b) => b.rating - a.rating);
 
         setTeachers(teachersData);
         console.log('Teachers data:', teachersData);
@@ -146,7 +147,7 @@ const AdminHomepage = ({ navigation }) => {
           iconname={"preview"}
           iconLibrary={"MaterialIcons"}
           onPress={() => {
-            // navigation.navigate('ClassDetails');
+             navigation.navigate('AdminFeedback');
           }}
         />
         {/* <OptionCom
@@ -159,7 +160,7 @@ const AdminHomepage = ({ navigation }) => {
         /> */}
 
         <OptionCom
-          name={"Join Call"}
+          name={"Join A Call"}
           iconname={"progress-check"}
           iconLibrary={"MaterialCommunityIcons"}
           onPress={() => {

@@ -78,7 +78,7 @@ const TeacherSearch = ({navigation}) => {
     querySnapshot.forEach((doc) => {
       const docData = doc.data();
       if (selectedFilter !== 'student' && docData.Status !== 'approved') {
-        // Skip non-approved records for filters other than 'student'
+       
         return;
       }
       data.push({ id: doc.id, ...docData });
