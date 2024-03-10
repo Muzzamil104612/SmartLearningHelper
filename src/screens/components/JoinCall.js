@@ -93,8 +93,8 @@ const JoinCall = ({ navigation, route }) => {
 
               </View>
               <Animatable.View animation="fadeInUpBig" duration={3000} style={styles.imgview}>
-                <Text style={{ color: '#F4BC1C', alignSelf: "center", fontSize: 25, fontWeight: "500", marginBottom: hp(1.5) }}>𝙂𝙤𝙤𝙙 𝙏𝙤 𝙎𝙚𝙚 𝙔𝙤𝙪 𝘼𝙜𝙖𝙞𝙣!</Text>
-                <Image source={require('../../assets/images/student.png')}
+                <Text style={{ color: themeColors.bg3, alignSelf: "center", fontSize: 32,textAlign:'center', fontWeight: "500", marginBottom: hp(1.5) }}> 𝓖𝓮𝓽 𝓡𝓮𝓪𝓭𝔂 𝓕𝓸𝓻 𝓪 𝓟𝓻𝓸𝓭𝓾𝓬𝓽𝓲𝓿𝓮 𝓢𝓮𝓼𝓼𝓲𝓸𝓷.</Text>
+                <Image source={require('../../assets/images/call.png')}
                   style={styles.img} />
               </Animatable.View>
             </SafeAreaView>

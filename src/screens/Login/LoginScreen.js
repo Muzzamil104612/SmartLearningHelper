@@ -520,7 +520,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginTop: hp(-2.5),
     color: 'black',
-    width: wp(60),
+    width: wp(63),
 
   }
 });

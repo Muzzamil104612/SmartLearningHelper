@@ -70,7 +70,7 @@ import TutorOptions from '../screens/student/TutorOptions';
 import PendingTeachers from '../screens/student/PendingTeachers';
 import CurrentTeachers from '../screens/student/CurrentTeachers';
 import TeacherInfo from '../screens/student/TeacherInfo';
-
+import TeacherJoinCall from '../screens/teacher/TeacherJoinCall';
 import CurrentStudent from '../screens/teacher/CurrentStudent';
 import StudentInfo from '../screens/teacher/StudentInfo';
 import ChildDetail from '../screens/parent/ChildDetail';
@@ -94,7 +94,7 @@ import PTeacherInfo from '../screens/parent/PTeacherInfo';
 import AllFeedbacks from '../screens/teacher/AllFeedbacks';
 import JoinCall from '../screens/components/JoinCall';
 import MeetingScreen from '../screens/components/MeetingScreen';
-
+import TeacherMeeting from '../screens/teacher/TeacherMeating';
 
 
 const Stack = createNativeStackNavigator();
@@ -105,6 +105,8 @@ export default function AppNavigation() {
     <NavigationContainer>
         <Provider store={store}>
       <Stack.Navigator initialRouteName='Login'>
+      <Stack.Screen name="TeacherMeeting" options={{headerShown: false}} component={TeacherMeeting} />
+      <Stack.Screen name="TeacherJoinCall" options={{headerShown: false}} component={TeacherJoinCall} />
       <Stack.Screen name="PaymentByTeacher" options={{headerShown: false}} component={PaymentByTeacher} />
       <Stack.Screen name="SpecificTeacherPayment" options={{headerShown: false}} component={SpecificTeacherPayment} />
       <Stack.Screen name="GroupDetail" options={{headerShown: false}} component={GroupDetail} />
