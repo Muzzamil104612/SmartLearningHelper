@@ -23,14 +23,16 @@ const AdminHomepage = ({ navigation }) => {
         const teachersData = [];
 
         for (const doc of teachersSnapshot.docs) {
-          const {userID, name, majorSubject, ImageURL } = doc.data();
+          const {userID, name, majorSubject, ImageURL,email ,qualification,experience} = doc.data();
 
           teachersData.push({
             userID,
             ImageURL,
             name,
             majorSubject,
-
+            email,
+            qualification,
+            experience
           });
         }
         teachersData.sort((a, b) => b.rating - a.rating);
@@ -97,17 +99,26 @@ const AdminHomepage = ({ navigation }) => {
       </Animatable.View>
       <View style={{ flexDirection: 'row', marginTop: hp(2) }}>
         <Text style={styles.headtxt1}>Popular Teachers</Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+        
+        onPress={()=>{navigation.navigate('TeachersList')}}>
           <Text style={styles.headtxt2}>View All {'>'}</Text>
         </TouchableOpacity>
       </View>
+      {console.log(teachers.ImageURL)}
       <View style={{ height: hp(25) }}>
         <FlatList
           data={teachers}
+         
           keyExtractor={(item) => item.name}
           renderItem={({ item }) => (
             <View style={styles.categoriesView1}>
-              <TouchableOpacity style={styles.iconbtn1}>
+              <TouchableOpacity
+              onPress={()=>{
+                let teacher=item;
+                navigation.navigate('TeacherDetail',{teacher})
+              }}
+              style={styles.iconbtn1}>
                 <Image style={styles.selectedImageq1} source={{ uri: item.ImageURL }} />
 
                 <Text style={[styles.Teachtxt, { color: themeColors.bg3 }]}>Name:</Text>

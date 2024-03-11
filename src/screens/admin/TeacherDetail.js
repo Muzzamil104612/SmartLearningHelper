@@ -6,7 +6,7 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 import { themeColors } from '../../theme';
 import { View, Text, TouchableOpacity, Image, TextInput, StyleSheet, Alert, ScrollView, ActivityIndicator } from 'react-native'
 import React from 'react'
-
+import FeedbackList from '../components/FeedbackList';
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
@@ -19,6 +19,7 @@ import * as Animatable from 'react-native-animatable';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import auth from '@react-native-firebase/auth';
 import TeacherDetails from './TeacherDetails';
+import TeacherStarRating from '../components/TeacherStarRating';
 
 const TeacherDetail = ({ route, navigation }) => {
     const { teacher } = route.params;
@@ -36,7 +37,7 @@ const TeacherDetail = ({ route, navigation }) => {
 
         <ScrollView style={{ backgroundColor: 'white', flex: 1.5 }}>
 
-            < View >
+            < View  style={{marginBottom:hp(-10)}}>
                 <SafeAreaView style={styles.container1}>
 
                     <View style={styles.upperPart}>
@@ -67,7 +68,10 @@ const TeacherDetail = ({ route, navigation }) => {
                 </SafeAreaView>
 
 
-
+<View style={{padding:20,alignItems:'center'}}>
+<TeacherStarRating teacherEmail={teacher.email} />
+</View>
+               
 
 
                 <View
@@ -198,7 +202,14 @@ const TeacherDetail = ({ route, navigation }) => {
                 </View>
             </View>
 
+            <View >
+                    <FeedbackList
+                        teacherEmail={teacher.email}
+                       
 
+                    />
+
+                </View>
 
 
 

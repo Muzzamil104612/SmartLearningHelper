@@ -8,7 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ScrollView } from 'react-native';
 import RetreiveCount from '../components/retreiveCount';
 import Feather from 'react-native-vector-icons/Feather';
-
+import TeacherStarRating from '../components/TeacherStarRating';
 
 const TeachersList = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -125,6 +125,13 @@ const ViewDetail=(teacher)=>{
            <Text style={styles.text2email}>{item.majorSubject}</Text>
            <Feather name="external-link" size={25}    style={{marginLeft:wp(59) ,marginTop:hp(-6)}} color={themeColors.bg2}
             /> 
+            
+              
+              <View style={{marginTop:hp(2.4) ,marginLeft:wp(2.9)}}>
+              <TeacherStarRating   teacherEmail={item.email} />
+
+              </View>
+              
        </TouchableOpacity>
        </View>
      
@@ -270,7 +277,7 @@ const styles = StyleSheet.create({
     fontSize:17,
     fontWeight:'700',
     marginLeft:wp(4),
-    marginTop:hp(4),
+    marginTop:hp(2),
   },
   center: {
     height: hp(7),
