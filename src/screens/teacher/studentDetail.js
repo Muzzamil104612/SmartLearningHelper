@@ -71,15 +71,13 @@ const StudentsDetail = ({ route, navigation }) => {
             Subject:myObject.majorSubject
           };
     
-          // Update Firestore with the groupData
           await firebase.firestore().collection('groups').add(groupData);
 
     
           setIsModalVisible(false);
           navigation.goBack();
     
-          // Additional logic for accepting the student
-          // ...
+        
     
         } catch (error) {
           console.error('Error accepting student and creating group:', error);
@@ -121,9 +119,6 @@ const StudentsDetail = ({ route, navigation }) => {
                     </Animatable.View>
 
                 </SafeAreaView>
-
-
-
 
 
                 <View

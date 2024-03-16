@@ -67,7 +67,7 @@ const MeetingScreen = ({ navigation, route }) => {
 
     const callEnded = () => {
         setRefreshKey((prevKey) => prevKey + 1);
-        isCallEnded.current = true; // Set the call as ended
+        isCallEnded.current = true; 
     };
 
     LogBox.ignoreLogs([
@@ -77,7 +77,7 @@ const MeetingScreen = ({ navigation, route }) => {
     ]);
 
     const randomUserId = String(Math.floor(Math.random() * 100000));
-
+    console.log("username",userName," Random Number",randomUserId);
     return (
         <View key={refreshKey} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <ZegoUIKitPrebuiltCall
@@ -85,6 +85,7 @@ const MeetingScreen = ({ navigation, route }) => {
                 appSign={'317602ea0798e87fa555d188e9e666050b91fcfd6e712d16a313a7d0cec6b1c1'}
                 userID={userId}
                 userName={userName + randomUserId}
+                
                 callID={callID}
                 config={{
                     ...GROUP_VIDEO_CALL_CONFIG,

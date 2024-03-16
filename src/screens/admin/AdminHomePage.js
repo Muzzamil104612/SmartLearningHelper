@@ -115,8 +115,8 @@ const AdminHomepage = ({ navigation }) => {
             <View style={styles.categoriesView1}>
               <TouchableOpacity
               onPress={()=>{
-                let teacher=item;
-                navigation.navigate('TeacherDetail',{teacher})
+              
+                navigation.navigate('TeacherDetails',{teacher:item})
               }}
               style={styles.iconbtn1}>
                 <Image style={styles.selectedImageq1} source={{ uri: item.ImageURL }} />

@@ -125,7 +125,7 @@ const StdRequests = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     loadingIndicator: {
-        marginTop: hp(3), // Adjust the marginTop as needed
+        marginTop: hp(3), 
       },
       
     selectedImage: {

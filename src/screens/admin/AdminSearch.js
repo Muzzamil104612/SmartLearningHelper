@@ -1,19 +1,20 @@
-import React, { useState,useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image,StyleSheet, TextInput, Modal } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput, Modal } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useIsFocused } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import { themeColors } from '../../theme';
 import { useFocusEffect } from '@react-navigation/native';
-const AdminSearch = ({navigation}) => {
+import TeacherStarRating from '../components/TeacherStarRating';
+const AdminSearch = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterActive, setFilterActive] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [searchResultFound, setSearchResultFound] = useState(true); // State to track search result status
   const [selectedFilter, setSelectedFilter] = useState('');
   const [filteredData, setFilteredData] = useState([]);
-  const [clearFields, setClearFields] = useState(true); 
+  const [clearFields, setClearFields] = useState(true);
   const isFocused = useIsFocused();
   const handleFilter = async (filterType) => {
     setSelectedFilter(filterType);
@@ -37,7 +38,7 @@ const AdminSearch = ({navigation}) => {
       };
     }, [clearFields])
   );
- 
+
   const handleSearch = async () => {
     try {
       let querySnapshot;
@@ -45,7 +46,7 @@ const AdminSearch = ({navigation}) => {
         // Search for students by name based on searchQuery
         querySnapshot = await firestore()
           .collection('Students')
-         
+
           .where('name', '>=', searchQuery)
           .where('name', '<=', searchQuery + '\uf8ff')
           .get();
@@ -53,49 +54,48 @@ const AdminSearch = ({navigation}) => {
         // Search for teachers by name based on searchQuery
         querySnapshot = await firestore()
           .collection('Teachers')
-         
+
           .where('name', '>=', searchQuery)
           .where('name', '<=', searchQuery + '\uf8ff')
-         
+
           .get();
       }
-      else
-      {
+      else {
         querySnapshot = await firestore()
-        .collection('Teachers')
-     
-        .where('majorSubject', '>=', searchQuery)
-        .where('majorSubject', '<=', searchQuery + '\uf8ff')
-      
-        .get();
+          .collection('Teachers')
+
+          .where('majorSubject', '>=', searchQuery)
+          .where('majorSubject', '<=', searchQuery + '\uf8ff')
+
+          .get();
 
       }
 
-  
+
       const data = [];
-    querySnapshot.forEach((doc) => {
-      const docData = doc.data();
-      if (selectedFilter !== 'student' && docData.Status !== 'approved') {
-        // Skip non-approved records for filters other than 'student'
-        return;
-      }
-      data.push({ id: doc.id, ...docData });
-    });
+      querySnapshot.forEach((doc) => {
+        const docData = doc.data();
+        if (selectedFilter !== 'student' && docData.Status !== 'approved') {
+          // Skip non-approved records for filters other than 'student'
+          return;
+        }
+        data.push({ id: doc.id, ...docData });
+      });
 
 
       setFilteredData(data);
-      setSearchResultFound(data.length > 0); 
+      setSearchResultFound(data.length > 0);
     } catch (error) {
       console.error('Error searching data: ', error);
     }
   };
-  
+
   const viewDetails = (item) => {
     setClearFields(false);
     if (selectedFilter === 'student') {
       navigation.navigate('StudentSearchDetails', { student: item });
     } else {
-      navigation.navigate('TeacherSearchDetails', { teacher: item });
+      navigation.navigate('TeacherDetails', { teacher: item });
     }
   };
 
@@ -104,32 +104,58 @@ const AdminSearch = ({navigation}) => {
     return (
       <View>
         {filteredData.map((item, index) => (
-       
-       <View key={item.id} style={[styles.reqpart]}>
-       <View style={{flexDirection:'row'}}>
-          <View style={styles.circle}>
-          <Image source={{ uri: item.ImageURL }} style={styles.selectedImage} />
+
+          <View key={item.id} style={[styles.reqpart]}>
+            <View style={{ flexDirection: 'row' }}>
+              <View style={styles.circle}>
+                <Image source={{ uri: item.ImageURL }} style={styles.selectedImage} />
+              </View>
+
+              <View >
+
+                {selectedFilter != 'student' ? (
+                  <View style={{ flexDirection: 'row', width: wp(49) }}>
+                    <Text style={{
+                      color: themeColors.bg3,
+                      fontSize: 17,
+                      fontWeight: '600',
+                      marginLeft: wp(4),
+                      marginTop: hp(2),
+                    }}>{item.name}</Text>
+
+
+                  </View>
+                ) : (
+                  <View style={{ flexDirection: 'row', width: wp(49) }}>
+                    <Text style={styles.text2}>{item.name}</Text>
+
+
+                  </View>
+                )}
+                {selectedFilter === 'student' ? (
+                  <Text style={styles.text}>Class =&gt; {item.qualification}</Text>
+                ) : (
+                  <Text style={styles.text}>{item.qualification}</Text>
+                )}
+
+
+                <View style={{ marginLeft: wp(2.7) }}>
+                  {selectedFilter != 'student' ? (
+                    <TeacherStarRating teacherEmail={item.email} />
+                  ) : (
+                    null
+                  )}
+                </View>
+
+              </View>
+              <TouchableOpacity onPress={() => viewDetails(item)}>
+                <View style={[styles.btn]}>
+                  <Text style={{ color: 'black', textAlign: 'center' }}>Details</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
           </View>
-     
-       <View >
-         <View style={{flexDirection:'row',width:wp(49)}}>
-       <Text style={styles.text2}>{item.name}</Text>
-       
-       </View>
-       {selectedFilter === 'student' ? (
-                <Text style={styles.text}>Class =&gt; {item.qualification}</Text>
-              ) : (
-                <Text style={styles.text}>{item.qualification}</Text>
-              )}
-       </View>
-       <TouchableOpacity onPress={() => viewDetails(item)}>
-         <View style={[styles.btn]}>
-           <Text style={{ color: 'black',textAlign:'center' }}>Details</Text>
-         </View>
-       </TouchableOpacity>
-       </View>
-     
-     </View>
         ))}
       </View>
     );
@@ -142,7 +168,7 @@ const AdminSearch = ({navigation}) => {
         <TextInput
           style={styles.searchbox}
           placeholderTextColor={'gray'}
-        
+
           placeholder={`Search by ${selectedFilter ? selectedFilter.charAt(0).toUpperCase() + selectedFilter.slice(1) : 'Subject'}`}
           onChangeText={(text) => setSearchQuery(text)}
           value={searchQuery}
@@ -154,14 +180,14 @@ const AdminSearch = ({navigation}) => {
           <FontAwesome name="filter" size={22} color="#FFCD4B" style={{ marginLeft: wp(3) }} />
         </TouchableOpacity>
       </View>
-      <View style={{height:hp(4),}}></View>
+      <View style={{ height: hp(4), }}></View>
       {filteredData.length > 0 ? (
-      renderFilteredData()
-    ) : (
-      <Text style={styles.noRecordText}></Text>
-    )}
-    
-     {!searchResultFound && (
+        renderFilteredData()
+      ) : (
+        <Text style={styles.noRecordText}></Text>
+      )}
+
+      {!searchResultFound && (
         <Text style={styles.noRecordText}>𝙎𝙤𝙧𝙧𝙮, 𝙉𝙤 𝙍𝙚𝙘𝙤𝙧𝙙 𝙁𝙤𝙪𝙣𝙙</Text>
       )}
 
@@ -209,13 +235,13 @@ const styles = StyleSheet.create({
   },
   reqpart: {
     backgroundColor: "white",
-    borderRadius:9,
-   
-    height:hp(14),
-    paddingLeft:wp(2),
-    
+    borderRadius: 9,
+
+    height: hp(14),
+    paddingLeft: wp(2),
+
     marginHorizontal: wp(3),
-    marginVertical:hp(1),
+    marginVertical: hp(1),
     shadowColor: 'gray',
     shadowOffset: {
       width: 1,
@@ -224,13 +250,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 1,
     elevation: 8,
-  },  circle:
+  }, circle:
   {
     backgroundColor: 'white',
     height: hp(10),
     width: wp(20),
     borderRadius: 100,
-   
+
     marginTop: hp(2),
 
     alignContent: 'center',
@@ -248,9 +274,9 @@ const styles = StyleSheet.create({
     height: hp(10),
     width: wp(20),
     borderRadius: 100,
-    borderWidth:hp(0.3),
-    borderStyle:'solid',
-    borderColor:themeColors.bg3,
+    borderWidth: hp(0.3),
+    borderStyle: 'solid',
+    borderColor: themeColors.bg3,
     alignContent: 'center',
     justifyContent: 'center',
     shadowColor: '#000000',
@@ -264,17 +290,17 @@ const styles = StyleSheet.create({
   },
   text:
   {
-    color:themeColors.bg2,
-    marginLeft:wp(4),
-   // marginTop:hp(-1),
+    color: themeColors.bg2,
+    marginLeft: wp(4),
+    // marginTop:hp(-1),
   },
   text2:
   {
-    color:themeColors.bg3,
-    fontSize:17,
-    fontWeight:'600',
-    marginLeft:wp(4),
-    marginTop:hp(4),
+    color: themeColors.bg3,
+    fontSize: 17,
+    fontWeight: '600',
+    marginLeft: wp(4),
+    marginTop: hp(4),
   },
   center: {
     height: hp(7),
@@ -295,17 +321,17 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 1,
   },
-  btn:{
-    marginTop:hp(5.3),
-    color:'black',
-    backgroundColor:themeColors.bg2,
-    borderRadius:4,
-    padding:hp(0.7),
-    width:wp(17),
-  
-   
-   
-   },
+  btn: {
+    marginTop: hp(5.3),
+    color: 'black',
+    backgroundColor: themeColors.bg2,
+    borderRadius: 4,
+    padding: hp(0.7),
+    width: wp(17),
+
+
+
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -321,10 +347,10 @@ const styles = StyleSheet.create({
   filterOption: {
     fontSize: 28,
     paddingVertical: 10,
-    textAlign:'center',
+    textAlign: 'center',
     borderBottomWidth: 1,
     borderBottomColor: 'lightgray',
-    color:'#191D88'
+    color: '#191D88'
   },
   cancelText: {
     fontSize: 28,

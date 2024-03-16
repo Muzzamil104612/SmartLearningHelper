@@ -95,7 +95,7 @@ const TeachersList = ({navigation}) => {
   };
   
 const ViewDetail=(teacher)=>{
-   navigation.navigate('TeacherDetail',{teacher})
+   navigation.navigate('TeacherDetails',{teacher})
 }
 
 
