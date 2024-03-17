@@ -95,6 +95,7 @@ import AllFeedbacks from '../screens/teacher/AllFeedbacks';
 import JoinCall from '../screens/components/JoinCall';
 import MeetingScreen from '../screens/components/MeetingScreen';
 import AdminFeedback from '../screens/admin/AdminFeedback';
+import Notification from '../screens/components/Notification';
 
 
 
@@ -106,7 +107,7 @@ export default function AppNavigation() {
   return (
     <NavigationContainer>
         <Provider store={store}>
-      <Stack.Navigator initialRouteName='Login'>
+      <Stack.Navigator initialRouteName='Notification'>
       <Stack.Screen name="PaymentByTeacher" options={{headerShown: false}} component={PaymentByTeacher} />
       <Stack.Screen name="SpecificTeacherPayment" options={{headerShown: false}} component={SpecificTeacherPayment} />
       <Stack.Screen name="GroupDetail" options={{headerShown: false}} component={GroupDetail} />
@@ -201,6 +202,7 @@ export default function AppNavigation() {
         <Stack.Screen name="MeetingScreen" options={{headerShown: false}} component={MeetingScreen} />
         <Stack.Screen name="AdminFeedback" options={{headerShown: false}} component={AdminFeedback} />
 
+        <Stack.Screen name="Notification" options={{headerShown: false}} component={Notification} />
 
       </Stack.Navigator>
       </Provider>
