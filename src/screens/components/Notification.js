@@ -1,11 +1,53 @@
-import React from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, TouchableOpacity, StyleSheet, Alert, Linking, Platform } from 'react-native';
 import notifee from '@notifee/react-native';
 import { themeColors } from '../../theme';
 
 const Notification = () => {
+    const [notificationPermissionGranted, setNotificationPermissionGranted] = useState(false);
 
-    async function onDisplayNotification() {
+    const requestNotificationPermission = async () => {
+        try {
+            await notifee.requestPermission();
+           
+            console.log("Notification permission ...");
+        } catch (error) {
+            setNotificationPermissionGranted(false);
+            console.log("Error requesting notification permission:", error);
+        }
+    };
+
+    const handleNotificationSend = async () => {
+        if (!notificationPermissionGranted) {
+            Alert.alert(
+                "Notification Permission Required",
+                "Please allow the app to send notifications in order to proceed.",
+                [
+                    {
+                        text: "OK",
+                        
+                        onPress: () =>{ console.log("OK pressed")
+                        setNotificationPermissionGranted(false)},
+                    },
+                    {
+                        text: "Open Settings",
+                        onPress: () =>{ openAppSettings()
+                            setNotificationPermissionGranted(true)},
+                    }
+                ],
+                { cancelable: false }
+            );
+        } else {
+            await onDisplayNotification();
+        }
+
+        // Check if notification permission is granted after attempting to request it
+        if (!notificationPermissionGranted) {
+            requestNotificationPermission();
+        }
+    };
+
+    const onDisplayNotification = async () => {
         console.log("Displaying notification...");
         try {
             const channelId = await notifee.createChannel({
@@ -15,7 +57,7 @@ const Notification = () => {
 
             await notifee.displayNotification({
                 title: 'Smart Learning Helper ',
-                body: 'Hye Parent pay your fee...',
+                body: 'Hey Parent, pay your fee...',
                 android: {
                     channelId,
                     // smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
@@ -30,16 +72,41 @@ const Notification = () => {
         } catch (error) {
             console.log("Error displaying notification:", error);
         }
-    }
+    };
+
+    const openAppSettings = () => {
+        if (Platform.OS === 'android') {
+            Linking.openSettings();
+        } else if (Platform.OS === 'ios') {
+            Linking.openURL('app-settings:');
+        } else {
+            Alert.alert(
+                "Unsupported Platform",
+                "App settings are not supported on this platform.",
+                [
+                    {
+                        text: "OK",
+                        onPress: () => console.log("OK pressed"),
+                    }
+                ],
+                { cancelable: false }
+            );
+        }
+    };
+
 
     return (
         <View style={styles.container}>
             <TouchableOpacity
-                onPress={() => { onDisplayNotification() }}
+                onPress={() => {
+                    handleNotificationSend();
+                   
+                }}
                 style={styles.btn}
             >
                 <Text style={styles.btntxt}>Send Notification</Text>
             </TouchableOpacity>
+
         </View>
     );
 }
@@ -61,4 +128,4 @@ const styles = StyleSheet.create({
     btntxt: {
         color: 'white'
     }
-})
+});
