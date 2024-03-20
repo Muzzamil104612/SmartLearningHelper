@@ -23,6 +23,7 @@ const TeacherMeeting = ({ navigation, route }) => {
     setUserName(route.params.UserName);
     setCallID(route.params.passcode);
     setUserId(route.params.Id);
+    console.log('id is',userId,'name is ',userName + randomUserId,'callid',callID);
    
     isCallEnded.current = false;
   }, [route.params]);
@@ -95,6 +96,7 @@ const TeacherMeeting = ({ navigation, route }) => {
 
   const callEnded = () => {
     setForceRender((prev) => !prev);
+    console.log('id is',userId,'name is ',userName + randomUserId,'callid',callID);
     isCallEnded.current = true;
   };
 
@@ -105,6 +107,7 @@ const TeacherMeeting = ({ navigation, route }) => {
   ]);
 
   const randomUserId = String(Math.floor(Math.random() * 100000));
+ 
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
