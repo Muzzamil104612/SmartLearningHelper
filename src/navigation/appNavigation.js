@@ -107,7 +107,7 @@ export default function AppNavigation() {
   return (
     <NavigationContainer>
         <Provider store={store}>
-      <Stack.Navigator initialRouteName='Notification'>
+      <Stack.Navigator initialRouteName='Login'>
       <Stack.Screen name="PaymentByTeacher" options={{headerShown: false}} component={PaymentByTeacher} />
       <Stack.Screen name="SpecificTeacherPayment" options={{headerShown: false}} component={SpecificTeacherPayment} />
       <Stack.Screen name="GroupDetail" options={{headerShown: false}} component={GroupDetail} />
