@@ -171,7 +171,7 @@ const TeacherHomepage = ({navigation}) => {
                 iconname={"video"}
                     iconLibrary={"FontAwesome5"}
                     onPress={()=>{
-                        navigation.navigate('JoinCall'
+                        navigation.navigate('TeacherJoinCall'
                         ,{UserName:data.name,userID:data.userID})
                     }}
                 />

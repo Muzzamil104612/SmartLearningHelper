@@ -1,31 +1,41 @@
 package com.smartlearninghelper;
+
+import android.os.Bundle;
+import android.view.WindowManager;
+
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
-import android.os.Bundle; // Add this line
-import com.facebook.react.ReactActivity; // Add this line
-import android.app.NotificationChannel; // Add this line
-import android.app.NotificationManager; // Add this line
-import android.os.Build; // Add this line
+import com.facebook.soloader.SoLoader;
+
 public class MainActivity extends ReactActivity {
 
-  /**
-   * Returns the name of the main component registered from JavaScript. This is used to schedule
-   * rendering of the component.
-   */
   @Override
   protected String getMainComponentName() {
     return "SmartLearningHelper";
   }
 
-  /**
-   * Returns the instance of the {@link ReactActivityDelegate}. There the RootView is created and
-   * you can specify the renderer you wish to use - the new renderer (Fabric) or the old renderer
-   * (Paper).
-   */
   @Override
   protected ReactActivityDelegate createReactActivityDelegate() {
     return new MainActivityDelegate(this, getMainComponentName());
+  }
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    SoLoader.init(this, /* native exopackage */ false);
+
+    // Conditionally enable/disable screenshot capture based on build type
+    if (BuildConfig.DEBUG) {
+      getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+      // for Debug allow screenshot
+    } else {
+      getWindow().setFlags(
+        WindowManager.LayoutParams.FLAG_SECURE,
+        WindowManager.LayoutParams.FLAG_SECURE
+      );
+      // for Release prevent screenshot
+    }
   }
 
   public static class MainActivityDelegate extends ReactActivityDelegate {
