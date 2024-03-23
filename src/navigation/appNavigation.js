@@ -98,6 +98,7 @@ import AdminFeedback from '../screens/admin/AdminFeedback';
 import Notification from '../screens/components/Notification';
 
 
+import TeacherMeeting from '../screens/teacher/TeacherMeating';
 
 
 const Stack = createNativeStackNavigator();

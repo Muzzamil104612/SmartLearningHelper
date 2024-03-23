@@ -2070,7 +2070,7 @@
     react-native-screens "^3.18.2"
     react-native-sound "^0.11.2"
 
-"@zegocloud/zego-uikit-rn@^2.7.4", "@zegocloud/zego-uikit-rn@>=2.3.1":
+"@zegocloud/zego-uikit-rn@^2.7.0", "@zegocloud/zego-uikit-rn@>=2.3.1":
   version "2.7.4"
   resolved "https://registry.npmjs.org/@zegocloud/zego-uikit-rn/-/zego-uikit-rn-2.7.4.tgz"
   integrity sha512-dM2JlbFjHnuxfIhDbXwOgv7VFRhpKIEwPKdoJK9tz2xBHjzxHC3IZO++AwaEpeOhhXKTPO42C5ZAzpLq80nLiw==
