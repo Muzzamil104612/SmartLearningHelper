@@ -1,10 +1,11 @@
 
 import { useEffect, useState } from 'react';
+import firestore from '@react-native-firebase/firestore';
 
 import { firebase } from '@react-native-firebase/firestore';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { themeColors } from '../../theme';
-import { View, Text, TouchableOpacity, Image, TextInput, StyleSheet, Alert, ScrollView, ActivityIndicator } from 'react-native'
+import { View, Text,Modal,Button, TouchableOpacity, Image, TextInput, StyleSheet, Alert, ScrollView, ActivityIndicator } from 'react-native'
 import React from 'react'
 import FeedbackList from '../components/FeedbackList';
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -15,14 +16,51 @@ import TextInputComponent from '../components/TextInputComponent';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import * as Animatable from 'react-native-animatable';
-
+import { useSelector } from 'react-redux';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import auth from '@react-native-firebase/auth';
-
 import TeacherStarRating from '../components/TeacherStarRating';
 
 const TeacherDetails = ({ route, navigation }) => {
   const { teacher } = route.params;
+  const data = useSelector(state => state.value.AdminData);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [number, setNumber] = useState('');
+
+  const adminName = data.name;
+  const adminEmail= data.email;
+  const teacherEmail = teacher.email;
+  const message ="Dear "+ teacher.name +", Only " + number + " Days are Remaining To Pay Your Dues";
+
+  const handlePress = () => {
+    setModalVisible(true);
+  };
+
+  const handleSubmit = async () => {
+    if (number.trim() === '') {
+      alert('Please the Number of Days Remaining in the Due Date To Receive Fee');
+      return;
+    }
+
+    const currentTime = new Date();
+    try {
+      await firestore().collection('Notifications').add({
+        
+        time: currentTime,
+        adminName,
+        adminEmail,
+        teacherEmail,
+        message,
+      });
+      console.log('Notification saved successfully!');
+      setNumber('');
+    } catch (error) {
+      console.error('Error saving notification: ', error);
+
+    }
+    setModalVisible(false);
+  };
+
   const openDocumentInBrowser = async () => {
     try {
       await InAppBrowser.open(teacher.documentURL, {
@@ -134,14 +172,47 @@ const TeacherDetails = ({ route, navigation }) => {
                 <Text style={{ color: 'white' }}>Open CV</Text>
               </View>
             </TouchableOpacity>
+            <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: hp(39) }}>
+            <TouchableOpacity
+              style={styles.ReminderBtn}
+              onPress={handlePress}
 
+            >
+              <Text style={{ padding: 5, color: 'white', fontSize: 14, fontWeight: 'bold' }}>Send Reminder To Parent</Text>
+            </TouchableOpacity>
 
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(false);
+              }}
+            >
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
+                  <Text style={{ color: 'black' }}>Enter the Days Remaining For the Due Date</Text>
+                  <TextInput
+                    style={{ borderWidth: 1, borderColor: 'gray', borderRadius: 5, margin: 10, padding: 5, color: 'black' }}
+                    keyboardType="numeric"
+                    value={number}
+                    onChangeText={setNumber}
+                  />
+                  <TouchableOpacity
+                    style={{ margin: 10, backgroundColor: themeColors.bg3, alignItems: 'center', borderRadius: 5 }}
+                    onPress={handleSubmit}>
+                    <Text style={{ color: 'white', padding: 10 }}>OK</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
 
           </View>
 
 
 
-
+          </View>
+         
         </View>
       </View>
 
@@ -426,5 +497,15 @@ const styles = StyleSheet.create({
     color: themeColors.bg3,
   }, subtxt: {
     fontWeight: '400'
-  }
+  },
+  ReminderBtn: {
+    backgroundColor: themeColors.bg3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: hp(8),
+    width: wp(49),
+    justifyContent: 'center',
+    borderRadius: 8,
+    marginTop: hp(1.5),
+  },
 });

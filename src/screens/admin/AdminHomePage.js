@@ -97,6 +97,7 @@ const AdminHomepage = ({ navigation }) => {
      <Text style={styles.txtemail}>{myObject.email}</Text> */}
         </View>
       </Animatable.View>
+     
       <View style={{ flexDirection: 'row', marginTop: hp(2) }}>
         <Text style={styles.headtxt1}>Popular Teachers</Text>
         <TouchableOpacity

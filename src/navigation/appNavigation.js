@@ -99,6 +99,7 @@ import Notification from '../screens/components/Notification';
 
 
 import TeacherMeeting from '../screens/teacher/TeacherMeating';
+import TeacherNotification from '../screens/teacher/TeacherNotification';
 
 
 const Stack = createNativeStackNavigator();
@@ -206,6 +207,7 @@ export default function AppNavigation() {
         <Stack.Screen name="AdminFeedback" options={{headerShown: false}} component={AdminFeedback} />
 
         <Stack.Screen name="Notification" options={{headerShown: false}} component={Notification} />
+        <Stack.Screen name="TeacherNotification" options={{headerShown: false}} component={TeacherNotification} />
 
       </Stack.Navigator>
       </Provider>

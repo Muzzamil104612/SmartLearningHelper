@@ -22,7 +22,7 @@ const SpecificStudentPayment = ({ route, navigation }) => {
   const teacherName = data.name;
   const parentEmail = student.parentEmail;
   const teacherEmail = data.email;
-  const message = "Only " + number + " Days are Remaining To Pay your Student " + student.name + "'s Fee";
+  const message = "Only " + number + " Days are Remaining To Pay " + student.name + "'s Fee";
 
   const handlePress = () => {
     setModalVisible(true);

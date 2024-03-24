@@ -4,17 +4,17 @@ import firestore from '@react-native-firebase/firestore';
 import { themeColors } from '../../theme';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
-const Notification = ({ route }) => {
-    const parentEmail = route.params.parentEmail;
+const TeacherNotification = ({ route }) => {
+    const adminEmail = route.params.adminEmail;
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
-    console.log(parentEmail);
-    const fetchNotifications = async (parentEmail) => {
+    console.log(adminEmail);
+    const fetchNotifications = async (adminEmail) => {
         try {
             setLoading(true);
             const querySnapshot = await firestore()
                 .collection('Notifications')
-                .where('parentEmail', '==', parentEmail)
+                .where('adminEmail', '==', adminEmail)
                 .get();
 
             const notificationsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -30,8 +30,8 @@ const Notification = ({ route }) => {
     };
 
     useEffect(() => {
-        fetchNotifications(parentEmail);
-    }, [parentEmail]);
+        fetchNotifications(adminEmail);
+    }, [adminEmail]);
 
 
     if (loading) {
@@ -66,7 +66,7 @@ const Notification = ({ route }) => {
                             </Text>
                             <Text style={styles.time}>
                                 <Text style={{ color: themeColors.bg3, fontWeight: 'bold' }} >Sent By : </Text>
-                                {item.teacherName}
+                                {item.adminName}
                             </Text>
                             <Text style={{ color: themeColors.bg2, padding: 2 }}>
                                 <Text style={{ color: themeColors.bg3, fontWeight: 'bold', paddingBottom: 5 }} >Received At : </Text>
@@ -84,7 +84,7 @@ const Notification = ({ route }) => {
 
 }
 
-export default Notification;
+export default TeacherNotification;
 
 
 

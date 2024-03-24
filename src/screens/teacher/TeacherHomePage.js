@@ -10,7 +10,7 @@ import firestore from '@react-native-firebase/firestore';
 import OptionCom from '../components/OptionCom';
 import TeacherStarRating from '../components/TeacherStarRating';
 const TeacherHomepage = ({navigation}) => {
-  
+  const admin = useSelector(state => state.value.AdminData);
   const data = useSelector(state => state.value.TeacherData);
   const [myObject, setMyObject] = useState({
     userID: '', name: '', email: '', phone: '', experience: '', majorSubject: '', qualification: '',
@@ -95,6 +95,41 @@ const TeacherHomepage = ({navigation}) => {
      <Text style={styles.txtemail}>{myObject.email}</Text> */}
      </View>
      </Animatable.View>
+
+
+     <View style={{alignItems:'center'}}>
+      <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '500',
+            color: themeColors.bg2,
+            padding:6,
+          
+          }}>
+        All notifications about the payment
+        
+        </Text>
+      <TouchableOpacity
+      onPress={()=>{navigation.navigate('TeacherNotification',{adminEmail:admin.email})}}
+       
+      >
+        <Text
+          style={{
+
+            fontSize: 14,
+            fontWeight: '700',
+            color: themeColors.bg3,
+            padding: 1,
+            marginTop:hp(-1.0)
+
+          }}>
+        {'View All>>'}
+         {/* <Icon name="notifications" size={20} color={themeColors.bg3}  /> */}
+        </Text>
+      </TouchableOpacity>
+      </View>
+
+
      <View style={{alignItems:"center" , padding:10}}>
       <TeacherStarRating teacherEmail={myObject.email}/>
      </View>

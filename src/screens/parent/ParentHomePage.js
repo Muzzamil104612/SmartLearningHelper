@@ -106,25 +106,37 @@ const ParentHomepage = ({ navigation }) => {
 
         </View>
       </Animatable.View>
+      <View style={{alignItems:'center'}}>
+      <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '500',
+            color: themeColors.bg2,
+            padding:6,
+          
+          }}>
+        All notifications about the payment
+        
+        </Text>
       <TouchableOpacity
       onPress={()=>{navigation.navigate('Notification',{parentEmail:data.email})}}
-        style={{
-          alignItems: 'center'
-        }}
+       
       >
         <Text
           style={{
 
-            fontSize: 18,
+            fontSize: 14,
             fontWeight: '700',
             color: themeColors.bg3,
-            padding: 12,
+            padding: 1,
+            marginTop:hp(-1.0)
 
           }}>
-         Your Notifications  
-         <Icon name="notifications" size={20} color={themeColors.bg3}  />
+        {'View All>>'}
+         {/* <Icon name="notifications" size={20} color={themeColors.bg3}  /> */}
         </Text>
       </TouchableOpacity>
+      </View>
       <Text
         style={{
 
